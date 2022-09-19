@@ -53,4 +53,9 @@ public interface RisorseService extends JpaRepository<Risorse, Integer>{
 			+ "from Risorse r, RuoliRisorse rr "
 			+ "where r.id = rr.idRisorsa and r.nomeCognome != :dipendente ")
 	String[] findAllException(String dipendente);
+	
+	@Query("select r.id "
+			+ "from Risorse r, DettagliRisorse dr "
+			+ "where r.id = dr.idRisorsa")
+	List<Integer> getIdCandidati();
 }

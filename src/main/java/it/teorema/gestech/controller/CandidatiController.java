@@ -1,10 +1,15 @@
 package it.teorema.gestech.controller;
 
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +52,13 @@ public class CandidatiController {
 	CommentiRisorseService commentiRisorseService;
 	
 	@RequestMapping("/all-candidati")
-	public ResponseEntity<List<Object>> allCandidati() {
-		return new ResponseEntity<>(dettagliRisorseService.allCandidati(), HttpStatus.OK);
+	public ResponseEntity<List<Object>> allCandidati(HttpServletRequest request) {
+		List<Object> lista = new ArrayList<>();
+		HttpSession session = request.getSession(true);
+		lista.add(dettagliRisorseService.allCandidati());
+		lista.add(session.getAttribute("listaCodiciCandidati"));
+		System.out.println(session.getAttribute("listaCodiciCandidati"));
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
 	@RequestMapping("/all-dipendenti")
@@ -280,5 +290,24 @@ public class CandidatiController {
 	@RequestMapping("/get-dipendenti")
 	public ResponseEntity<String[]> getDipendenti() {
 		return new ResponseEntity<> (risorseService.getDipendenti(), HttpStatus.OK);
+	}
+	
+	@RequestMapping("/get-codici-candidati")
+	public ResponseEntity<?> getCodiciCandidati(HttpServletRequest request) {
+		List<JSONObject> listaCodici = new ArrayList<JSONObject>();
+		List<Integer> listaId = risorseService.getIdCandidati();
+		for (Integer id : listaId) {
+			JSONObject oggetto = new JSONObject();
+			byte[] array = new byte[16];
+		    new Random().nextBytes(array);
+		    String stringRandom = new String(array, Charset.forName("UTF-8"));
+			oggetto.put("id", id);
+			oggetto.put("codice", stringRandom);
+			listaCodici.add(oggetto);
+			//controllo sul se esce uguale
+		}
+		HttpSession session = request.getSession(true);
+		session.setAttribute("listaCodiciCandidati", listaCodici);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
