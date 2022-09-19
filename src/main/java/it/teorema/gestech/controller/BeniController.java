@@ -49,7 +49,6 @@ public class BeniController {
 	
 	@RequestMapping("/modifica-bene")
 	public ResponseEntity<?> modificaBene(@RequestBody Beni bene) {
-		System.out.println(bene.getId());
 		beniService.modificaBene(bene.getId(), bene.getDispositivo(), bene.getMarca(), bene.getModello(), 
 				bene.getNumeroSeriale(), bene.getPassword(), bene.getDipendente(), bene.getSocieta(), 
 				bene.getDataConsegna(), bene.getDataRestituzione(), bene.getNote());

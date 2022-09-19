@@ -47,7 +47,7 @@ public class HomeController {
 		LocalDateTime now = LocalDateTime.now();
 		Avvisi avviso = new Avvisi();
 		avviso.setTitolo((String) addForm.get("titolo"));
-		avviso.setRuoli((String) addForm.get("ruoli"));
+		avviso.setRuoli((String) addForm.get("ruoli").toString().replace(",", "").replace("[", "").replace("]", ""));
 		avviso.setData(LocalDateTime.parse(dtf.format(now), dtf));
 		avviso.setIdRisorsa(Integer.parseInt((String) addForm.get("idRisorsa")));
 		avviso.setNote((String) addForm.get("note"));
@@ -56,11 +56,8 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/modifica-password")
-	public ResponseEntity<?> modificaPassword(@RequestBody JSONObject formModificaPassword) throws NoSuchAlgorithmException {
-		String password = (String)formModificaPassword.get("password");
-		byte[] messageDigest = MessageDigest.getInstance("MD5").digest(password.getBytes());
-        password = new BigInteger(1, messageDigest).toString(16);
-		authService.changePassword(password, Integer.parseInt((String)formModificaPassword.get("idRisorsa")));
+	public ResponseEntity<?> modificaPassword(@RequestBody JSONObject formModificaPassword) {
+		authService.changePassword((String)formModificaPassword.get("password"), Integer.parseInt((String)formModificaPassword.get("idRisorsa")));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

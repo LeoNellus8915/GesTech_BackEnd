@@ -252,7 +252,7 @@ public class CandidatiController {
 		
 		dettagliRisorseService.updateCandidato(idCandidato, 
 			Integer.parseInt((String)updateForm.get("esitoColloquio")), 
-			Integer.parseInt((String)updateForm.get("ruoloRisorsa")), 
+			Integer.parseInt((String)updateForm.get("profilo")), 
 			Integer.parseInt((String)updateForm.get("skill1")),
 			Integer.parseInt((String)updateForm.get("skill2")), 
 			Integer.parseInt((String)updateForm.get("skill3")), 
@@ -261,7 +261,7 @@ public class CandidatiController {
 			Integer.parseInt((String)updateForm.get("lingua1")), 
 			Integer.parseInt((String)updateForm.get("lingua2")), 
 			Integer.parseInt((String)updateForm.get("lingua3")), 
-			Integer.parseInt((String)updateForm.get("seniority")));
+			Integer.parseInt((String)updateForm.get("livello")));
 		
 		if ((String)updateForm.get("commento") != "")
 		{

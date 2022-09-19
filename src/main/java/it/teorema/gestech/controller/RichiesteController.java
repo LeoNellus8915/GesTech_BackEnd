@@ -68,6 +68,7 @@ public class RichiesteController {
 		dati.add(nomeStatoRichiesta);
 		dati.add(statiRichiestaService.getIdStatoRichiesta(nomeStatoRichiesta).toString());
 		dati.add(statiRichiestaService.findAllException(nomeStatoRichiesta));
+		dati.add(commentiRichiesteService.findById(idRichiesta));
 		return new ResponseEntity<>(dati, HttpStatus.OK);
 	}
 	
@@ -96,15 +97,15 @@ public class RichiesteController {
 		richiesta.setCitta((String)addForm.get("citta"));
 		richiesta.setCosto(Double.parseDouble((String)addForm.get("costo")));
 		richiesta.setNote((String)addForm.get("note"));
-		richiesta.setRecruiter((String)addForm.get("listaRecruiter").toString().replace(",", "").replace("[", "").replace("]", ""));
+		richiesta.setRecruiter((String)addForm.get("listaRecruiters").toString().replace(",", "").replace("[", "").replace("]", ""));
 		richiesta.setIdStato(1);
 		richiesteService.save(richiesta);
 		
-		String[] recruiters = addForm.get("listaRecruiter").toString().replace("[", "").replace("]", "").split(", ");
+		String[] recruiters = addForm.get("listaRecruiters").toString().replace("[", "").replace("]", "").split(", ");
 		List<String> recruiter = new ArrayList<String>();
 		int idRichiesta = richiesteService.findLastId();
 		
-		if (addForm.get("listaRecruiter").toString().indexOf("Tutti") > -1)
+		if (addForm.get("listaRecruiters").toString().indexOf("Tutti") > -1)
 		{
 			recruiter = risorseService.getNomiRecruiter();
 			for (int c=0; c<recruiter.size(); c++)
