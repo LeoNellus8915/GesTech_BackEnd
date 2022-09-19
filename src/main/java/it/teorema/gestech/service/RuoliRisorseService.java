@@ -1,5 +1,7 @@
 package it.teorema.gestech.service;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -9,7 +11,7 @@ public interface RuoliRisorseService extends JpaRepository <RuoliRisorse, Intege
 	@Query("select r.nome "
 			+ "from RuoliRisorse rr, Ruoli r "
 			+ "where rr.idRuolo = r.id and rr.idRisorsa = :idRisorsa")
-	String getRuoloByIdRisorsa(int idRisorsa);
+	List<String> getRuoloByIdRisorsa(int idRisorsa);
 	
 	@Query("select r.nome "
 			+ "from RuoliRisorse rr, Ruoli r "

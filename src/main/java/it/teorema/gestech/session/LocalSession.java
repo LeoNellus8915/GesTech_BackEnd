@@ -1,8 +1,10 @@
 package it.teorema.gestech.session;
 
+import java.util.List;
+
 public class LocalSession {
 	private String nomeCognome;
-	private String ruolo;
+	private List<String> ruolo;
 	private String azienda;
 	private int idRisorsa;
 	private int numeroRichieste;
@@ -13,10 +15,10 @@ public class LocalSession {
 	public void setNomeCognome(String nomeCognome) {
 		this.nomeCognome = nomeCognome;
 	}
-	public String getRuolo() {
+	public List<String> getRuolo() {
 		return ruolo;
 	}
-	public void setRuolo(String ruolo) {
+	public void setRuolo(List<String> ruolo) {
 		this.ruolo = ruolo;
 	}
 	public String getAzienda() {
