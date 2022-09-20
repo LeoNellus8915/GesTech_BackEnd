@@ -1,6 +1,5 @@
 package it.teorema.gestech.service;
 
-
 import java.time.LocalDate;
 
 import javax.transaction.Transactional;

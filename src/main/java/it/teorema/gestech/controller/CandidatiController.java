@@ -1,15 +1,13 @@
 package it.teorema.gestech.controller;
 
-import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,14 +48,12 @@ public class CandidatiController {
 	DettagliRisorseService dettagliRisorseService;
 	@Autowired
 	CommentiRisorseService commentiRisorseService;
-	
+		
 	@RequestMapping("/all-candidati")
 	public ResponseEntity<List<Object>> allCandidati(HttpServletRequest request) {
 		List<Object> lista = new ArrayList<>();
-		HttpSession session = request.getSession(true);
 		lista.add(dettagliRisorseService.allCandidati());
-		lista.add(session.getAttribute("listaCodiciCandidati"));
-		System.out.println(session.getAttribute("listaCodiciCandidati"));
+		lista.add(SecurityController.getCodiciCandidati());
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
@@ -66,6 +62,7 @@ public class CandidatiController {
 		return new ResponseEntity<>(dettagliRisorseService.allDipendenti(), HttpStatus.OK);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/salva-candidato")
 	public ResponseEntity<?> salvaCandidato(@RequestBody JSONObject formCandidato) {
 		if (risorseService.existsByEmail((String) formCandidato.get("email")) != null)
@@ -129,100 +126,129 @@ public class CandidatiController {
 				commentiRisorseService.save(commentiRisorse);
 			}
 			dettagliRisorseService.save(dettagliRisorsa);
+			
+			List<JSONObject> listaCodici = SecurityController.getCodiciCandidati();
+			JSONObject oggetto = new JSONObject();
+			UUID codice = UUID.randomUUID();
+			oggetto.put("id", idRisorsa);
+			oggetto.put("codice", codice.toString().replaceAll("-", ""));
+			listaCodici.add(oggetto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 	}
 	
-	@RequestMapping("/get-candidato-visualizza/{idCandidato}")
-	public ResponseEntity<List<Object>> getCandidatoVisualizza(@PathVariable("idCandidato") int idCandidato) {
-		Risorse risorsa = risorseService.findByIdRisorsa(idCandidato);
-		if (risorsa == null)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		else {
-			List<Object> datiCandidato = new ArrayList<Object>();
-			List<Object> dettagliCandidato = new ArrayList<Object>();
-			
-			dettagliCandidato.add(dettagliRisorseService.getDataInserimento(idCandidato));
-			dettagliCandidato.add(esitiColloquioService.getEsitoColloquio(idCandidato));
-			dettagliCandidato.add(profiliService.getProfilo(idCandidato));
-			dettagliCandidato.add(linguaggiService.getSkill2(idCandidato));
-			dettagliCandidato.add(linguaggiService.getSkill3(idCandidato));
-			dettagliCandidato.add(linguaggiService.getSkill4(idCandidato));
-			dettagliCandidato.add(linguaggiService.getSkill5(idCandidato));
-			dettagliCandidato.add(lingueService.getLingua1(idCandidato));
-			dettagliCandidato.add(lingueService.getLingua2(idCandidato));
-			dettagliCandidato.add(lingueService.getLingua3(idCandidato));
-			dettagliCandidato.add(livelliService.getSeniority(idCandidato));
-					
-			datiCandidato.add(risorsa);
-			datiCandidato.add(dettagliCandidato);
-			datiCandidato.add(commentiRisorseService.findByIdRisorsa(idCandidato));
-			datiCandidato.add(esitiColloquioService.getColore((String)dettagliCandidato.get(1)));
-			datiCandidato.add(dettagliRisorseService.getFile64(idCandidato));
-			return new ResponseEntity<>(datiCandidato, HttpStatus.OK);
+	@RequestMapping("/get-candidato-visualizza/{codiceCandidato}")
+	public ResponseEntity<List<Object>> getCandidatoVisualizza(@PathVariable("codiceCandidato") String codiceCandidato) {
+		int idCandidato = 0;
+		List<JSONObject> listaCodici = SecurityController.getCodiciCandidati();
+		
+		for (JSONObject codice : listaCodici)
+			if (((String)codice.get(("codice"))).equals(codiceCandidato))
+				idCandidato = (Integer)codice.get("id");
+		
+		if (idCandidato != 0) {
+			Risorse risorsa = risorseService.findByIdRisorsa(idCandidato);
+			if (risorsa == null)
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			else {
+				List<Object> datiCandidato = new ArrayList<Object>();
+				List<Object> dettagliCandidato = new ArrayList<Object>();
+				
+				dettagliCandidato.add(dettagliRisorseService.getDataInserimento(idCandidato));
+				dettagliCandidato.add(esitiColloquioService.getEsitoColloquio(idCandidato));
+				dettagliCandidato.add(profiliService.getProfilo(idCandidato));
+				dettagliCandidato.add(linguaggiService.getSkill2(idCandidato));
+				dettagliCandidato.add(linguaggiService.getSkill3(idCandidato));
+				dettagliCandidato.add(linguaggiService.getSkill4(idCandidato));
+				dettagliCandidato.add(linguaggiService.getSkill5(idCandidato));
+				dettagliCandidato.add(lingueService.getLingua1(idCandidato));
+				dettagliCandidato.add(lingueService.getLingua2(idCandidato));
+				dettagliCandidato.add(lingueService.getLingua3(idCandidato));
+				dettagliCandidato.add(livelliService.getSeniority(idCandidato));
+						
+				datiCandidato.add(risorsa);
+				datiCandidato.add(dettagliCandidato);
+				datiCandidato.add(commentiRisorseService.findByIdRisorsa(idCandidato));
+				datiCandidato.add(esitiColloquioService.getColore((String)dettagliCandidato.get(1)));
+				datiCandidato.add(dettagliRisorseService.getFile64(idCandidato));
+				return new ResponseEntity<>(datiCandidato, HttpStatus.OK);
+			}
 		}
+		else
+			return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 	
-	@RequestMapping("/get-candidato-modifica/{idCandidato}")
-	public ResponseEntity<List<Object>> getCandidatoModifica(@PathVariable("idCandidato") int idCandidato) {
-		Risorse risorsa = risorseService.findByIdRisorsa(idCandidato);
-		DettagliRisorse listaSelects = dettagliRisorseService.findByIdRisorsa(idCandidato);
-		if (risorsa == null)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		else {
-			List<Object> datiCandidato = new ArrayList<Object>();
-			List<Object> dettagliCandidato = new ArrayList<Object>();
-			
-			String esitoColloquio = esitiColloquioService.getEsitoColloquio(idCandidato);
-			dettagliCandidato.add(esitoColloquio);
-			dettagliCandidato.add(esitiColloquioService.findAllException(esitoColloquio));
-			
-			String profilo = profiliService.getProfilo(idCandidato);
-			dettagliCandidato.add(profilo);
-			dettagliCandidato.add(profiliService.findAllException(profilo));
-			
-			String linguaggio1 = linguaggiService.getSkill1(idCandidato);
-			dettagliCandidato.add(linguaggio1);
-			dettagliCandidato.add(linguaggiService.findAllException(linguaggio1));
-			
-			String linguaggio2 = linguaggiService.getSkill2(idCandidato);
-			dettagliCandidato.add(linguaggio2);
-			dettagliCandidato.add(linguaggiService.findAllException(linguaggio2));
-			
-			String linguaggio3 = linguaggiService.getSkill3(idCandidato);
-			dettagliCandidato.add(linguaggio3);
-			dettagliCandidato.add(linguaggiService.findAllException(linguaggio3));
-			
-			String linguaggio4 = linguaggiService.getSkill4(idCandidato);
-			dettagliCandidato.add(linguaggio4);
-			dettagliCandidato.add(linguaggiService.findAllException(linguaggio4));
-			
-			String linguaggio5 = linguaggiService.getSkill5(idCandidato);
-			dettagliCandidato.add(linguaggio5);
-			dettagliCandidato.add(linguaggiService.findAllException(linguaggio5));
-			
-			String lingua1 = lingueService.getLingua1(idCandidato);
-			dettagliCandidato.add(lingua1);
-			dettagliCandidato.add(lingueService.findAllException(lingua1));
-			
-			String lingua2 = lingueService.getLingua2(idCandidato);
-			dettagliCandidato.add(lingua2);
-			dettagliCandidato.add(lingueService.findAllException(lingua2));
-			
-			String lingua3 = lingueService.getLingua3(idCandidato);
-			dettagliCandidato.add(lingua3);
-			dettagliCandidato.add(lingueService.findAllException(lingua3));
-			
-			String livello = livelliService.getSeniority(idCandidato);
-			dettagliCandidato.add(livello);
-			dettagliCandidato.add(livelliService.findAllException(livello));
-			
-			datiCandidato.add(risorsa);
-			datiCandidato.add(dettagliCandidato);
-			datiCandidato.add(listaSelects);
+	@RequestMapping("/get-candidato-modifica/{codiceCandidato}")
+	public ResponseEntity<List<Object>> getCandidatoModifica(@PathVariable("codiceCandidato") String codiceCandidato) {
+		int idCandidato = 0;
+		List<JSONObject> listaCodici = SecurityController.getCodiciCandidati();
 		
-			return new ResponseEntity<>(datiCandidato, HttpStatus.OK);
+		for (JSONObject codice : listaCodici)
+			if (((String)codice.get(("codice"))).equals(codiceCandidato))
+				idCandidato = (Integer)codice.get("id");
+		
+		if (idCandidato != 0) {
+			Risorse risorsa = risorseService.findByIdRisorsa(idCandidato);
+			DettagliRisorse listaSelects = dettagliRisorseService.findByIdRisorsa(idCandidato);
+			if (risorsa == null)
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			else {
+				List<Object> datiCandidato = new ArrayList<Object>();
+				List<Object> dettagliCandidato = new ArrayList<Object>();
+				
+				String esitoColloquio = esitiColloquioService.getEsitoColloquio(idCandidato);
+				dettagliCandidato.add(esitoColloquio);
+				dettagliCandidato.add(esitiColloquioService.findAllException(esitoColloquio));
+				
+				String profilo = profiliService.getProfilo(idCandidato);
+				dettagliCandidato.add(profilo);
+				dettagliCandidato.add(profiliService.findAllException(profilo));
+				
+				String linguaggio1 = linguaggiService.getSkill1(idCandidato);
+				dettagliCandidato.add(linguaggio1);
+				dettagliCandidato.add(linguaggiService.findAllException(linguaggio1));
+				
+				String linguaggio2 = linguaggiService.getSkill2(idCandidato);
+				dettagliCandidato.add(linguaggio2);
+				dettagliCandidato.add(linguaggiService.findAllException(linguaggio2));
+				
+				String linguaggio3 = linguaggiService.getSkill3(idCandidato);
+				dettagliCandidato.add(linguaggio3);
+				dettagliCandidato.add(linguaggiService.findAllException(linguaggio3));
+				
+				String linguaggio4 = linguaggiService.getSkill4(idCandidato);
+				dettagliCandidato.add(linguaggio4);
+				dettagliCandidato.add(linguaggiService.findAllException(linguaggio4));
+				
+				String linguaggio5 = linguaggiService.getSkill5(idCandidato);
+				dettagliCandidato.add(linguaggio5);
+				dettagliCandidato.add(linguaggiService.findAllException(linguaggio5));
+				
+				String lingua1 = lingueService.getLingua1(idCandidato);
+				dettagliCandidato.add(lingua1);
+				dettagliCandidato.add(lingueService.findAllException(lingua1));
+				
+				String lingua2 = lingueService.getLingua2(idCandidato);
+				dettagliCandidato.add(lingua2);
+				dettagliCandidato.add(lingueService.findAllException(lingua2));
+				
+				String lingua3 = lingueService.getLingua3(idCandidato);
+				dettagliCandidato.add(lingua3);
+				dettagliCandidato.add(lingueService.findAllException(lingua3));
+				
+				String livello = livelliService.getSeniority(idCandidato);
+				dettagliCandidato.add(livello);
+				dettagliCandidato.add(livelliService.findAllException(livello));
+				
+				datiCandidato.add(risorsa);
+				datiCandidato.add(dettagliCandidato);
+				datiCandidato.add(listaSelects);
+			
+				return new ResponseEntity<>(datiCandidato, HttpStatus.OK);
+			}
 		}
+		else
+			return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 	
 	@RequestMapping("/elimina-candidato/{idCandidato}")
@@ -290,24 +316,5 @@ public class CandidatiController {
 	@RequestMapping("/get-dipendenti")
 	public ResponseEntity<String[]> getDipendenti() {
 		return new ResponseEntity<> (risorseService.getDipendenti(), HttpStatus.OK);
-	}
-	
-	@RequestMapping("/get-codici-candidati")
-	public ResponseEntity<?> getCodiciCandidati(HttpServletRequest request) {
-		List<JSONObject> listaCodici = new ArrayList<JSONObject>();
-		List<Integer> listaId = risorseService.getIdCandidati();
-		for (Integer id : listaId) {
-			JSONObject oggetto = new JSONObject();
-			byte[] array = new byte[16];
-		    new Random().nextBytes(array);
-		    String stringRandom = new String(array, Charset.forName("UTF-8"));
-			oggetto.put("id", id);
-			oggetto.put("codice", stringRandom);
-			listaCodici.add(oggetto);
-			//controllo sul se esce uguale
-		}
-		HttpSession session = request.getSession(true);
-		session.setAttribute("listaCodiciCandidati", listaCodici);
-		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
