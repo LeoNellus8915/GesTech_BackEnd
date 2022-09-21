@@ -46,12 +46,12 @@ public interface RisorseService extends JpaRepository<Risorse, Integer>{
 
 	@Query("select r.nomeCognome "
 			+ "from Risorse r, RuoliRisorse rr "
-			+ "where r.id = rr.idRisorsa")
+			+ "where r.id = rr.idRisorsa group by r.nomeCognome")
 	String[] getDipendenti();
 	
 	@Query("select r.nomeCognome "
 			+ "from Risorse r, RuoliRisorse rr "
-			+ "where r.id = rr.idRisorsa and r.nomeCognome != :dipendente ")
+			+ "where r.id = rr.idRisorsa and r.nomeCognome != :dipendente group by r.nomeCognome")
 	String[] findAllException(String dipendente);
 	
 	@Query("select r.id "
