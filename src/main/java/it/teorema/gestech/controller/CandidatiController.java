@@ -251,8 +251,14 @@ public class CandidatiController {
 			return new ResponseEntity<>(null, HttpStatus.OK);
 	}
 	
-	@RequestMapping("/elimina-candidato/{idCandidato}")
-	public ResponseEntity<?> eliminaCandidato(@PathVariable("idCandidato") int idCandidato) {
+	@RequestMapping("/elimina-candidato/{codiceCandidato}")
+	public ResponseEntity<?> eliminaCandidato(@PathVariable("codiceCandidato") String codiceCandidato) {
+		int idCandidato = 0;
+		List<JSONObject> listaCodici = SecurityController.getCodiciCandidati();
+		for (JSONObject codice : listaCodici)
+			if (((String)codice.get(("codice"))).equals(codiceCandidato))
+				idCandidato = (Integer)codice.get("id");
+		
 		risorseService.deleteById(idCandidato);
 		dettagliRisorseService.deleteByIdCandidato(idCandidato);
 		commentiRisorseService.deleteByIdCandidato(idCandidato);
@@ -267,9 +273,15 @@ public class CandidatiController {
 			return new ResponseEntity<>(1, HttpStatus.OK);
 	}
 	
-	@RequestMapping("/modifica-candidato/{idCandidato}/{idRisorsa}")
-	public ResponseEntity<?> modificaCandidato(@PathVariable("idCandidato") int idCandidato, @PathVariable("idRisorsa") int idRisorsa, 
+	@RequestMapping("/modifica-candidato/{codiceCandidato}/{idRisorsa}")
+	public ResponseEntity<?> modificaCandidato(@PathVariable("codiceCandidato") String codiceCandidato, @PathVariable("idRisorsa") int idRisorsa, 
 											@RequestBody JSONObject updateForm) {
+		int idCandidato = 0;
+		List<JSONObject> listaCodici = SecurityController.getCodiciCandidati();
+		for (JSONObject codice : listaCodici)
+			if (((String)codice.get(("codice"))).equals(codiceCandidato))
+				idCandidato = (Integer)codice.get("id");
+		
 		risorseService.updateCandidato(idCandidato,
 			(String)updateForm.get("nomeCognome"), 
 			(String)updateForm.get("recapito"),
