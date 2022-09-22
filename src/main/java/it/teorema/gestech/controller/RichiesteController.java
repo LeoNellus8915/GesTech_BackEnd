@@ -3,7 +3,9 @@ package it.teorema.gestech.controller;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,20 +41,31 @@ public class RichiesteController {
 
 	@RequestMapping("/all-richieste-aperte/{ruolo}/{nomeCognome}/{idRisorsa}")
 	public ResponseEntity<List<Object>> allRichiesteAperte(@PathVariable String ruolo, @PathVariable String nomeCognome, @PathVariable("idRisorsa") int idRisorsa) {
+		List <Object> lista = new ArrayList<Object>();
+		lista.add(SecurityController.getListaCodiciRichiesteAperte());
 		if(ruolo.equals("Commerciale")
 				|| ruolo.equals("Admin")) {
-			return new ResponseEntity<>(richiesteService.stampaCardAperte(), HttpStatus.OK); }
+			lista.add(richiesteService.stampaCardAperte());
+			return new ResponseEntity<>(lista, HttpStatus.OK); 
+		}
 		else {
-			return new ResponseEntity<>(richiesteService.stampaCardByNameAperte(nomeCognome, idRisorsa), HttpStatus.OK);}
+			lista.add(richiesteService.stampaCardByNameAperte(nomeCognome, idRisorsa));
+			return new ResponseEntity<>(lista, HttpStatus.OK);}
 	}
 	
 	@RequestMapping("/all-richieste-chiuse/{ruolo}/{nomeCognome}/{idRisorsa}")
 	public ResponseEntity<List<Object>> allRichiesteChiuse(@PathVariable String ruolo, @PathVariable String nomeCognome, @PathVariable("idRisorsa") int idRisorsa) {
+		List <Object> lista = new ArrayList<Object>();
+		lista.add(SecurityController.getListaCodiciRichiesteChiuse());
 		if(ruolo.equals("Commerciale")
 				|| ruolo.equals("Admin")) {
-			return new ResponseEntity<>(richiesteService.stampaCardChiuse(), HttpStatus.OK); }
+			lista.add(richiesteService.stampaCardChiuse());
+			return new ResponseEntity<>(lista, HttpStatus.OK); 
+		}
 		else {
-			return new ResponseEntity<>(richiesteService.stampaCardByNameChiuse(nomeCognome, idRisorsa), HttpStatus.OK);}
+			lista.add(richiesteService.stampaCardByNameChiuse(nomeCognome, idRisorsa));
+			return new ResponseEntity<>(lista, HttpStatus.OK);
+		}
 	}
 	
 	@RequestMapping("/get-nomi-recruiter")
@@ -60,8 +73,23 @@ public class RichiesteController {
 		return new ResponseEntity<>(risorseService.getNomiRecruiter(), HttpStatus.OK);
 	}
 	
-	@RequestMapping("/get-richiesta/{idRichiesta}")
-	public ResponseEntity<List<Object>> getRichiesta(@PathVariable("idRichiesta") int idRichiesta) {
+	@RequestMapping("/get-richiesta/{codiceRichiesta}/{pagina}")
+	public ResponseEntity<List<Object>> getRichiesta(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("pagina") int pagina) {
+		int idRichiesta = 0;
+		
+		if (pagina == 0) {
+			List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperte();
+			for (JSONObject codice : listaCodici)
+				if (((String)codice.get(("codice"))).equals(codiceRichiesta))
+					idRichiesta = (Integer)codice.get("id");
+		}
+		else {
+			List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteChiuse();
+			for (JSONObject codice : listaCodici)
+				if (((String)codice.get(("codice"))).equals(codiceRichiesta))
+					idRichiesta = (Integer)codice.get("id");
+		}
+		
 		List<Object> dati = new ArrayList<Object>();
 		String nomeStatoRichiesta = statiRichiestaService.getStatoRichiesta(idRichiesta);
 		dati.add(richiesteService.visualizzaRichiesta(idRichiesta));
@@ -72,19 +100,23 @@ public class RichiesteController {
 		return new ResponseEntity<>(dati, HttpStatus.OK);
 	}
 	
-	@RequestMapping("/get-commenti-richiesta/{idRichiesta}")
-	public ResponseEntity<List<Object>> getCommentiRichiesta(@PathVariable("idRichiesta") int idRichiesta) {
-		return new ResponseEntity<> (commentiRichiesteService.findById(idRichiesta), HttpStatus.OK);
-	}
-	
-	@RequestMapping("/set-visualizzato/{idRichiesta}/{idRisorsa}")
-	public ResponseEntity<?> setVisualizzato(@PathVariable("idRichiesta") int idRichiesta, @PathVariable("idRisorsa") int idRisorsa) {
+	@RequestMapping("/set-visualizzato/{codiceRichiesta}/{idRisorsa}")
+	public ResponseEntity<?> setVisualizzato(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("idRisorsa") int idRisorsa) {
+		int idRichiesta = 0;
+		
+		List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperte();
+		for (JSONObject codice : listaCodici)
+			if (((String)codice.get(("codice"))).equals(codiceRichiesta))
+				idRichiesta = (Integer)codice.get("id");
+		
 		risorseRichiesteService.setVisualizzato(idRichiesta, idRisorsa);
 		return new ResponseEntity<> (HttpStatus.OK);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/salva-richiesta")
 	public ResponseEntity<?> salvaRichiesta(@RequestBody JSONObject addForm) {
+		
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
 		LocalDateTime now = LocalDateTime.now();
 		Richieste richiesta = new Richieste();
@@ -100,6 +132,15 @@ public class RichiesteController {
 		richiesta.setRecruiter((String)addForm.get("listaRecruiters").toString().replace(",", "").replace("[", "").replace("]", ""));
 		richiesta.setIdStato(1);
 		richiesteService.save(richiesta);
+		
+		List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperte();
+		JSONObject oggetto = new JSONObject();
+		UUID codice = UUID.randomUUID();
+		oggetto.put("id", richiesteService.getLastId());
+		oggetto.put("codice", codice.toString().replaceAll("-", ""));
+		Collections.reverse(listaCodici);
+		listaCodici.add(oggetto);
+		Collections.reverse(listaCodici);
 		
 		String[] recruiters = addForm.get("listaRecruiters").toString().replace("[", "").replace("]", "").split(", ");
 		List<String> recruiter = new ArrayList<String>();
@@ -119,20 +160,89 @@ public class RichiesteController {
 		return new ResponseEntity<> (HttpStatus.OK); 
 	}
 	
-	@RequestMapping("/elimina-richiesta/{idRichiesta}")
-	public ResponseEntity<?> eliminaRichiesta(@PathVariable("idRichiesta") int idRichiesta) {
+	@RequestMapping("/elimina-richiesta/{codiceRichiesta}/{pagina}")
+	public ResponseEntity<?> eliminaRichiesta(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("pagina") int pagina) {
+		int idRichiesta = 0;
+		JSONObject appoggio = null;
+		
+		if (pagina == 0) {
+			List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperte();
+			for (JSONObject codice : listaCodici)
+				if (((String)codice.get(("codice"))).equals(codiceRichiesta)) {
+					idRichiesta = (Integer)codice.get("id");
+					appoggio = codice;
+				}
+			listaCodici.remove(appoggio);
+		}
+		else {
+			List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteChiuse();
+			for (JSONObject codice : listaCodici)
+				if (((String)codice.get(("codice"))).equals(codiceRichiesta)) {
+					idRichiesta = (Integer)codice.get("id");
+					appoggio = codice;
+				}
+			listaCodici.remove(appoggio);
+		}
+		
 		richiesteService.deleteById(idRichiesta);
 		commentiRichiesteService.deleteCommento(idRichiesta);
 		risorseRichiesteService.deleteRisorsaRichiesta(idRichiesta);
 		return new ResponseEntity<> (HttpStatus.OK);  
 	}
 	
-	@RequestMapping("/modifica-richiesta/{idRichiesta}/{idRisorsa}")
-	public ResponseEntity<?> modificaRichiesta(@PathVariable("idRichiesta") int idRichiesta, @PathVariable("idRisorsa") int idRisorsa, 
-												@RequestBody JSONObject updateForm) {
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/modifica-richiesta/{codiceRichiesta}/{idRisorsa}/{pagina}")
+	public ResponseEntity<?> modificaRichiesta(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("idRisorsa") int idRisorsa, 
+												@PathVariable("pagina") int pagina, @RequestBody JSONObject updateForm) {
+		int idRichiesta = 0;
+		JSONObject richiesta = null;
+		
+		if (pagina == 0) {
+			List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperte();
+			for (JSONObject codice : listaCodici)
+				if (((String)codice.get(("codice"))).equals(codiceRichiesta)) {
+					idRichiesta = (Integer)codice.get("id");
+					richiesta = codice;
+				}
+		}
+		else {
+			List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteChiuse();
+			for (JSONObject codice : listaCodici)
+				if (((String)codice.get(("codice"))).equals(codiceRichiesta)) {
+					idRichiesta = (Integer)codice.get("id");
+					richiesta = codice;
+				}
+		}	
+		
 		richiesteService.updateStato(Integer.parseInt((String)updateForm.get("statoRichiesta")), idRichiesta);
-		if (Integer.parseInt((String)updateForm.get("statoRichiesta")) == 3)
+		
+		List<JSONObject> listaCodiciAperte = SecurityController.getListaCodiciRichiesteAperte();
+		List<JSONObject> listaCodiciChiuse = SecurityController.getListaCodiciRichiesteChiuse();
+		if (pagina == 0 && Integer.parseInt((String)updateForm.get("statoRichiesta")) == 3) {
+			listaCodiciAperte.remove(richiesta);
+			JSONObject oggetto = new JSONObject();
+			UUID codice = UUID.randomUUID();
+			oggetto.put("id", idRichiesta);
+			oggetto.put("codice", codice.toString().replaceAll("-", ""));
+			Collections.reverse(listaCodiciChiuse);
+			listaCodiciChiuse.add(oggetto);
+			Collections.reverse(listaCodiciChiuse);
+		}
+		if (pagina == 1 && (Integer.parseInt((String)updateForm.get("statoRichiesta")) == 1 ||
+								Integer.parseInt((String)updateForm.get("statoRichiesta")) == 2)) {
+			listaCodiciChiuse.remove(richiesta);
+			JSONObject oggetto = new JSONObject();
+			UUID codice = UUID.randomUUID();
+			oggetto.put("id", idRichiesta);
+			oggetto.put("codice", codice.toString().replaceAll("-", ""));
+			Collections.reverse(listaCodiciAperte);
+			listaCodiciAperte.add(oggetto);
+			Collections.reverse(listaCodiciAperte);
+		}
+			
+		if (Integer.parseInt((String)updateForm.get("statoRichiesta")) == 3) {
 			risorseRichiesteService.setVisualizzato(idRichiesta);
+		}
 		if ((String)updateForm.get("commento") != "")
 		{
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  

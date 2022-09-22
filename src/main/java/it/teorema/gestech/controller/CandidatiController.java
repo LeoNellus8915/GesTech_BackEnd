@@ -53,7 +53,7 @@ public class CandidatiController {
 	public ResponseEntity<List<Object>> allCandidati(HttpServletRequest request) {
 		List<Object> lista = new ArrayList<>();
 		lista.add(dettagliRisorseService.allCandidati());
-		lista.add(SecurityController.getCodiciCandidati());
+		lista.add(SecurityController.getListaCodiciCandidati());
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
@@ -127,7 +127,7 @@ public class CandidatiController {
 			}
 			dettagliRisorseService.save(dettagliRisorsa);
 			
-			List<JSONObject> listaCodici = SecurityController.getCodiciCandidati();
+			List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
 			JSONObject oggetto = new JSONObject();
 			UUID codice = UUID.randomUUID();
 			oggetto.put("id", idRisorsa);
@@ -140,7 +140,7 @@ public class CandidatiController {
 	@RequestMapping("/get-candidato-visualizza/{codiceCandidato}")
 	public ResponseEntity<List<Object>> getCandidatoVisualizza(@PathVariable("codiceCandidato") String codiceCandidato) {
 		int idCandidato = 0;
-		List<JSONObject> listaCodici = SecurityController.getCodiciCandidati();
+		List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
 		
 		for (JSONObject codice : listaCodici)
 			if (((String)codice.get(("codice"))).equals(codiceCandidato))
@@ -181,7 +181,7 @@ public class CandidatiController {
 	@RequestMapping("/get-candidato-modifica/{codiceCandidato}")
 	public ResponseEntity<List<Object>> getCandidatoModifica(@PathVariable("codiceCandidato") String codiceCandidato) {
 		int idCandidato = 0;
-		List<JSONObject> listaCodici = SecurityController.getCodiciCandidati();
+		List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
 		
 		for (JSONObject codice : listaCodici)
 			if (((String)codice.get(("codice"))).equals(codiceCandidato))
@@ -254,10 +254,15 @@ public class CandidatiController {
 	@RequestMapping("/elimina-candidato/{codiceCandidato}")
 	public ResponseEntity<?> eliminaCandidato(@PathVariable("codiceCandidato") String codiceCandidato) {
 		int idCandidato = 0;
-		List<JSONObject> listaCodici = SecurityController.getCodiciCandidati();
-		for (JSONObject codice : listaCodici)
-			if (((String)codice.get(("codice"))).equals(codiceCandidato))
+		JSONObject appoggio = null;
+		List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
+		for (JSONObject codice : listaCodici) {
+			if (((String)codice.get(("codice"))).equals(codiceCandidato)) {
 				idCandidato = (Integer)codice.get("id");
+				appoggio = codice;
+			}
+		}
+		listaCodici.remove(appoggio);
 		
 		risorseService.deleteById(idCandidato);
 		dettagliRisorseService.deleteByIdCandidato(idCandidato);
@@ -277,7 +282,7 @@ public class CandidatiController {
 	public ResponseEntity<?> modificaCandidato(@PathVariable("codiceCandidato") String codiceCandidato, @PathVariable("idRisorsa") int idRisorsa, 
 											@RequestBody JSONObject updateForm) {
 		int idCandidato = 0;
-		List<JSONObject> listaCodici = SecurityController.getCodiciCandidati();
+		List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
 		for (JSONObject codice : listaCodici)
 			if (((String)codice.get(("codice"))).equals(codiceCandidato))
 				idCandidato = (Integer)codice.get("id");

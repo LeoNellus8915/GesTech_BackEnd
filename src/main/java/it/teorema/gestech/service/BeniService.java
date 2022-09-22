@@ -1,6 +1,7 @@
 package it.teorema.gestech.service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -21,4 +22,8 @@ public interface BeniService extends JpaRepository <Beni, Integer> {
 			+ "dataRestituzione = :dataRestituzione, note = :note where id = :idBene")
 	void modificaBene(int idBene, String dispositivo, String marca, String modello, String numeroSeriale, String password,
 			String dipendente, String societa, LocalDate dataConsegna, LocalDate dataRestituzione, String note);
+
+	@Query("select id "
+			+ "from Beni ")
+	List<Integer> getIdBeni();
 }

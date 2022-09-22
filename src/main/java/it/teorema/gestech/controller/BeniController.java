@@ -1,8 +1,10 @@
 package it.teorema.gestech.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +25,11 @@ public class BeniController {
 	RisorseService risorseService;
 	
 	@RequestMapping("/all-beni")
-	public ResponseEntity<List<Beni>> allBeni() {
-		return new ResponseEntity<>(beniService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<Object>> allBeni() {
+		List<Object> lista = new ArrayList<>();
+		lista.add(beniService.findAll());
+		lista.add(SecurityController.getListaCodiciBeni());
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
 	@RequestMapping("/salva-bene")
@@ -33,14 +38,29 @@ public class BeniController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@RequestMapping("/get-bene-visualizza/{idBene}")
-	public ResponseEntity<Beni> getBeneVisualizza(@PathVariable("idBene") int idBene) {
+	@RequestMapping("/get-bene-visualizza/{codiceBene}")
+	public ResponseEntity<Beni> getBeneVisualizza(@PathVariable("codiceBene") String codiceBene) {
+		int idBene = 0;
+		List<JSONObject> listaCodici = SecurityController.getListaCodiciBeni();
+		
+		for (JSONObject codice : listaCodici)
+			if (((String)codice.get(("codice"))).equals(codiceBene))
+				idBene = (Integer)codice.get("id");
+		
 		return new ResponseEntity<>(beniService.getBene(idBene), HttpStatus.OK);
 	}
 	
-	@RequestMapping("/get-bene-modifica/{idBene}")
-	public ResponseEntity<List<Object>> getBeneModifica(@PathVariable("idBene") int idBene) {
+	@RequestMapping("/get-bene-modifica/{codiceBene}")
+	public ResponseEntity<List<Object>> getBeneModifica(@PathVariable("codiceBene") String codiceBene) {
 		List<Object> lista = new ArrayList<>();
+		
+		int idBene = 0;
+		List<JSONObject> listaCodici = SecurityController.getListaCodiciBeni();
+		
+		for (JSONObject codice : listaCodici)
+			if (((String)codice.get(("codice"))).equals(codiceBene))
+				idBene = (Integer)codice.get("id");
+		
 		Beni bene = beniService.getBene(idBene);
 		lista.add(bene);
 		lista.add(risorseService.findAllException(bene.getDipendente()));
@@ -48,10 +68,18 @@ public class BeniController {
 	}
 	
 	@RequestMapping("/modifica-bene")
-	public ResponseEntity<?> modificaBene(@RequestBody Beni bene) {
-		beniService.modificaBene(bene.getId(), bene.getDispositivo(), bene.getMarca(), bene.getModello(), 
-				bene.getNumeroSeriale(), bene.getPassword(), bene.getDipendente(), bene.getSocieta(), 
-				bene.getDataConsegna(), bene.getDataRestituzione(), bene.getNote());
+	public ResponseEntity<?> modificaBene(@RequestBody JSONObject bene) {
+		int idBene = 0;
+		List<JSONObject> listaCodici = SecurityController.getListaCodiciBeni();
+		
+		for (JSONObject codice : listaCodici)
+			if (((String)codice.get(("codice"))).equals((String)bene.get("id")))
+				idBene = (Integer)codice.get("id");
+		
+		beniService.modificaBene(idBene, (String)bene.get("dispositivo"), (String)bene.get("marca"), (String)bene.get("modello"), 
+				(String)bene.get("numeroSeriale"), (String)bene.get("password"), (String)bene.get("dipendente"), (String)bene.get("societa"), 
+				LocalDate.parse((String)bene.get("dataConsegna")), LocalDate.parse((String)bene.get("dataRestituzione")), 
+				(String)bene.get("note"));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

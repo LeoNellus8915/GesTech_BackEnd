@@ -54,4 +54,22 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 
 	@Query("select max(id) from Richieste")
 	Integer findLastId();
+	
+	@Query("select r.id "
+			+ "from Richieste r, RisorseRichieste rr, StatiRichiesta sr "
+			+ "where r.idStato = sr.id and r.id = rr.idRichiesta "
+			+ "and sr.nome != 'Chiusa' "
+			+ "group by rr.idRichiesta order by r.data desc")
+	List<Integer> getIdRichiesteAperte();
+	
+	@Query("select r.id "
+			+ "from Richieste r, RisorseRichieste rr, StatiRichiesta sr "
+			+ "where r.idStato = sr.id and r.id = rr.idRichiesta "
+			+ "and sr.nome = 'Chiusa' "
+			+ "order by r.data desc")
+	List<Integer> getIdRichiesteChiuse();
+
+	@Query("select max(id) "
+			+ " from Richieste")
+	Integer getLastId();
 }
