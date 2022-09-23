@@ -10,5 +10,8 @@ import it.teorema.gestech.model.Ruoli;
 public interface RuoliService extends JpaRepository <Ruoli, Integer> {
 
 	@Query("from Ruoli where nome != 'Dipendente'")
-	List<Ruoli> allRuoliTranneDipendente();
+	List<Ruoli> allRuoliTranneDipendenteAdmin();
+	
+	@Query("from Ruoli where nome != 'Dipendente' and nome != 'Admin'")
+	List<Ruoli> allRuoliTranneDipendentePersonale();
 }

@@ -74,9 +74,14 @@ public class GetListeController {
 		return new ResponseEntity<>(ruoliService.findAll(), HttpStatus.OK);
 	}
 	
-	@RequestMapping("/all-ruoli-dipendente")
-	public ResponseEntity<List<Ruoli>> allRuoliTranneDipendente() {
-		return new ResponseEntity<>(ruoliService.allRuoliTranneDipendente(), HttpStatus.OK);
+	@RequestMapping("/all-ruoli-dipendente-admin")
+	public ResponseEntity<List<Ruoli>> allRuoliTranneDipendenteAdmin() {
+		return new ResponseEntity<>(ruoliService.allRuoliTranneDipendenteAdmin(), HttpStatus.OK);
+	}
+	
+	@RequestMapping("/all-ruoli-dipendente-personale")
+	public ResponseEntity<List<Ruoli>> allRuoliTranneDipendentePersonale() {
+		return new ResponseEntity<>(ruoliService.allRuoliTranneDipendentePersonale(), HttpStatus.OK);
 	}
 	
 	@RequestMapping("/all-stati-richiesta")

@@ -67,19 +67,18 @@ public class BeniController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
-	@RequestMapping("/modifica-bene")
-	public ResponseEntity<?> modificaBene(@RequestBody JSONObject bene) {
+	@RequestMapping("/modifica-bene/{codiceBene}")
+	public ResponseEntity<?> modificaBene(@RequestBody Beni bene, @PathVariable("codiceBene") String codiceBene) {
 		int idBene = 0;
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciBeni();
 		
 		for (JSONObject codice : listaCodici)
-			if (((String)codice.get(("codice"))).equals((String)bene.get("id")))
+			if (((String)codice.get(("codice"))).equals(codiceBene))
 				idBene = (Integer)codice.get("id");
 		
-		beniService.modificaBene(idBene, (String)bene.get("dispositivo"), (String)bene.get("marca"), (String)bene.get("modello"), 
-				(String)bene.get("numeroSeriale"), (String)bene.get("password"), (String)bene.get("dipendente"), (String)bene.get("societa"), 
-				LocalDate.parse((String)bene.get("dataConsegna")), LocalDate.parse((String)bene.get("dataRestituzione")), 
-				(String)bene.get("note"));
+		beniService.modificaBene(idBene, bene.getDispositivo(), bene.getMarca(), bene.getModello(), 
+				bene.getNumeroSeriale(), bene.getPassword(), bene.getDipendente(), bene.getSocieta(), 
+				bene.getDataConsegna(), bene.getDataRestituzione(), bene.getNote());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
