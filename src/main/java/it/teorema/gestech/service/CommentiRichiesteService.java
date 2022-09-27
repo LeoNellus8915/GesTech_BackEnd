@@ -11,15 +11,15 @@ import org.springframework.data.jpa.repository.Query;
 import it.teorema.gestech.model.CommentiRichieste;
 
 public interface CommentiRichiesteService extends JpaRepository <CommentiRichieste, Integer> {
-	@Query("select c.data, r.nomeCognome, c.note "
-			+ "from CommentiRichieste c, Risorse r "
-			+ "where c.idDestinatario = :idRichiesta and c.idRisorsa = r.id "
+	@Query("select c.data, d.nomeCognome, c.note "
+			+ "from CommentiRichieste c, Dipendenti d "
+			+ "where c.idRichiesta = :idRichiesta and c.idDipendente = d.id "
 			+ "order by c.data desc")
 	List<Object> findById(int idRichiesta);
 
 	@Modifying
 	@Transactional
 	@Query("delete from CommentiRichieste "
-			+ "where idDestinatario = :idRichiesta")
+			+ "where idRichiesta = :idRichiesta")
 	void deleteCommento(int idRichiesta);
 }

@@ -9,29 +9,29 @@ import it.teorema.gestech.model.Linguaggi;
 
 public interface LinguaggiService extends JpaRepository <Linguaggi, Integer> {	
 	@Query("select l.nome "
-			+ "from Linguaggi l, DettagliRisorse d "
-			+ "where l.id = d.idSkill1 and d.idRisorsa = :idRisorsa")
-	String getSkill1(int idRisorsa);
+			+ "from Linguaggi l, DettagliCandidati dc "
+			+ "where l.id = dc.idLinguaggio1 and dc.idCandidato = :idCandidato")
+	String getLinguaggio1(int idCandidato);
 	
 	@Query("select l.nome "
-			+ "from Linguaggi l, DettagliRisorse d "
-			+ "where l.id = d.idSkill2 and d.idRisorsa = :idRisorsa")
-	String getSkill2(int idRisorsa);
+			+ "from Linguaggi l, DettagliCandidati dc "
+			+ "where l.id = dc.idLinguaggio2 and dc.idCandidato = :idCandidato")
+	String getLinguaggio2(int idCandidato);
 	
 	@Query("select l.nome "
-			+ "from Linguaggi l, DettagliRisorse d "
-			+ "where l.id = d.idSkill3 and d.idRisorsa = :idRisorsa")
-	String getSkill3(int idRisorsa);
+			+ "from Linguaggi l, DettagliCandidati dc "
+			+ "where l.id = dc.idLinguaggio3 and dc.idCandidato = :idCandidato")
+	String getLinguaggio3(int idCandidato);
 	
 	@Query("select l.nome "
-			+ "from Linguaggi l, DettagliRisorse d "
-			+ "where l.id = d.idSkill4 and d.idRisorsa = :idRisorsa")
-	String getSkill4(int idRisorsa);
+			+ "from Linguaggi l, DettagliCandidati dc "
+			+ "where l.id = dc.idLinguaggio4 and dc.idCandidato = :idCandidato")
+	String getLinguaggio4(int idCandidato);
 	
 	@Query("select l.nome "
-			+ "from Linguaggi l, DettagliRisorse d "
-			+ "where l.id = d.idSkill5 and d.idRisorsa = :idRisorsa")
-	String getSkill5(int idRisorsa);
+			+ "from Linguaggi l, DettagliCandidati dc "
+			+ "where l.id = dc.idLinguaggio5 and dc.idCandidato = :idCandidato")
+	String getLinguaggio5(int idCandidato);
 
 	@Query("from Linguaggi "
 			+ "where nome != :skill")

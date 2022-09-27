@@ -18,16 +18,16 @@ public class Richieste
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "id_risorsa")
-	private int idRisorsa;
+	@Column(name = "id_dipendente")
+	private int idDipendente;
 	@Column(name = "data")
 	private LocalDateTime data;
-	@Column(name = "id_skill")
-	private int idSkill;
+	@Column(name = "id_linguaggio")
+	private int idLinguaggio;
 	@Column(name = "id_profilo")
 	private int idProfilo;
-	@Column(name = "id_seniority")
-	private int idSeniority;
+	@Column(name = "id_livello")
+	private int idLivello;
 	@Column(name = "cliente")
 	private String cliente;
 	@Column(name = "citta")
@@ -43,15 +43,15 @@ public class Richieste
 	
 	public Richieste() {}
 
-	public Richieste(int id, int idRisorsa,LocalDateTime data, int idSkill, int idProfilo, int idSeniority, String cliente,
-			String citta, double costo, String note, String recruiter, int idStato) {
+	public Richieste(int id, int idDipendente, LocalDateTime data, int idLinguaggio, int idProfilo, int idLivello,
+			String cliente, String citta, double costo, String note, String recruiter, int idStato) {
 		super();
 		this.id = id;
-		this.idRisorsa = idRisorsa;
+		this.idDipendente = idDipendente;
 		this.data = data;
-		this.idSkill = idSkill;
+		this.idLinguaggio = idLinguaggio;
 		this.idProfilo = idProfilo;
-		this.idSeniority = idSeniority;
+		this.idLivello = idLivello;
 		this.cliente = cliente;
 		this.citta = citta;
 		this.costo = costo;
@@ -68,12 +68,12 @@ public class Richieste
 		this.id = id;
 	}
 
-	public int getIdRisorsa() {
-		return idRisorsa;
+	public int getIdDipendente() {
+		return idDipendente;
 	}
 
-	public void setIdRisorsa(int idRisorsa) {
-		this.idRisorsa = idRisorsa;
+	public void setIdDipendente(int idDipendente) {
+		this.idDipendente = idDipendente;
 	}
 
 	public LocalDateTime getData() {
@@ -84,12 +84,12 @@ public class Richieste
 		this.data = data;
 	}
 
-	public int getIdSkill() {
-		return idSkill;
+	public int getIdLinguaggio() {
+		return idLinguaggio;
 	}
 
-	public void setIdSkill(int idSkill) {
-		this.idSkill = idSkill;
+	public void setIdLinguaggio(int idLinguaggio) {
+		this.idLinguaggio = idLinguaggio;
 	}
 
 	public int getIdProfilo() {
@@ -100,12 +100,12 @@ public class Richieste
 		this.idProfilo = idProfilo;
 	}
 
-	public int getIdSeniority() {
-		return idSeniority;
+	public int getIdLivello() {
+		return idLivello;
 	}
 
-	public void setIdSeniority(int idSeniority) {
-		this.idSeniority = idSeniority;
+	public void setIdLivello(int idLivello) {
+		this.idLivello = idLivello;
 	}
 
 	public String getCliente() {

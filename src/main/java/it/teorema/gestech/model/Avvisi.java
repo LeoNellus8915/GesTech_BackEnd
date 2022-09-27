@@ -17,35 +17,27 @@ public class Avvisi
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
+	@Column(name = "id_dipendente")
+	private int idDipendente;
 	@Column(name = "titolo")
 	private String titolo;
 	@Column(name = "ruoli")
 	private String ruoli;
-	@Column(name = "id_risorsa")
-	private int idRisorsa;
 	@Column(name = "note")
 	private String note;
 	@Column(name = "data")
 	private LocalDateTime data;
 	
 	public Avvisi() {}
-	
-	public Avvisi(int id, String titolo, String ruoli, int idRisorsa, String note, LocalDateTime data) {
+
+	public Avvisi(int id, int idDipendente, String titolo, String ruoli, String note, LocalDateTime data) {
 		super();
 		this.id = id;
+		this.idDipendente = idDipendente;
 		this.titolo = titolo;
 		this.ruoli = ruoli;
-		this.idRisorsa = idRisorsa;
 		this.note = note;
 		this.data = data;
-	}
-
-	public String getTitolo() {
-		return titolo;
-	}
-
-	public void setTitolo(String titolo) {
-		this.titolo = titolo;
 	}
 
 	public int getId() {
@@ -56,20 +48,28 @@ public class Avvisi
 		this.id = id;
 	}
 
+	public int getIdDipendente() {
+		return idDipendente;
+	}
+
+	public void setIdDipendente(int idDipendente) {
+		this.idDipendente = idDipendente;
+	}
+
+	public String getTitolo() {
+		return titolo;
+	}
+
+	public void setTitolo(String titolo) {
+		this.titolo = titolo;
+	}
+
 	public String getRuoli() {
 		return ruoli;
 	}
 
 	public void setRuoli(String ruoli) {
 		this.ruoli = ruoli;
-	}
-
-	public int getIdRisorsa() {
-		return idRisorsa;
-	}
-
-	public void setIdRisorsa(int idRisorsa) {
-		this.idRisorsa = idRisorsa;
 	}
 
 	public String getNote() {

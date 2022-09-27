@@ -16,10 +16,10 @@ public class CommentiRichieste {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "id_risorsa")
-	private int idRisorsa;
-	@Column(name = "id_destinatario")
-	private int idDestinatario;
+	@Column(name = "id_dipendente")
+	private int idDipendente;
+	@Column(name = "id_richiesta")
+	private int idRichiesta;
 	@Column(name = "note")
 	private String note;
 	@Column(name = "data")
@@ -27,11 +27,11 @@ public class CommentiRichieste {
 	
 	public CommentiRichieste(){}
 
-	public CommentiRichieste(int id, int idRisorsa, int idDestinatario, String note, LocalDateTime data) {
+	public CommentiRichieste(int id, int idDipendente, int idRichiesta, String note, LocalDateTime data) {
 		super();
 		this.id = id;
-		this.idRisorsa = idRisorsa;
-		this.idDestinatario = idDestinatario;
+		this.idDipendente = idDipendente;
+		this.idRichiesta = idRichiesta;
 		this.note = note;
 		this.data = data;
 	}
@@ -44,20 +44,20 @@ public class CommentiRichieste {
 		this.id = id;
 	}
 
-	public int getIdRisorsa() {
-		return idRisorsa;
+	public int getIdDipendente() {
+		return idDipendente;
 	}
 
-	public void setIdRisorsa(int idRisorsa) {
-		this.idRisorsa = idRisorsa;
+	public void setIdDipendente(int idDipendente) {
+		this.idDipendente = idDipendente;
 	}
 
-	public int getIdDestinatario() {
-		return idDestinatario;
+	public int getIdRichiesta() {
+		return idRichiesta;
 	}
 
-	public void setIdDestinatario(int idDestinatario) {
-		this.idDestinatario = idDestinatario;
+	public void setIdRichiesta(int idRichiesta) {
+		this.idRichiesta = idRichiesta;
 	}
 
 	public String getNote() {

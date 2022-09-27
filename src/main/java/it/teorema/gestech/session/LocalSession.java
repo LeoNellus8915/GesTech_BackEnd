@@ -6,7 +6,7 @@ public class LocalSession {
 	private String nomeCognome;
 	private List<String> ruolo;
 	private String azienda;
-	private int idRisorsa;
+	private int idDipendente;
 	private int numeroRichieste;
 	
 	public String getNomeCognome() {
@@ -27,11 +27,11 @@ public class LocalSession {
 	public void setAzienda(String azienda) {
 		this.azienda = azienda;
 	}
-	public int getIdRisorsa() {
-		return idRisorsa;
+	public int getIdDipendente() {
+		return idDipendente;
 	}
-	public void setIdRisorsa(int idRisorsa) {
-		this.idRisorsa = idRisorsa;
+	public void setIdDipendente(int idDipendente) {
+		this.idDipendente = idDipendente;
 	}
 	public int getNumeroRichieste() {
 		return numeroRichieste;

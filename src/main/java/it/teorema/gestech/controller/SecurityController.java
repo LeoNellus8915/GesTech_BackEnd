@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import it.teorema.gestech.service.BeniService;
 import it.teorema.gestech.service.RichiesteService;
-import it.teorema.gestech.service.RisorseService;
+import it.teorema.gestech.service.CandidatiService;
 
 @Controller
 public class SecurityController {
 	
 	@Autowired
-	RisorseService risorseService;
+	CandidatiService candidatiService;
 	@Autowired
 	RichiesteService richiesteService;
 	@Autowired
@@ -35,7 +35,7 @@ public class SecurityController {
 	@RequestMapping("/get-codici-candidati")
 	public ResponseEntity<?> getCodiciCandidati() {
 		List<JSONObject> listaCodici = new ArrayList<JSONObject>();
-		List<Integer> listaId = risorseService.getIdCandidati();
+		List<Integer> listaId = candidatiService.getIdCandidati();
 		for (Integer id : listaId) {
 			JSONObject oggetto = new JSONObject();
 			UUID codice = UUID.randomUUID();

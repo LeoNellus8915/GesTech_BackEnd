@@ -9,29 +9,29 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="hy_commenti_risorse")
-public class CommentiRisorse
+@Table(name="hy_commenti_candidati")
+public class CommentiCandidati
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "id_mittente")
-	private int idMittente;
-	@Column(name = "id_destinatario")
-	private int idDestinatario;
+	@Column(name = "id_dipendente")
+	private int idDipendente;
+	@Column(name = "id_candidato")
+	private int idCandidato;
 	@Column(name = "note")
 	private String note;
 	@Column(name = "data")
 	private LocalDate data;
 	
-	public CommentiRisorse() {}
+	public CommentiCandidati() {}
 
-	public CommentiRisorse(int id, int idMittente, int idDestinatario, String note, LocalDate data) {
+	public CommentiCandidati(int id, int idDipendente, int idCandidato, String note, LocalDate data) {
 		super();
 		this.id = id;
-		this.idMittente = idMittente;
-		this.idDestinatario = idDestinatario;
+		this.idDipendente = idDipendente;
+		this.idCandidato = idCandidato;
 		this.note = note;
 		this.data = data;
 	}
@@ -44,20 +44,20 @@ public class CommentiRisorse
 		this.id = id;
 	}
 
-	public int getIdMittente() {
-		return idMittente;
+	public int getIdDipendente() {
+		return idDipendente;
 	}
 
-	public void setIdMittente(int idMittente) {
-		this.idMittente = idMittente;
+	public void setIdDipendente(int idDipendente) {
+		this.idDipendente = idDipendente;
 	}
 
-	public int getIdDestinatario() {
-		return idDestinatario;
+	public int getIdCandidato() {
+		return idCandidato;
 	}
 
-	public void setIdDestinatario(int idDestinatario) {
-		this.idDestinatario = idDestinatario;
+	public void setIdCandidato(int idCandidato) {
+		this.idCandidato = idCandidato;
 	}
 
 	public String getNote() {

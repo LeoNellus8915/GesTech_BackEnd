@@ -8,31 +8,31 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "sy_risorse_richieste")
-public class RisorseRichieste {
+@Table(name = "sy_dipendenti_richieste")
+public class DipendentiRichieste {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "id_risorsa")
-	private int idRisorsa;
+	@Column(name = "id_dipendente")
+	private int idDipendente;
 	@Column(name = "id_richiesta")
 	private int idRichiesta;
 	@Column(name = "visualizzato")
 	private boolean visualizzato;
 	
-	public RisorseRichieste() {}
+	public DipendentiRichieste() {}
 	
-	public RisorseRichieste(int idRisorsa, int idRichiesta)
-	{
-		this.idRisorsa = idRisorsa;
+	public DipendentiRichieste(int idDipendente, int idRichiesta) {
+		super();
+		this.idDipendente = idDipendente;
 		this.idRichiesta = idRichiesta;
 	}
 
-	public RisorseRichieste(int id, int idRisorsa, int idRichiesta, boolean visualizzato) {
+	public DipendentiRichieste(int id, int idDipendente, int idRichiesta, boolean visualizzato) {
 		super();
 		this.id = id;
-		this.idRisorsa = idRisorsa;
+		this.idDipendente = idDipendente;
 		this.idRichiesta = idRichiesta;
 		this.visualizzato = visualizzato;
 	}
@@ -45,12 +45,12 @@ public class RisorseRichieste {
 		this.id = id;
 	}
 
-	public int getIdRisorsa() {
-		return idRisorsa;
+	public int getIdDipendente() {
+		return idDipendente;
 	}
 
-	public void setIdRisorsa(int idRisorsa) {
-		this.idRisorsa = idRisorsa;
+	public void setIdDipendente(int idDipendente) {
+		this.idDipendente = idDipendente;
 	}
 
 	public int getIdRichiesta() {

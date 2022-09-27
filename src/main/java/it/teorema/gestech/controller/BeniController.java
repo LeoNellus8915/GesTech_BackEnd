@@ -1,8 +1,8 @@
 package it.teorema.gestech.controller;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import it.teorema.gestech.model.Beni;
 import it.teorema.gestech.service.BeniService;
-import it.teorema.gestech.service.RisorseService;
+import it.teorema.gestech.service.DipendentiService;
 
 @Controller
 public class BeniController {
 	@Autowired
 	BeniService beniService;
 	@Autowired
-	RisorseService risorseService;
+	DipendentiService dipendentiService;
 	
 	@RequestMapping("/all-beni")
 	public ResponseEntity<List<Object>> allBeni() {
@@ -32,9 +32,16 @@ public class BeniController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/salva-bene")
 	public ResponseEntity<?> salvaBene(@RequestBody Beni bene) {
 		beniService.save(bene);
+		List<JSONObject> listaCodici = SecurityController.getListaCodiciBeni();
+		JSONObject oggetto = new JSONObject();
+		UUID codice = UUID.randomUUID();
+		oggetto.put("id", beniService.getLastId());
+		oggetto.put("codice", codice.toString().replaceAll("-", ""));
+		listaCodici.add(oggetto);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -63,7 +70,7 @@ public class BeniController {
 		
 		Beni bene = beniService.getBene(idBene);
 		lista.add(bene);
-		lista.add(risorseService.findAllException(bene.getDipendente()));
+		lista.add(dipendentiService.findAllException(bene.getDipendente()));
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	

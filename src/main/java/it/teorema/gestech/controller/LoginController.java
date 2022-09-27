@@ -14,69 +14,69 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import it.teorema.gestech.model.RisorseCCNL;
+import it.teorema.gestech.model.DipendentiCCNL;
 import it.teorema.gestech.service.AuthService;
-import it.teorema.gestech.service.AziendeRisorseService;
+import it.teorema.gestech.service.AziendeDipendentiService;
 import it.teorema.gestech.service.CCNLService;
-import it.teorema.gestech.service.RisorseCCNLService;
-import it.teorema.gestech.service.RisorseRichiesteService;
-import it.teorema.gestech.service.RisorseService;
-import it.teorema.gestech.service.RuoliRisorseService;
+import it.teorema.gestech.service.DipendentiCCNLService;
+import it.teorema.gestech.service.DipendentiRichiesteService;
+import it.teorema.gestech.service.DipendentiService;
+import it.teorema.gestech.service.RuoliDipendentiService;
 import it.teorema.gestech.session.LocalSession;
 
 @Controller
 public class LoginController {
 	@Autowired
-	RisorseService risorseService;
+	DipendentiService dipendentiService;
 	@Autowired
 	AuthService authService;
 	@Autowired
-	RuoliRisorseService ruoliRisorseService;
+	RuoliDipendentiService ruoliDipendentiService;
 	@Autowired
-	AziendeRisorseService aziendeRisorseService;
+	AziendeDipendentiService aziendeDipendentiService;
 	@Autowired
-	RisorseRichiesteService risorseRichiesteService;
+	DipendentiRichiesteService dipendentiRichiesteService;
 	@Autowired
 	CCNLService ccnlService;
 	@Autowired
-	RisorseCCNLService risorseCCNLService;
+	DipendentiCCNLService dipendentiCCNLService;
 	
 	@RequestMapping("/login")
 	public ResponseEntity<?> login(@RequestBody JSONObject formLogin){
         
-        List<Integer> idRisorsa = authService.login((String)formLogin.get("email"), (String)formLogin.get("password"));
+        List<Integer> idDipendente = authService.login((String)formLogin.get("email"), (String)formLogin.get("password"));
         
-		if (idRisorsa.size() == 0)
+		if (idDipendente.size() == 0)
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		else {
 			LocalSession localSession = new LocalSession();
-	        localSession.setIdRisorsa(idRisorsa.get(0));
-	        localSession.setNomeCognome(risorseService.getNomeCognome(idRisorsa.get(0)));
-	        localSession.setNumeroRichieste(risorseRichiesteService.getNumeroRichieste(idRisorsa.get(0)));
-	        localSession.setRuolo(ruoliRisorseService.getRuoloByIdRisorsa(idRisorsa.get(0)));
-	        localSession.setAzienda(aziendeRisorseService.getAziendaByIdRisorsa(idRisorsa.get(0)));
+	        localSession.setIdDipendente(idDipendente.get(0));
+	        localSession.setNomeCognome(dipendentiService.getNomeCognome(idDipendente.get(0)));
+	        localSession.setNumeroRichieste(dipendentiRichiesteService.getNumeroRichieste(idDipendente.get(0)));
+	        localSession.setRuolo(ruoliDipendentiService.getRuoloByIdDipendente(idDipendente.get(0)));
+	        localSession.setAzienda(aziendeDipendentiService.getAziendaByIdDipendente(idDipendente.get(0)));
 	        return new ResponseEntity<>(localSession, HttpStatus.OK);
 		}
 	}
 	
-	@RequestMapping("/controllo-download/{idRisorsa}")
-	public ResponseEntity<List<String>> controlloDownload(@PathVariable("idRisorsa") int idRisorsa) {
+	@RequestMapping("/controllo-download/{idDipendente}")
+	public ResponseEntity<List<String>> controlloDownload(@PathVariable("idDipendente") int idDipendente) {
 		List<String> lista = new ArrayList<String>();
-		lista.add(ccnlService.controlloDownload(idRisorsa));
+		lista.add(ccnlService.controlloDownload(idDipendente));
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
-	@RequestMapping("/download/{idRisorsa}")
-	public ResponseEntity<?> download(@PathVariable("idRisorsa") int idRisorsa) {
+	@RequestMapping("/download/{idDipendente}")
+	public ResponseEntity<?> download(@PathVariable("idDipendente") int idDipendente) {
 		DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); 
 		LocalDateTime now = LocalDateTime.now();  
 		LocalDateTime data = LocalDateTime.parse(format1.format(now), format1);	
 		
-		RisorseCCNL risorseCCNL = new RisorseCCNL();
-		risorseCCNL.setIdRisorsa(idRisorsa);
-		risorseCCNL.setDataDownload(data);
+		DipendentiCCNL dipendentiCCNL = new DipendentiCCNL();
+		dipendentiCCNL.setIdDipendente(idDipendente);
+		dipendentiCCNL.setDataDownload(data);
 		
-		risorseCCNLService.save(risorseCCNL);
+		dipendentiCCNLService.save(dipendentiCCNL);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

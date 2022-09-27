@@ -33,7 +33,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/delete-avviso/{idAvviso}")
-	public ResponseEntity<?> deleteRisorsa(@PathVariable("idAvviso") int idAvviso) {
+	public ResponseEntity<?> deleteAvviso(@PathVariable("idAvviso") int idAvviso) {
 		avvisiService.deleteById(idAvviso);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -46,7 +46,7 @@ public class HomeController {
 		avviso.setTitolo((String) addForm.get("titolo"));
 		avviso.setRuoli((String) addForm.get("ruoli").toString().replace(",", "").replace("[", "").replace("]", ""));
 		avviso.setData(LocalDateTime.parse(dtf.format(now), dtf));
-		avviso.setIdRisorsa(Integer.parseInt((String) addForm.get("idRisorsa")));
+		avviso.setIdDipendente(Integer.parseInt((String) addForm.get("idDipendente")));
 		avviso.setNote((String) addForm.get("note"));
 		avvisiService.save(avviso);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -54,7 +54,7 @@ public class HomeController {
 	
 	@RequestMapping("/modifica-password")
 	public ResponseEntity<?> modificaPassword(@RequestBody JSONObject formModificaPassword) {
-		authService.changePassword((String)formModificaPassword.get("password"), Integer.parseInt((String)formModificaPassword.get("idRisorsa")));
+		authService.changePassword((String)formModificaPassword.get("password"), Integer.parseInt((String)formModificaPassword.get("idDipendente")));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

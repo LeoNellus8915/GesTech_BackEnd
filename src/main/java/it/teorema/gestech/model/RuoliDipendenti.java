@@ -8,24 +8,24 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="sy_ruoli_risorse")
-public class RuoliRisorse
+@Table(name="sy_ruoli_dipendenti")
+public class RuoliDipendenti
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "id_risorsa")
-	private int idRisorsa;
+	@Column(name = "id_dipendente")
+	private int idDipendente;
 	@Column(name = "id_ruolo")
 	private int idRuolo;
 	
-	public RuoliRisorse() {}
+	public RuoliDipendenti() {}
 
-	public RuoliRisorse(int id, int idRisorsa, int idRuolo) {
+	public RuoliDipendenti(int id, int idDipendente, int idRuolo) {
 		super();
 		this.id = id;
-		this.idRisorsa = idRisorsa;
+		this.idDipendente = idDipendente;
 		this.idRuolo = idRuolo;
 	}
 
@@ -37,12 +37,12 @@ public class RuoliRisorse
 		this.id = id;
 	}
 
-	public int getIdRisorsa() {
-		return idRisorsa;
+	public int getIdDipendente() {
+		return idDipendente;
 	}
 
-	public void setIdRisorsa(int idRisorsa) {
-		this.idRisorsa = idRisorsa;
+	public void setIdDipendente(int idDipendente) {
+		this.idDipendente = idDipendente;
 	}
 
 	public int getIdRuolo() {
@@ -52,4 +52,6 @@ public class RuoliRisorse
 	public void setIdRuolo(int idRuolo) {
 		this.idRuolo = idRuolo;
 	}
+
+	
 }

@@ -8,24 +8,24 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="sy_aziende_risorse")
-public class AziendeRisorse
+@Table(name="sy_aziende_dipendenti")
+public class AziendeDipendenti
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "id_risorsa")
-	private int idRisorsa;
+	@Column(name = "id_dipendente")
+	private int idDipendente;
 	@Column(name = "id_azienda")
 	private int idAzienda;
 	
-	public AziendeRisorse() {}
+	public AziendeDipendenti() {}
 
-	public AziendeRisorse(int id, int idRisorsa, int idAzienda) {
+	public AziendeDipendenti(int id, int idDipendente, int idAzienda) {
 		super();
 		this.id = id;
-		this.idRisorsa = idRisorsa;
+		this.idDipendente = idDipendente;
 		this.idAzienda = idAzienda;
 	}
 
@@ -37,12 +37,12 @@ public class AziendeRisorse
 		this.id = id;
 	}
 
-	public int getIdRisorsa() {
-		return idRisorsa;
+	public int getIdDipendente() {
+		return idDipendente;
 	}
 
-	public void setIdRisorsa(int idRisorsa) {
-		this.idRisorsa = idRisorsa;
+	public void setIdDipendente(int idDipendente) {
+		this.idDipendente = idDipendente;
 	}
 
 	public int getIdAzienda() {

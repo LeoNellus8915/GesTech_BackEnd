@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import it.teorema.gestech.model.CommentiRichieste;
 import it.teorema.gestech.model.Richieste;
-import it.teorema.gestech.model.RisorseRichieste;
+import it.teorema.gestech.model.DipendentiRichieste;
 import it.teorema.gestech.service.CommentiRichiesteService;
 import it.teorema.gestech.service.RichiesteService;
-import it.teorema.gestech.service.RisorseRichiesteService;
-import it.teorema.gestech.service.RisorseService;
+import it.teorema.gestech.service.DipendentiRichiesteService;
+import it.teorema.gestech.service.DipendentiService;
 import it.teorema.gestech.service.StatiRichiestaService;
 
 @Controller
@@ -30,17 +30,17 @@ public class RichiesteController {
 	@Autowired
 	RichiesteService richiesteService;
 	@Autowired
-	RisorseService risorseService;
+	DipendentiService dipendentiService;
 	@Autowired
 	CommentiRichiesteService commentiRichiesteService;
 	@Autowired
-	RisorseRichiesteService risorseRichiesteService;
+	DipendentiRichiesteService dipendentiRichiesteService;
 	@Autowired
 	StatiRichiestaService statiRichiestaService;
 	
 
-	@RequestMapping("/all-richieste-aperte/{ruolo}/{nomeCognome}/{idRisorsa}")
-	public ResponseEntity<List<Object>> allRichiesteAperte(@PathVariable String ruolo, @PathVariable String nomeCognome, @PathVariable("idRisorsa") int idRisorsa) {
+	@RequestMapping("/all-richieste-aperte/{ruolo}/{nomeCognome}/{idDipendente}")
+	public ResponseEntity<List<Object>> allRichiesteAperte(@PathVariable String ruolo, @PathVariable String nomeCognome, @PathVariable("idDipendente") int idDipendente) {
 		List <Object> lista = new ArrayList<Object>();
 		lista.add(SecurityController.getListaCodiciRichiesteAperte());
 		if(ruolo.equals("Commerciale")
@@ -49,12 +49,12 @@ public class RichiesteController {
 			return new ResponseEntity<>(lista, HttpStatus.OK); 
 		}
 		else {
-			lista.add(richiesteService.stampaCardByNameAperte(nomeCognome, idRisorsa));
+			lista.add(richiesteService.stampaCardByNameAperte(nomeCognome, idDipendente));
 			return new ResponseEntity<>(lista, HttpStatus.OK);}
 	}
 	
-	@RequestMapping("/all-richieste-chiuse/{ruolo}/{nomeCognome}/{idRisorsa}")
-	public ResponseEntity<List<Object>> allRichiesteChiuse(@PathVariable String ruolo, @PathVariable String nomeCognome, @PathVariable("idRisorsa") int idRisorsa) {
+	@RequestMapping("/all-richieste-chiuse/{ruolo}/{nomeCognome}/{idDipendente}")
+	public ResponseEntity<List<Object>> allRichiesteChiuse(@PathVariable String ruolo, @PathVariable String nomeCognome, @PathVariable("idDipendente") int idDipendente) {
 		List <Object> lista = new ArrayList<Object>();
 		lista.add(SecurityController.getListaCodiciRichiesteChiuse());
 		if(ruolo.equals("Commerciale")
@@ -63,14 +63,14 @@ public class RichiesteController {
 			return new ResponseEntity<>(lista, HttpStatus.OK); 
 		}
 		else {
-			lista.add(richiesteService.stampaCardByNameChiuse(nomeCognome, idRisorsa));
+			lista.add(richiesteService.stampaCardByNameChiuse(nomeCognome, idDipendente));
 			return new ResponseEntity<>(lista, HttpStatus.OK);
 		}
 	}
 	
 	@RequestMapping("/get-nomi-recruiter")
 	public ResponseEntity<List<String>> getNomiRecruiter() {
-		return new ResponseEntity<>(risorseService.getNomiRecruiter(), HttpStatus.OK);
+		return new ResponseEntity<>(dipendentiService.getNomiRecruiter(), HttpStatus.OK);
 	}
 	
 	@RequestMapping("/get-richiesta/{codiceRichiesta}/{pagina}")
@@ -100,8 +100,8 @@ public class RichiesteController {
 		return new ResponseEntity<>(dati, HttpStatus.OK);
 	}
 	
-	@RequestMapping("/set-visualizzato/{codiceRichiesta}/{idRisorsa}")
-	public ResponseEntity<?> setVisualizzato(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("idRisorsa") int idRisorsa) {
+	@RequestMapping("/set-visualizzato/{codiceRichiesta}/{idDipendente}")
+	public ResponseEntity<?> setVisualizzato(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("idDipendente") int idDipendente) {
 		int idRichiesta = 0;
 		
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperte();
@@ -109,7 +109,7 @@ public class RichiesteController {
 			if (((String)codice.get(("codice"))).equals(codiceRichiesta))
 				idRichiesta = (Integer)codice.get("id");
 		
-		risorseRichiesteService.setVisualizzato(idRichiesta, idRisorsa);
+		dipendentiRichiesteService.setVisualizzato(idRichiesta, idDipendente);
 		return new ResponseEntity<> (HttpStatus.OK);
 	}
 	
@@ -120,11 +120,11 @@ public class RichiesteController {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
 		LocalDateTime now = LocalDateTime.now();
 		Richieste richiesta = new Richieste();
-		richiesta.setIdRisorsa(Integer.parseInt((String)addForm.get("idRisorsa")));
+		richiesta.setIdDipendente(Integer.parseInt((String)addForm.get("idDipendente")));
 		richiesta.setData(LocalDateTime.parse(dtf.format(now), dtf));
-		richiesta.setIdSkill(Integer.parseInt((String)addForm.get("linguaggio")));
+		richiesta.setIdLinguaggio(Integer.parseInt((String)addForm.get("linguaggio")));
 		richiesta.setIdProfilo(Integer.parseInt((String)addForm.get("profilo")));
-		richiesta.setIdSeniority(Integer.parseInt((String)addForm.get("livello")));
+		richiesta.setIdLivello(Integer.parseInt((String)addForm.get("livello")));
 		richiesta.setCliente((String)addForm.get("cliente"));
 		richiesta.setCitta((String)addForm.get("citta"));
 		richiesta.setCosto(Double.parseDouble((String)addForm.get("costo")));
@@ -148,14 +148,14 @@ public class RichiesteController {
 		
 		if (addForm.get("listaRecruiters").toString().indexOf("Tutti") > -1)
 		{
-			recruiter = risorseService.getNomiRecruiter();
+			recruiter = dipendentiService.getNomiRecruiter();
 			for (int c=0; c<recruiter.size(); c++)
-				risorseRichiesteService.save(new RisorseRichieste(risorseService.findByName(recruiter.get(c)), idRichiesta));
+				dipendentiRichiesteService.save(new DipendentiRichieste(dipendentiService.findByName(recruiter.get(c)), idRichiesta));
 		}
 		else
 			if (recruiters.length > 0)
 				for (int c=0; c<recruiters.length; c++)
-					risorseRichiesteService.save(new RisorseRichieste(risorseService.findByName(recruiters[c]), idRichiesta));
+					dipendentiRichiesteService.save(new DipendentiRichieste(dipendentiService.findByName(recruiters[c]), idRichiesta));
 		
 		return new ResponseEntity<> (HttpStatus.OK); 
 	}
@@ -186,13 +186,13 @@ public class RichiesteController {
 		
 		richiesteService.deleteById(idRichiesta);
 		commentiRichiesteService.deleteCommento(idRichiesta);
-		risorseRichiesteService.deleteRisorsaRichiesta(idRichiesta);
+		dipendentiRichiesteService.deleteDipendenteRichiesta(idRichiesta);
 		return new ResponseEntity<> (HttpStatus.OK);  
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping("/modifica-richiesta/{codiceRichiesta}/{idRisorsa}/{pagina}")
-	public ResponseEntity<?> modificaRichiesta(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("idRisorsa") int idRisorsa, 
+	@RequestMapping("/modifica-richiesta/{codiceRichiesta}/{idDipendente}/{pagina}")
+	public ResponseEntity<?> modificaRichiesta(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("idDipendente") int idDipendente, 
 												@PathVariable("pagina") int pagina, @RequestBody JSONObject updateForm) {
 		int idRichiesta = 0;
 		JSONObject richiesta = null;
@@ -241,7 +241,7 @@ public class RichiesteController {
 		}
 			
 		if (Integer.parseInt((String)updateForm.get("statoRichiesta")) == 3) {
-			risorseRichiesteService.setVisualizzato(idRichiesta);
+			dipendentiRichiesteService.setVisualizzato(idRichiesta);
 		}
 		if ((String)updateForm.get("commento") != "")
 		{
@@ -249,8 +249,8 @@ public class RichiesteController {
 			LocalDateTime now = LocalDateTime.now();
 			CommentiRichieste commentoRichiesta = new CommentiRichieste();
 			commentoRichiesta.setData(LocalDateTime.parse(dtf.format(now), dtf));
-			commentoRichiesta.setIdRisorsa(idRisorsa);
-			commentoRichiesta.setIdDestinatario(idRichiesta);
+			commentoRichiesta.setIdDipendente(idDipendente);
+			commentoRichiesta.setIdRichiesta(idRichiesta);
 			commentoRichiesta.setNote((String)updateForm.get("commento"));
 			commentiRichiesteService.save(commentoRichiesta);
 		}

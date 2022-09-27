@@ -26,4 +26,7 @@ public interface BeniService extends JpaRepository <Beni, Integer> {
 	@Query("select id "
 			+ "from Beni ")
 	List<Integer> getIdBeni();
+
+	@Query("select max(id) from Beni")
+	Integer getLastId();
 }

@@ -10,24 +10,24 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="hy_risorse_ccnl")
-public class RisorseCCNL
+@Table(name="hy_dipendenti_ccnl")
+public class DipendentiCCNL
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "id_risorsa")
-	private int idRisorsa;
+	@Column(name = "id_dipendente")
+	private int idDipendente;
 	@Column(name = "data_download")
 	private LocalDateTime dataDownload;
 	
-	public RisorseCCNL() {}
+	public DipendentiCCNL() {}
 
-	public RisorseCCNL(int id, int idRisorsa, LocalDateTime dataDownload) {
+	public DipendentiCCNL(int id, int idDipendente, LocalDateTime dataDownload) {
 		super();
 		this.id = id;
-		this.idRisorsa = idRisorsa;
+		this.idDipendente = idDipendente;
 		this.dataDownload = dataDownload;
 	}
 
@@ -39,12 +39,12 @@ public class RisorseCCNL
 		this.id = id;
 	}
 
-	public int getIdRisorsa() {
-		return idRisorsa;
+	public int getIdDipendente() {
+		return idDipendente;
 	}
 
-	public void setIdRisorsa(int idRisorsa) {
-		this.idRisorsa = idRisorsa;
+	public void setIdDipendente(int idDipendente) {
+		this.idDipendente = idDipendente;
 	}
 
 	public LocalDateTime getDataDownload() {

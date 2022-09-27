@@ -9,9 +9,9 @@ import it.teorema.gestech.model.Profili;
 
 public interface ProfiliService extends JpaRepository <Profili, Integer> {
 	@Query("select p.nome "
-			+ "from Profili p, DettagliRisorse d "
-			+ "where d.idRisorsa = :idRisorsa and p.id = d.idProfilo")
-	String getProfilo(int idRisorsa);
+			+ "from Profili p, DettagliCandidati dc "
+			+ "where dc.idCandidato = :idCandidato and p.id = dc.idProfilo")
+	String getProfilo(int idCandidato);
 
 	@Query("from Profili "
 			+ "where nome != :profilo")
