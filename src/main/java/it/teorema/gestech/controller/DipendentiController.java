@@ -17,6 +17,7 @@ import it.teorema.gestech.model.Auth;
 import it.teorema.gestech.model.AziendeDipendenti;
 import it.teorema.gestech.model.Dipendenti;
 import it.teorema.gestech.model.RuoliDipendenti;
+import it.teorema.gestech.model.mapper.AllDipendenti;
 import it.teorema.gestech.service.AuthService;
 import it.teorema.gestech.service.AziendeDipendentiService;
 import it.teorema.gestech.service.CandidatiService;
@@ -41,7 +42,7 @@ public class DipendentiController {
 	AziendeDipendentiService aziendeDipendentiService;
 	
 	@RequestMapping("/all-dipendenti")
-	public ResponseEntity<List<Object>> allDipendenti() {
+	public ResponseEntity<List<AllDipendenti>> allDipendenti() {
 		return new ResponseEntity<>(dettagliDipendentiService.allDipendenti(), HttpStatus.OK);
 	}
 	
