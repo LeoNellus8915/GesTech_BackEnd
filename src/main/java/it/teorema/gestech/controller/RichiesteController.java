@@ -43,8 +43,9 @@ public class RichiesteController {
 	public ResponseEntity<List<Object>> allRichiesteAperte(@PathVariable String ruolo, @PathVariable String nomeCognome, @PathVariable("idDipendente") int idDipendente) {
 		List <Object> lista = new ArrayList<Object>();
 		lista.add(SecurityController.getListaCodiciRichiesteAperte());
-		if(ruolo.equals("Commerciale")
-				|| ruolo.equals("Admin")) {
+		if(ruolo.equals("Direttore Commerciale")
+				|| ruolo.equals("Admin") 
+					|| ruolo.equals("Account")) {
 			lista.add(richiesteService.stampaCardAperte());
 			return new ResponseEntity<>(lista, HttpStatus.OK); 
 		}
@@ -57,7 +58,7 @@ public class RichiesteController {
 	public ResponseEntity<List<Object>> allRichiesteChiuse(@PathVariable String ruolo, @PathVariable String nomeCognome, @PathVariable("idDipendente") int idDipendente) {
 		List <Object> lista = new ArrayList<Object>();
 		lista.add(SecurityController.getListaCodiciRichiesteChiuse());
-		if(ruolo.equals("Commerciale")
+		if(ruolo.equals("Direttore Commerciale")
 				|| ruolo.equals("Admin")) {
 			lista.add(richiesteService.stampaCardChiuse());
 			return new ResponseEntity<>(lista, HttpStatus.OK); 
@@ -114,8 +115,8 @@ public class RichiesteController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping("/salva-richiesta")
-	public ResponseEntity<?> salvaRichiesta(@RequestBody JSONObject addForm) {
+	@RequestMapping("/salva-richiesta/{ruolo}")
+	public ResponseEntity<?> salvaRichiesta(@RequestBody JSONObject addForm, @PathVariable("ruolo") String ruolo) {
 		
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
 		LocalDateTime now = LocalDateTime.now();
@@ -146,16 +147,18 @@ public class RichiesteController {
 		List<String> recruiter = new ArrayList<String>();
 		int idRichiesta = richiesteService.findLastId();
 		
-		if (addForm.get("listaRecruiters").toString().indexOf("Tutti") > -1)
-		{
-			recruiter = dipendentiService.getNomiRecruiter();
-			for (int c=0; c<recruiter.size(); c++)
-				dipendentiRichiesteService.save(new DipendentiRichieste(dipendentiService.findByName(recruiter.get(c)), idRichiesta));
+		if (!ruolo.equals("Account")) {
+			if (addForm.get("listaRecruiters").toString().indexOf("Tutti") > -1)
+			{
+				recruiter = dipendentiService.getNomiRecruiter();
+				for (int c=0; c<recruiter.size(); c++)
+					dipendentiRichiesteService.save(new DipendentiRichieste(dipendentiService.findByName(recruiter.get(c)), idRichiesta));
+			}
+			else
+				if (recruiters.length > 0)
+					for (int c=0; c<recruiters.length; c++)
+						dipendentiRichiesteService.save(new DipendentiRichieste(dipendentiService.findByName(recruiters[c]), idRichiesta));
 		}
-		else
-			if (recruiters.length > 0)
-				for (int c=0; c<recruiters.length; c++)
-					dipendentiRichiesteService.save(new DipendentiRichieste(dipendentiService.findByName(recruiters[c]), idRichiesta));
 		
 		return new ResponseEntity<> (HttpStatus.OK); 
 	}

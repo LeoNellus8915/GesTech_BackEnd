@@ -12,11 +12,14 @@ import org.springframework.data.jpa.repository.Query;
 
 import it.teorema.gestech.model.DettagliCandidati;
 
+import it.teorema.gestech.model.mapper.allCandidati;
+
 public interface DettagliCandidatiService extends JpaRepository <DettagliCandidati, Integer> {
-	@Query("select c.id, dc.dataInserimento, c.nomeCognome, c.citta, p.nome, dc.competenzaPrincipale, e.nome "
+	@Query("select c.id as id, dc.dataInserimento as dataInserimento, c.nomeCognome as nomeCognome, c.citta as citta, "
+			+ "p.nome as profiloNome, dc.competenzaPrincipale as competenzaPrincipale, e.nome as esitoNome "
 			+ "from DettagliCandidati dc, Candidati c, EsitiColloquio e, Profili p "
 			+ "where c.id = dc.idCandidato and e.id = dc.idEsitoColloquio and p.id = dc.idProfilo")
-	List<Object> allCandidati();
+	List<allCandidati> allCandidati();
 	
 	@Modifying
 	@Transactional

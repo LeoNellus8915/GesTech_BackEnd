@@ -11,11 +11,11 @@ import org.springframework.data.jpa.repository.Query;
 import it.teorema.gestech.model.Richieste;
 
 public interface RichiesteService extends JpaRepository <Richieste, Integer> {
-	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.recruiter, dr.visualizzato "
-			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, DipendentiRichieste dr "
-			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id and ri.id = dr.idRichiesta "
+	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome "
+			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
+			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and sr.nome != 'Chiusa' "
-			+ "group by dr.idRichiesta order by ri.data desc")
+			+ "order by ri.data desc")
 	List<Object> stampaCardAperte();
 	
 	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.recruiter, dr.visualizzato "
@@ -26,11 +26,11 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "order by ri.data desc")
 	List<Object> stampaCardByNameAperte(String nomeCognome, int idDipendente);
 	
-	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.recruiter, dr.visualizzato "
-			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, DipendentiRichieste dr "
-			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id and ri.id = dr.idRichiesta "
+	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.recruiter "
+			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
+			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and sr.nome = 'Chiusa' "
-			+ "group by dr.idRichiesta order by ri.data desc")
+			+ "order by ri.data desc")
 	List<Object> stampaCardChiuse();
 	
 	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.recruiter, dr.visualizzato "
@@ -56,15 +56,15 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	Integer findLastId();
 	
 	@Query("select r.id "
-			+ "from Richieste r, DipendentiRichieste dr, StatiRichiesta sr "
-			+ "where r.idStato = sr.id and r.id = dr.idRichiesta "
+			+ "from Richieste r, StatiRichiesta sr "
+			+ "where r.idStato = sr.id "
 			+ "and sr.nome != 'Chiusa' "
-			+ "group by dr.idRichiesta order by r.data desc")
+			+ "order by r.data desc")
 	List<Integer> getIdRichiesteAperte();
 	
 	@Query("select r.id "
-			+ "from Richieste r, DipendentiRichieste dr, StatiRichiesta sr "
-			+ "where r.idStato = sr.id and r.id = dr.idRichiesta "
+			+ "from Richieste r, StatiRichiesta sr "
+			+ "where r.idStato = sr.id "
 			+ "and sr.nome = 'Chiusa' "
 			+ "order by r.data desc")
 	List<Integer> getIdRichiesteChiuse();

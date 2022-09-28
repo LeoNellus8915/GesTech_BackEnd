@@ -81,7 +81,7 @@ public class DipendentiController {
 				RuoliDipendenti ruoloDipendente = new RuoliDipendenti();
 				
 				ruoloDipendente.setIdDipendente(idDipendente);
-				ruoloDipendente.setIdRuolo(4);
+				ruoloDipendente.setIdRuolo(7);
 				ruoli.add(ruoloDipendente);
 				
 				RuoliDipendenti ruoloAlternativo = new RuoliDipendenti();

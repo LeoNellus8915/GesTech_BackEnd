@@ -53,8 +53,8 @@ public class SecurityController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping("/get-codici-richieste-aperte/{ruolo}")
-	public ResponseEntity<?> getCodiciRichiesteAperte(@PathVariable("ruolo") String Ruolo) {
+	@RequestMapping("/get-codici-richieste-aperte")
+	public ResponseEntity<?> getCodiciRichiesteAperte() {
 		List<JSONObject> listaCodici = new ArrayList<JSONObject>();
 		List<Integer> listaId = richiesteService.getIdRichiesteAperte();
 		for (Integer id : listaId) {
@@ -74,8 +74,8 @@ public class SecurityController {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping("/get-codici-richieste-chiuse/{ruolo}")
-	public ResponseEntity<?> getCodiciRichiesteChiuse(@PathVariable("ruolo") String Ruolo) {
+	@RequestMapping("/get-codici-richieste-chiuse")
+	public ResponseEntity<?> getCodiciRichiesteChiuse() {
 		List<JSONObject> listaCodici = new ArrayList<JSONObject>();
 		List<Integer> listaId = richiesteService.getIdRichiesteChiuse();
 		for (Integer id : listaId) {
