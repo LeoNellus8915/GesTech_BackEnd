@@ -24,16 +24,19 @@ public class CommentiRichieste {
 	private String note;
 	@Column(name = "data")
 	private LocalDateTime data;
+	@Column(name = "nascosto")
+	private boolean nascosto;
 	
 	public CommentiRichieste(){}
 
-	public CommentiRichieste(int id, int idDipendente, int idRichiesta, String note, LocalDateTime data) {
+	public CommentiRichieste(int id, int idDipendente, int idRichiesta, String note, LocalDateTime data, boolean nascosto) {
 		super();
 		this.id = id;
 		this.idDipendente = idDipendente;
 		this.idRichiesta = idRichiesta;
 		this.note = note;
 		this.data = data;
+		this.nascosto = nascosto;
 	}
 
 	public int getId() {
@@ -74,5 +77,13 @@ public class CommentiRichieste {
 
 	public void setData(LocalDateTime data) {
 		this.data = data;
+	}
+
+	public boolean isNascosto() {
+		return nascosto;
+	}
+
+	public void setNascosto(boolean nascosto) {
+		this.nascosto = nascosto;
 	}
 }

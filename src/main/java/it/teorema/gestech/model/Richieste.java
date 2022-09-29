@@ -11,9 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="hy_richieste")
-public class Richieste 
-
-{
+public class Richieste {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -40,11 +38,13 @@ public class Richieste
 	private String recruiter;
 	@Column(name = "id_stato")
 	private int idStato;
+	@Column(name = "priorita")
+	private int priorita;
 	
 	public Richieste() {}
 
 	public Richieste(int id, int idDipendente, LocalDateTime data, int idLinguaggio, int idProfilo, int idLivello,
-			String cliente, String citta, double costo, String note, String recruiter, int idStato) {
+			String cliente, String citta, double costo, String note, String recruiter, int idStato, int priorita) {
 		super();
 		this.id = id;
 		this.idDipendente = idDipendente;
@@ -58,6 +58,7 @@ public class Richieste
 		this.note = note;
 		this.recruiter = recruiter;
 		this.idStato = idStato;
+		this.priorita = priorita;
 	}
 
 	public int getId() {
@@ -154,5 +155,13 @@ public class Richieste
 
 	public void setIdStato(int idStato) {
 		this.idStato = idStato;
+	}
+
+	public int getPriorita() {
+		return priorita;
+	}
+
+	public void setPriorita(int priorita) {
+		this.priorita = priorita;
 	}
 }
