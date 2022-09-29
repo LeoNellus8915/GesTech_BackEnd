@@ -12,7 +12,7 @@ import it.teorema.gestech.model.Richieste;
 
 public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	
-	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome "
+	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.priorita "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, Dipendenti d "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and sr.nome != 'Chiusa' and ri.idDipendente = d.id and d.id = :idDipendente "
