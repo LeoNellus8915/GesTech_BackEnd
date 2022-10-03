@@ -89,15 +89,29 @@ public class BeniController {
 			if (((String)codice.get(("codice"))).equals(codiceBene))
 				idBene = (Integer)codice.get("id");
 		
-		beniService.modificaBene(idBene, bene.getDispositivo(), bene.getMarca(), bene.getModello(), 
+		if(bene.getDataRestituzione() != null) {
+			beniService.modificaBeneRestituito(idBene, bene.getDispositivo(), bene.getMarca(), bene.getModello(), 
+					bene.getNumeroSeriale(), bene.getPassword(), bene.getSocieta(), bene.getNote());
+			
+			Beni copia = new Beni(bene.getDispositivo(), bene.getMarca(), bene.getModello(), 
 				bene.getNumeroSeriale(), bene.getPassword(), bene.getDipendente(), bene.getSocieta(), 
 				bene.getDataConsegna(), bene.getDataRestituzione(), bene.getNote());
-		
-		if(bene.getDataRestituzione() != null) {
-			Beni beneApp = new Beni(bene.getDispositivo(), bene.getMarca(), bene.getModello(), 
-					bene.getNumeroSeriale(), bene.getPassword(), bene.getNote());
-			beniService.save(beneApp);
+			
+			beniService.save(copia);
 		}
+		else {
+			beniService.modificaBene(idBene, bene.getDispositivo(), bene.getMarca(), bene.getModello(), 
+					bene.getNumeroSeriale(), bene.getPassword(), bene.getDipendente(), bene.getSocieta(), 
+					bene.getDataConsegna(), bene.getNote());
+		}
+		
+		
+		
+		
+		/*beniService.modificaBene(idBene, bene.getDispositivo(), bene.getMarca(), bene.getModello(), 
+				bene.getNumeroSeriale(), bene.getPassword(), bene.getDipendente(), bene.getSocieta(), 
+				bene.getDataConsegna(), bene.getDataRestituzione(), bene.getNote());*/
+		
 		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

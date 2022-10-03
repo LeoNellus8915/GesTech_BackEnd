@@ -25,9 +25,17 @@ public interface BeniService extends JpaRepository <Beni, Integer> {
 	@Transactional
 	@Query("update Beni set dispositivo = :dispositivo, marca = :marca, modello = :modello, numeroSeriale = :numeroSeriale, "
 			+ "password = :password, dipendente = :dipendente, societa = :societa, dataConsegna = :dataConsegna, "
-			+ "dataRestituzione = :dataRestituzione, note = :note where id = :idBene")
+			+ "note = :note where id = :idBene")
 	void modificaBene(int idBene, String dispositivo, String marca, String modello, String numeroSeriale, String password,
-			String dipendente, String societa, LocalDate dataConsegna, LocalDate dataRestituzione, String note);
+			String dipendente, String societa, LocalDate dataConsegna, String note);
+	
+	@Modifying
+	@Transactional
+	@Query("update Beni set dispositivo = :dispositivo, marca = :marca, modello = :modello, numeroSeriale = :numeroSeriale, "
+			+ "password = :password, dipendente = " + "''" + ", societa = :societa, dataConsegna = NULL, "
+			+ "dataRestituzione = NULL, note = :note where id = :idBene")
+	void modificaBeneRestituito(int idBene, String dispositivo, String marca, String modello, 
+			String numeroSeriale, String password, String societa, String note);
 
 	@Query("select id "
 			+ "from Beni ")

@@ -40,7 +40,8 @@ public class Beni
 	
 	public Beni() {}
 
-	public Beni(String dispositivo, String marca, String modello, String numeroSeriale, String password, String note) {
+	public Beni(String dispositivo, String marca, String modello, String numeroSeriale, String password,
+			String dipendente, String societa, LocalDate dataConsegna, LocalDate dataRestituzione, String note) {
 		super();
 		this.dispositivo = dispositivo;
 		this.marca = marca;
@@ -48,6 +49,10 @@ public class Beni
 		this.numeroSeriale = numeroSeriale;
 		this.password = password;
 		this.note = note;
+		this.dipendente = dipendente;
+		this.societa = societa;
+		this.dataConsegna = dataConsegna;
+		this.dataRestituzione = dataRestituzione;
 	}
 
 	public Beni(int id, String dispositivo, String marca, String modello, String numeroSeriale, String password,
