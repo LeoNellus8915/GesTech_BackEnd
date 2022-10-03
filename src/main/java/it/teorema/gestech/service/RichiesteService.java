@@ -33,13 +33,13 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "order by ri.priorita, ri.data desc")
 	List<Object> stampaCardAperteRecruiter();
 	
-	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.priorita "
-			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
-			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
-			+ "and sr.nome != 'Chiusa' "
+	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.priorita, dr.visualizzato "
+			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, DipendentiRichieste dr "
+			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id and ri.id = dr.idRichiesta "
+			+ "and sr.nome != 'Chiusa' and dr.idDipendente = :idDipendente "
 			+ "and (ri.recruiter like %:nomeCognome% or ri.recruiter like '%Tutti%') "
 			+ "order by ri.priorita, ri.data desc")
-	List<Object> stampaCardAperte(String nomeCognome);
+	List<Object> stampaCardAperte(String nomeCognome, int idDipendente);
 	
 	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.recruiter "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "

@@ -7,11 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +58,7 @@ public class RichiesteController {
 		richiesta.setPriorita(0);
 		richiesteService.save(richiesta);
 		
-		List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteCommerciale();
+		List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteAccount();
 		JSONObject oggetto = new JSONObject();
 		UUID codice = UUID.randomUUID();
 		oggetto.put("id", richiesteService.getLastId());
@@ -98,11 +94,11 @@ public class RichiesteController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
-	@RequestMapping("/all-richieste-aperte/{nomeCognome}")
-	public ResponseEntity<List<Object>> allRichiesteAperte(@PathVariable("nomeCognome") String nomeCognome) {
+	@RequestMapping("/all-richieste-aperte/{nomeCognome}/{idDipendente}")
+	public ResponseEntity<List<Object>> allRichiesteAperte(@PathVariable("nomeCognome") String nomeCognome, @PathVariable("idDipendente") int idDipendente) {
 		List <Object> lista = new ArrayList<Object>();
 		lista.add(SecurityController.getListaCodiciRichiesteAperte());
-		lista.add(richiesteService.stampaCardAperte(nomeCognome));
+		lista.add(richiesteService.stampaCardAperte(nomeCognome, idDipendente));
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
@@ -258,7 +254,6 @@ public class RichiesteController {
 		}
 		
 		if (!ruolo.equals("Recruiter")) {
-		
 			String listaRecruiters;
 			if (updateForm.get("listaRecruiters").toString().equals("[]"))
 				listaRecruiters = null;
@@ -326,6 +321,7 @@ public class RichiesteController {
 				commentoRichiesta.setIdDipendente(idDipendente);
 				commentoRichiesta.setIdRichiesta(idRichiesta);
 				commentoRichiesta.setNote((String)updateForm.get("commento"));
+				System.out.println(listaRecruiters);
 				if (commentiRichiesteService.recruiterPresente(idRichiesta) == null && listaRecruiters == null)
 					commentoRichiesta.setNascosto(false);
 				else
@@ -346,6 +342,19 @@ public class RichiesteController {
 				commentiRichiesteService.save(commentoRichiesta);
 			}
 		return new ResponseEntity<> (HttpStatus.OK);  
+	}
+	
+	@RequestMapping("/set-visualizzato/{codiceRichiesta}/{idDipendente}")
+	public ResponseEntity<?> setVisualizzato(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("idDipendente") int idDipendente) {
+		int idRichiesta = 0;
+		
+		List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperte();
+		for (JSONObject codice : listaCodici)
+			if (((String)codice.get(("codice"))).equals(codiceRichiesta))
+				idRichiesta = (Integer)codice.get("id");
+		
+		dipendentiRichiesteService.setVisualizzato(idRichiesta, idDipendente);
+		return new ResponseEntity<> (HttpStatus.OK);
 	}
 	
 	/*@RequestMapping("/all-richieste-aperte/{ruolo}/{nomeCognome}/{idDipendente}")
