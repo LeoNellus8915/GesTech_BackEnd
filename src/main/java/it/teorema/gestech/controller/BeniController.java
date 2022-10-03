@@ -27,7 +27,7 @@ public class BeniController {
 	@RequestMapping("/all-beni")
 	public ResponseEntity<List<Object>> allBeni() {
 		List<Object> lista = new ArrayList<>();
-		lista.add(beniService.findAll());
+		lista.add(beniService.findBeni());
 		lista.add(SecurityController.getListaCodiciBeni());
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
@@ -46,7 +46,8 @@ public class BeniController {
 	}
 	
 	@RequestMapping("/get-bene-visualizza/{codiceBene}")
-	public ResponseEntity<Beni> getBeneVisualizza(@PathVariable("codiceBene") String codiceBene) {
+	public ResponseEntity<List<Object>> getBeneVisualizza(@PathVariable("codiceBene") String codiceBene) {
+		List<Object> lista = new ArrayList<>();
 		int idBene = 0;
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciBeni();
 		
@@ -54,7 +55,10 @@ public class BeniController {
 			if (((String)codice.get(("codice"))).equals(codiceBene))
 				idBene = (Integer)codice.get("id");
 		
-		return new ResponseEntity<>(beniService.getBene(idBene), HttpStatus.OK);
+		lista.add(beniService.getBene(idBene));
+		lista.add(beniService.findStoricoBeni());
+		
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
 	@RequestMapping("/get-bene-modifica/{codiceBene}")
@@ -71,6 +75,8 @@ public class BeniController {
 		Beni bene = beniService.getBene(idBene);
 		lista.add(bene);
 		lista.add(dipendentiService.findAllException(bene.getDipendente()));
+		lista.add(beniService.findStoricoBeni());
+		
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
@@ -86,6 +92,13 @@ public class BeniController {
 		beniService.modificaBene(idBene, bene.getDispositivo(), bene.getMarca(), bene.getModello(), 
 				bene.getNumeroSeriale(), bene.getPassword(), bene.getDipendente(), bene.getSocieta(), 
 				bene.getDataConsegna(), bene.getDataRestituzione(), bene.getNote());
+		
+		if(bene.getDataRestituzione() != null) {
+			Beni beneApp = new Beni(bene.getDispositivo(), bene.getMarca(), bene.getModello(), 
+					bene.getNumeroSeriale(), bene.getPassword(), bene.getNote());
+			beniService.save(beneApp);
+		}
+		
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

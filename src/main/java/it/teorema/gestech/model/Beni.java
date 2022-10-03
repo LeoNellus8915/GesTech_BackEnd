@@ -40,6 +40,16 @@ public class Beni
 	
 	public Beni() {}
 
+	public Beni(String dispositivo, String marca, String modello, String numeroSeriale, String password, String note) {
+		super();
+		this.dispositivo = dispositivo;
+		this.marca = marca;
+		this.modello = modello;
+		this.numeroSeriale = numeroSeriale;
+		this.password = password;
+		this.note = note;
+	}
+
 	public Beni(int id, String dispositivo, String marca, String modello, String numeroSeriale, String password,
 			String note, String dipendente, String societa, LocalDate dataConsegna,
 			LocalDate dataRestituzione) {

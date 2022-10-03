@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import it.teorema.gestech.model.Candidati;
 import it.teorema.gestech.model.Dipendenti;
 
 public interface DipendentiService extends JpaRepository<Dipendenti, Integer>{

@@ -14,7 +14,13 @@ import it.teorema.gestech.model.Beni;
 public interface BeniService extends JpaRepository <Beni, Integer> {
 	@Query("from Beni where id = :idBene")
 	Beni getBene (int idBene);
-
+	
+	@Query("from Beni where dataRestituzione IS NULL")
+	List<Beni> findBeni ();
+	
+	@Query("from Beni where dataRestituzione IS NOT NULL")
+	List<Beni> findStoricoBeni ();
+	
 	@Modifying
 	@Transactional
 	@Query("update Beni set dispositivo = :dispositivo, marca = :marca, modello = :modello, numeroSeriale = :numeroSeriale, "
