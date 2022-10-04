@@ -2,7 +2,7 @@ package it.teorema.gestech.model.mapper;
 
 import java.time.LocalDateTime;
 
-public interface AllRichieste {
+public interface AllRichiesteAperte {
 	int getId();
 	LocalDateTime getData();
 	String getCliente();
@@ -14,4 +14,5 @@ public interface AllRichieste {
 	String getLivelliNome();
 	String getStatiRichiestaNome();
 	int getPriorita();
+	boolean getVisualizzato();
 }
