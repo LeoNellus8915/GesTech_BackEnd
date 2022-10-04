@@ -101,11 +101,13 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ " from Richieste")
 	Integer getLastId();
 	
-	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.recruiter "
+	@Query("select ri.id as id, ri.data as data, ri.cliente as cliente, ri.citta as citta , ri.costo as costo, "
+			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
+			+ "sr.nome as statiRichiesteNome, ri.recruiter as recruiter "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and ri.id = :idRichiesta")
-	AllRichieste visualizzaRichiesta(int idRichiesta);
+	AllRichiesteChiuse visualizzaRichiesta(int idRichiesta);
 
 	@Modifying
 	@Transactional
