@@ -93,7 +93,7 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and ri.id = :idRichiesta")
-	Object visualizzaRichiesta(int idRichiesta);
+	AllRichieste visualizzaRichiesta(int idRichiesta);
 
 	@Modifying
 	@Transactional
