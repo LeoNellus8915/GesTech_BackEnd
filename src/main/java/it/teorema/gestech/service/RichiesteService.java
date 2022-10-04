@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import it.teorema.gestech.model.Richieste;
+import it.teorema.gestech.model.mapper.AllRichieste;
 
 public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	
@@ -17,21 +18,21 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and sr.nome != 'Chiusa' and ri.idDipendente = d.id and d.id = :idDipendente "
 			+ "order by ri.data desc")
-	List<Object> stampaCardAperteAccount(int idDipendente);
+	List<AllRichieste> stampaCardAperteAccount(int idDipendente);
 	
 	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.priorita "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and sr.nome != 'Chiusa' "
 			+ "order by ri.priorita, ri.data desc")
-	List<Object> stampaCardAperteCommerciale();
+	List<AllRichieste> stampaCardAperteCommerciale();
 	
 	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.priorita "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and sr.nome != 'Chiusa' and ri.priorita > 0 "
 			+ "order by ri.priorita, ri.data desc")
-	List<Object> stampaCardAperteRecruiter();
+	List<AllRichieste> stampaCardAperteRecruiter();
 	
 	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.priorita, dr.visualizzato "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, DipendentiRichieste dr "
@@ -39,14 +40,14 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "and sr.nome != 'Chiusa' and dr.idDipendente = :idDipendente "
 			+ "and (ri.recruiter like %:nomeCognome% or ri.recruiter like '%Tutti%') "
 			+ "order by ri.priorita, ri.data desc")
-	List<Object> stampaCardAperte(String nomeCognome, int idDipendente);
+	List<AllRichieste> stampaCardAperte(String nomeCognome, int idDipendente);
 	
 	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.recruiter "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and sr.nome = 'Chiusa' "
 			+ "order by ri.data desc")
-	List<Object> stampaCardChiuse();
+	List<AllRichieste> stampaCardChiuse();
 	
 	@Query("select r.id "
 			+ "from Richieste r, StatiRichiesta sr, Dipendenti d "
