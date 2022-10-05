@@ -1,9 +1,9 @@
 package it.teorema.gestech.model.mapper;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public interface AllCommentiRichieste {
-	LocalDate getData();
+	LocalDateTime getData();
 	String getNomeCognome();
 	String getNote();
 }

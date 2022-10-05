@@ -40,11 +40,14 @@ public class Richieste {
 	private int idStato;
 	@Column(name = "priorita")
 	private int priorita;
+	@Column(name = "candidati")
+	private String candidati;
 	
 	public Richieste() {}
 
 	public Richieste(int id, int idDipendente, LocalDateTime data, int idLinguaggio, int idProfilo, int idLivello,
-			String cliente, String citta, double costo, String note, String recruiter, int idStato, int priorita) {
+			String cliente, String citta, double costo, String note, String recruiter, int idStato, int priorita,
+			String candidati) {
 		super();
 		this.id = id;
 		this.idDipendente = idDipendente;
@@ -59,6 +62,7 @@ public class Richieste {
 		this.recruiter = recruiter;
 		this.idStato = idStato;
 		this.priorita = priorita;
+		this.candidati = candidati;
 	}
 
 	public int getId() {
@@ -163,5 +167,13 @@ public class Richieste {
 
 	public void setPriorita(int priorita) {
 		this.priorita = priorita;
+	}
+
+	public String getCandidati() {
+		return candidati;
+	}
+
+	public void setCandidati(String candidati) {
+		this.candidati = candidati;
 	}
 }

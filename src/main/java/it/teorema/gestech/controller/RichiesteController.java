@@ -150,8 +150,10 @@ public class RichiesteController {
 		dati.add(nomeStatoRichiesta);
 		dati.add(statiRichiestaService.getIdStatoRichiesta(nomeStatoRichiesta).toString());
 		dati.add(statiRichiestaService.findAllException(nomeStatoRichiesta));
-		if (ruolo.equals("Direttore Recruiter"))
+		if (ruolo.equals("Direttore Recruiter")) {
+			System.out.println(commentiRichiesteService.findRecruiterById(idRichiesta));
 			dati.add(commentiRichiesteService.findRecruiterById(idRichiesta));
+		}
 		else if (ruolo.equals("Recruiter"))
 			dati.add(commentiRichiesteService.findById(idRichiesta));
 		else
@@ -258,7 +260,7 @@ public class RichiesteController {
 			if (updateForm.get("listaRecruiters").toString().equals("[]"))
 				listaRecruiters = null;
 			else
-				listaRecruiters = (String)updateForm.get("listaRecruiters").toString().replace(",", "").replace("[", "").replace("]", "");
+				listaRecruiters = (String)updateForm.get("listaRecruiters").toString().replace("[", "").replace("]", "");
 					
 			richiesteService.updateStato(Integer.parseInt((String)updateForm.get("statoRichiesta")), idRichiesta, 
 										listaRecruiters);
@@ -354,6 +356,12 @@ public class RichiesteController {
 				idRichiesta = (Integer)codice.get("id");
 		
 		dipendentiRichiesteService.setVisualizzato(idRichiesta, idDipendente);
+		return new ResponseEntity<> (HttpStatus.OK);
+	}
+	
+	@RequestMapping("/assegna-candidati/{idRichiesta}")
+	public ResponseEntity<?> assegnaCandidati(@RequestBody String listaCandidati, @PathVariable("idRichiesta") int idRichiesta) {
+		richiesteService.assegnaCandidati(listaCandidati, idRichiesta);
 		return new ResponseEntity<> (HttpStatus.OK);
 	}
 	

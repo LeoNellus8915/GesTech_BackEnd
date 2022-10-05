@@ -12,19 +12,19 @@ import it.teorema.gestech.model.CommentiRichieste;
 import it.teorema.gestech.model.mapper.AllCommentiRichieste;
 
 public interface CommentiRichiesteService extends JpaRepository <CommentiRichieste, Integer> {
-	@Query("select c.data, d.nomeCognome, c.note "
+	@Query("select c.data as data, d.nomeCognome as nomeCognome, c.note as note "
 			+ "from CommentiRichieste c, Dipendenti d "
 			+ "where c.idRichiesta = :idRichiesta and c.idDipendente = d.id and c.nascosto = 1 "
 			+ "order by c.data desc")
 	List<AllCommentiRichieste> findById(int idRichiesta);
 	
-	@Query("select c.data, d.nomeCognome, c.note "
+	@Query("select c.data as data, d.nomeCognome as nomeCognome, c.note as note "
 			+ "from CommentiRichieste c, Dipendenti d "
 			+ "where c.idRichiesta = :idRichiesta and c.idDipendente = d.id "
 			+ "order by c.data desc")
 	List<AllCommentiRichieste> findRecruiterById(int idRichiesta);
 	
-	@Query("select c.data, d.nomeCognome, c.note "
+	@Query("select c.data as data, d.nomeCognome as nomeCognome, c.note as note "
 			+ "from CommentiRichieste c, Dipendenti d "
 			+ "where c.idRichiesta = :idRichiesta and c.idDipendente = d.id and c.nascosto = 0 "
 			+ "order by c.data desc")

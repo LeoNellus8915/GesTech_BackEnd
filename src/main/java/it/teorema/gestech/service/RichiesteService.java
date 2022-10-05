@@ -12,6 +12,7 @@ import it.teorema.gestech.model.Richieste;
 import it.teorema.gestech.model.mapper.AllRichieste;
 import it.teorema.gestech.model.mapper.AllRichiesteAperte;
 import it.teorema.gestech.model.mapper.AllRichiesteChiuse;
+import it.teorema.gestech.model.mapper.GetRichiesta;
 
 public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	
@@ -103,11 +104,11 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	
 	@Query("select ri.id as id, ri.data as data, ri.cliente as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
-			+ "sr.nome as statiRichiesteNome, ri.recruiter as recruiter "
+			+ "sr.nome as statiRichiesteNome, ri.recruiter as recruiter, ri.candidati as candidati "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and ri.id = :idRichiesta")
-	AllRichiesteChiuse visualizzaRichiesta(int idRichiesta);
+	GetRichiesta visualizzaRichiesta(int idRichiesta);
 
 	@Modifying
 	@Transactional
@@ -119,6 +120,11 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	@Transactional
 	@Query("update Richieste set idStato = :idStato, recruiter = :recruiter where id = :idRichiesta")
 	void updateStato(int idStato, int idRichiesta, String recruiter);
+
+	@Modifying
+	@Transactional
+	@Query("update Richieste set candidati = :listaCandidati where id = :idRichiesta")
+	void assegnaCandidati(String listaCandidati, int idRichiesta);
 	
 	/*@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
