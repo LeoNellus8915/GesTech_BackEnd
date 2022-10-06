@@ -94,6 +94,14 @@ public class RichiesteController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
+	@RequestMapping("/all-richieste-aperte-admin")
+	public ResponseEntity<List<Object>> allRichiesteAperteAdmin() {
+		List <Object> lista = new ArrayList<Object>();
+		lista.add(SecurityController.getListaCodiciRichiesteAperteAdmin());
+		lista.add(richiesteService.stampaCardAperteAdmin());
+		return new ResponseEntity<>(lista, HttpStatus.OK);
+	}
+	
 	@RequestMapping("/all-richieste-aperte/{nomeCognome}/{idDipendente}")
 	public ResponseEntity<List<Object>> allRichiesteAperte(@PathVariable("nomeCognome") String nomeCognome, @PathVariable("idDipendente") int idDipendente) {
 		List <Object> lista = new ArrayList<Object>();
@@ -113,6 +121,12 @@ public class RichiesteController {
 	@RequestMapping("/get-richiesta/{codiceRichiesta}/{pagina}/{ruolo}")
 	public ResponseEntity<List<Object>> getRichiesta(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("pagina") int pagina, @PathVariable("ruolo") String ruolo) {
 		int idRichiesta = 0;
+		if (pagina == 0 && ruolo.equals("Admin")) {
+			List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteAdmin();
+			for (JSONObject codice : listaCodici)
+				if (((String)codice.get(("codice"))).equals(codiceRichiesta))
+					idRichiesta = (Integer)codice.get("id");
+		}
 		if (pagina == 0 && ruolo.equals("Account")) {
 			List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteAccount();
 			for (JSONObject codice : listaCodici)
@@ -151,7 +165,6 @@ public class RichiesteController {
 		dati.add(statiRichiestaService.getIdStatoRichiesta(nomeStatoRichiesta).toString());
 		dati.add(statiRichiestaService.findAllException(nomeStatoRichiesta));
 		if (ruolo.equals("Direttore Recruiter")) {
-			System.out.println(commentiRichiesteService.findRecruiterById(idRichiesta));
 			dati.add(commentiRichiesteService.findRecruiterById(idRichiesta));
 		}
 		else if (ruolo.equals("Recruiter"))
@@ -161,16 +174,20 @@ public class RichiesteController {
 		return new ResponseEntity<>(dati, HttpStatus.OK);
 	}
 	
-	@RequestMapping("salva-priorita")
-	public ResponseEntity<?> salvaPriorita(@RequestBody List<JSONObject> listaPriorita) {
+	@RequestMapping("salva-priorita/{ruolo}")
+	public ResponseEntity<?> salvaPriorita(@RequestBody List<JSONObject> listaPriorita, @PathVariable("ruolo") String ruolo) {
 		int idRichiesta = 0;
-		List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteCommerciale();
+		List<JSONObject> listaCodici = new ArrayList<JSONObject>();
+		if (ruolo.equals("Direttore Commerciale"))
+			listaCodici = SecurityController.getListaCodiciRichiesteAperteCommerciale();
+		else
+			listaCodici = SecurityController.getListaCodiciRichiesteAperteAdmin();
 		for (JSONObject oggetto : listaPriorita) {
 			for (JSONObject codice : listaCodici)
 				if (((String)codice.get(("codice"))).equals((String)oggetto.get("codiceRichiesta")))
 					idRichiesta = (Integer)codice.get("id");
-			richiesteService.setPriorita(idRichiesta, (Integer)oggetto.get("priorita"));
-		}
+				richiesteService.setPriorita(idRichiesta, (Integer)oggetto.get("priorita"));
+			}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -216,6 +233,14 @@ public class RichiesteController {
 		int idRichiesta = 0;
 		JSONObject richiesta = null;
 		
+		if (pagina == 0 && ruolo.equals("Admin")) {
+			List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteAdmin();
+			for (JSONObject codice : listaCodici)
+				if (((String)codice.get(("codice"))).equals(codiceRichiesta)) {
+					idRichiesta = (Integer)codice.get("id");
+					richiesta = codice;
+				}
+		}
 		if (pagina == 0 && ruolo.equals("Account")) {
 			List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteAccount();
 			for (JSONObject codice : listaCodici)
@@ -262,8 +287,8 @@ public class RichiesteController {
 			else
 				listaRecruiters = (String)updateForm.get("listaRecruiters").toString().replace("[", "").replace("]", "");
 					
-			richiesteService.updateStato(Integer.parseInt((String)updateForm.get("statoRichiesta")), idRichiesta, 
-										listaRecruiters);
+			richiesteService.updateRichiesta(Integer.parseInt((String)updateForm.get("statoRichiesta")), idRichiesta, 
+									Integer.parseInt((String)updateForm.get("priorita")), listaRecruiters);
 			
 			String[] recruiters = updateForm.get("listaRecruiters").toString().replace("[", "").replace("]", "").split(", ");
 			List<String> recruiter = new ArrayList<String>();

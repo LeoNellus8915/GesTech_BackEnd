@@ -15,6 +15,14 @@ import it.teorema.gestech.model.mapper.AllRichiesteChiuse;
 import it.teorema.gestech.model.mapper.GetRichiesta;
 
 public interface RichiesteService extends JpaRepository <Richieste, Integer> {
+	@Query("select ri.id as id, ri.data as data, ri.cliente as cliente, ri.citta as citta , ri.costo as costo, "
+			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
+			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita "
+			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
+			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
+			+ "and sr.nome != 'Chiusa' "
+			+ "order by ri.priorita, ri.data desc")
+	List<AllRichieste> stampaCardAperteAdmin();
 	
 	@Query("select ri.id as id, ri.data as data, ri.cliente as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
@@ -63,6 +71,13 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	List<AllRichiesteChiuse> stampaCardChiuse();
 	
 	@Query("select r.id "
+			+ "from Richieste r, StatiRichiesta sr "
+			+ "where r.idStato = sr.id "
+			+ "and sr.nome != 'Chiusa' "
+			+ "order by r.priorita, r.data desc")
+	List<Integer> getIdRichiesteAperteAdmin();
+	
+	@Query("select r.id "
 			+ "from Richieste r, StatiRichiesta sr, Dipendenti d "
 			+ "where r.idStato = sr.id and r.idDipendente = d.id "
 			+ "and sr.nome != 'Chiusa' and r.idDipendente = :idDipendente "
@@ -104,7 +119,7 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	
 	@Query("select ri.id as id, ri.data as data, ri.cliente as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
-			+ "sr.nome as statiRichiesteNome, ri.recruiter as recruiter, ri.candidati as candidati "
+			+ "sr.nome as statiRichiesteNome, ri.recruiter as recruiter, ri.candidati as candidati, ri.priorita as priorita "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and ri.id = :idRichiesta")
@@ -118,8 +133,8 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	
 	@Modifying
 	@Transactional
-	@Query("update Richieste set idStato = :idStato, recruiter = :recruiter where id = :idRichiesta")
-	void updateStato(int idStato, int idRichiesta, String recruiter);
+	@Query("update Richieste set idStato = :idStato, priorita = :priorita, recruiter = :recruiter where id = :idRichiesta")
+	void updateRichiesta(int idStato, int idRichiesta, int priorita, String recruiter);
 
 	@Modifying
 	@Transactional

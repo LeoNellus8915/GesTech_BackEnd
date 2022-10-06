@@ -27,6 +27,7 @@ public class SecurityController {
 	BeniService beniService;
 	
 	private static List<JSONObject> listaCodiciCandidati;
+	private static List<JSONObject> listaCodiciRichiesteAperteAdmin;
 	private static List<JSONObject> listaCodiciRichiesteAperteAccount;
 	private static List<JSONObject> listaCodiciRichiesteAperteCommerciale;
 	private static List<JSONObject> listaCodiciRichiesteAperteRecruiter;
@@ -116,6 +117,27 @@ public class SecurityController {
 	
 	public static List<JSONObject> getListaCodiciRichiesteAperteRecruiter() {
 		return listaCodiciRichiesteAperteRecruiter;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping("/get-codici-richieste-aperte-admin")
+	public ResponseEntity<?> getCodiciRichiesteAperteAdmin() {
+		List<JSONObject> listaCodici = new ArrayList<JSONObject>();
+		List<Integer> listaId = richiesteService.getIdRichiesteAperteAdmin();
+		for (Integer id : listaId) {
+			JSONObject oggetto = new JSONObject();
+			UUID codice = UUID.randomUUID();
+			oggetto.put("id", id);
+			oggetto.put("codice", codice.toString().replaceAll("-", ""));
+			listaCodici.add(oggetto);
+			//controllo sul se esce uguale
+		}
+		listaCodiciRichiesteAperteAdmin = listaCodici;
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	public static List<JSONObject> getListaCodiciRichiesteAperteAdmin() {
+		return listaCodiciRichiesteAperteAdmin;
 	}
 	
 	@SuppressWarnings("unchecked")
