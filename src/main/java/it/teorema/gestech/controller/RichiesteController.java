@@ -39,9 +39,8 @@ public class RichiesteController {
 	StatiRichiestaService statiRichiestaService;
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping("/salva-richiesta")
-	public ResponseEntity<?> salvaRichiesta(@RequestBody JSONObject addForm) {
-		
+	@RequestMapping("/salva-richiesta/{ruolo}")
+	public ResponseEntity<?> salvaRichiesta(@RequestBody JSONObject addForm, @PathVariable("ruolo") String ruolo) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
 		LocalDateTime now = LocalDateTime.now();
 		Richieste richiesta = new Richieste();
@@ -58,7 +57,11 @@ public class RichiesteController {
 		richiesta.setPriorita(0);
 		richiesteService.save(richiesta);
 		
-		List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteAccount();
+		List<JSONObject> listaCodici = null;
+		if (ruolo.equals("Account"))
+			listaCodici = SecurityController.getListaCodiciRichiesteAperteAccount();
+		if (ruolo.equals("Admin"))
+			listaCodici = SecurityController.getListaCodiciRichiesteAperteAdmin();
 		JSONObject oggetto = new JSONObject();
 		UUID codice = UUID.randomUUID();
 		oggetto.put("id", richiesteService.getLastId());
@@ -191,13 +194,18 @@ public class RichiesteController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@RequestMapping("/elimina-richiesta/{codiceRichiesta}/{pagina}")
-	public ResponseEntity<?> eliminaRichiesta(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("pagina") int pagina) {
+	@RequestMapping("/elimina-richiesta/{codiceRichiesta}/{pagina}/{ruolo}")
+	public ResponseEntity<?> eliminaRichiesta(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("pagina") int pagina,
+												@PathVariable("ruolo") String ruolo) {
 		int idRichiesta = 0;
 		JSONObject appoggio = null;
 		
 		if (pagina == 0) {
-			List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteCommerciale();
+			List<JSONObject> listaCodici = null;
+			if (ruolo.equals("Direttore Commerciale"))
+				listaCodici = SecurityController.getListaCodiciRichiesteAperteCommerciale();
+			if (ruolo.equals("Admin"))
+				listaCodici = SecurityController.getListaCodiciRichiesteAperteAdmin();
 			for (JSONObject codice : listaCodici)
 				if (((String)codice.get(("codice"))).equals(codiceRichiesta)) {
 					idRichiesta = (Integer)codice.get("id");

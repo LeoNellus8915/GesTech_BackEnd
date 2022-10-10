@@ -12,6 +12,6 @@ public interface AllRichieste {
 	String getLinguaggiNome();
 	String getProfiliNome();
 	String getLivelliNome();
-	String getStatiRichiestaNome();
+	String getStatiRichiesteNome();
 	int getPriorita();
 }

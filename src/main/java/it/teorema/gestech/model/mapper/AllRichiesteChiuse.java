@@ -12,6 +12,6 @@ public interface AllRichiesteChiuse {
 	String getLinguaggiNome();
 	String getProfiliNome();
 	String getLivelliNome();
-	String getStatiRichiestaNome();
+	String getStatiRichiesteNome();
 	String getRecruiter();
 }
