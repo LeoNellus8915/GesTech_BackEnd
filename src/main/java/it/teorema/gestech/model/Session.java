@@ -1,5 +1,7 @@
 package it.teorema.gestech.model;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,18 +16,21 @@ public class Session {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "id_dipendente")
-	private int idDipendente;
-	@Column(name = "id_ruolo")
-	private int idRuolo;
+	@Column(name = "id_persona")
+	private int idPersona;
+	@Column(name = "token")
+	private String token;
+	@Column(name = "data")
+	private LocalDateTime data;
 	
 	public Session() {}
-	
-	public Session(int id, int idDipendente, int idRuolo) {
+
+	public Session(int id, int idPersona, String token, LocalDateTime data) {
 		super();
 		this.id = id;
-		this.idDipendente = idDipendente;
-		this.idRuolo = idRuolo;
+		this.idPersona = idPersona;
+		this.token = token;
+		this.data = data;
 	}
 
 	public int getId() {
@@ -36,19 +41,29 @@ public class Session {
 		this.id = id;
 	}
 
-	public int getIdDipendente() {
-		return idDipendente;
+	public int getIdPersona() {
+		return idPersona;
 	}
 
-	public void setIdDipendente(int idDipendente) {
-		this.idDipendente = idDipendente;
+	public void setIdPersona(int idPersona) {
+		this.idPersona = idPersona;
 	}
 
-	public int getIdRuolo() {
-		return idRuolo;
+	public String getToken() {
+		return token;
 	}
 
-	public void setIdRuolo(int idRuolo) {
-		this.idRuolo = idRuolo;
+	public void setToken(String token) {
+		this.token = token;
 	}
+
+	public LocalDateTime getData() {
+		return data;
+	}
+
+	public void setData(LocalDateTime data) {
+		this.data = data;
+	}
+	
+	
 }

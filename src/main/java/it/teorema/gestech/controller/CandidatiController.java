@@ -23,7 +23,7 @@ import it.teorema.gestech.model.DettagliCandidati;
 import it.teorema.gestech.model.Candidati;
 import it.teorema.gestech.service.CommentiCandidatiService;
 import it.teorema.gestech.service.DettagliCandidatiService;
-import it.teorema.gestech.service.DipendentiService;
+import it.teorema.gestech.service.PersoneService;
 import it.teorema.gestech.service.EsitiColloquioService;
 import it.teorema.gestech.service.LinguaggiService;
 import it.teorema.gestech.service.LingueService;
@@ -36,7 +36,7 @@ public class CandidatiController {
 	@Autowired
 	CandidatiService candidatiService;
 	@Autowired
-	DipendentiService dipendentiService;
+	PersoneService dipendentiService;
 	@Autowired
 	EsitiColloquioService esitiColloquioService;
 	@Autowired

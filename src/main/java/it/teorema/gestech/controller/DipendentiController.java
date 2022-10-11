@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import it.teorema.gestech.model.Auth;
 import it.teorema.gestech.model.AziendeDipendenti;
 import it.teorema.gestech.model.Dipendenti;
-import it.teorema.gestech.model.RuoliDipendenti;
+import it.teorema.gestech.model.RuoliPersona;
 import it.teorema.gestech.model.mapper.AllDipendenti;
 import it.teorema.gestech.service.AuthService;
 import it.teorema.gestech.service.AziendeDipendentiService;
 import it.teorema.gestech.service.CandidatiService;
 import it.teorema.gestech.service.DettagliDipendentiService;
-import it.teorema.gestech.service.DipendentiService;
+import it.teorema.gestech.service.PersoneService;
 import it.teorema.gestech.service.RuoliDipendentiService;
 
 @Controller
@@ -31,7 +31,7 @@ public class DipendentiController {
 	@Autowired
 	DettagliDipendentiService dettagliDipendentiService;
 	@Autowired
-	DipendentiService dipendentiService;
+	PersoneService dipendentiService;
 	@Autowired
 	CandidatiService candidatiService;
 	@Autowired
@@ -78,14 +78,14 @@ public class DipendentiController {
 			authService.save(auth);
 			
 			if ((String)formUtente.get("ruolo") != "") {
-				List<RuoliDipendenti> ruoli = new ArrayList<RuoliDipendenti>();
-				RuoliDipendenti ruoloDipendente = new RuoliDipendenti();
+				List<RuoliPersona> ruoli = new ArrayList<RuoliPersona>();
+				RuoliPersona ruoloDipendente = new RuoliPersona();
 				
 				ruoloDipendente.setIdDipendente(idDipendente);
 				ruoloDipendente.setIdRuolo(7);
 				ruoli.add(ruoloDipendente);
 				
-				RuoliDipendenti ruoloAlternativo = new RuoliDipendenti();
+				RuoliPersona ruoloAlternativo = new RuoliPersona();
 				
 				ruoloAlternativo.setIdDipendente(idDipendente);
 				ruoloAlternativo.setIdRuolo(Integer.parseInt((String) formUtente.get("ruolo")));
@@ -95,7 +95,7 @@ public class DipendentiController {
 				
 			}
 			else {
-				RuoliDipendenti ruoliRisorse = new RuoliDipendenti();
+				RuoliPersona ruoliRisorse = new RuoliPersona();
 				ruoliRisorse.setIdDipendente(idDipendente);
 				ruoliRisorse.setIdRuolo(4);
 				

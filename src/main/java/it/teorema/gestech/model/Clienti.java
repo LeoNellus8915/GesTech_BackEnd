@@ -17,13 +17,22 @@ public class Clienti
 	private int id;
 	@Column(name = "nome")
 	private String nome;
+	@Column(name = "sede")
+	private String sede;
+	@Column(name = "partita_iva")
+	private String partitaIva;
+	@Column(name = "stato")
+	private int stato;
 	
 	public Clienti() {}
-	
-	public Clienti(int id, String nome) {
+
+	public Clienti(int id, String nome, String sede, String partitaIva, int stato) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.sede = sede;
+		this.partitaIva = partitaIva;
+		this.stato = stato;
 	}
 
 	public int getId() {
@@ -41,4 +50,30 @@ public class Clienti
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
+	public String getSede() {
+		return sede;
+	}
+
+	public void setSede(String sede) {
+		this.sede = sede;
+	}
+
+	public String getPartitaIva() {
+		return partitaIva;
+	}
+
+	public void setPartitaIva(String partitaIva) {
+		this.partitaIva = partitaIva;
+	}
+
+	public int getStato() {
+		return stato;
+	}
+
+	public void setStato(int stato) {
+		this.stato = stato;
+	}
+	
+	
 }

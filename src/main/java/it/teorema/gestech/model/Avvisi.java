@@ -17,8 +17,8 @@ public class Avvisi
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "id_dipendente")
-	private int idDipendente;
+	@Column(name = "id_persona")
+	private int idPersona;
 	@Column(name = "titolo")
 	private String titolo;
 	@Column(name = "ruoli")
@@ -30,10 +30,10 @@ public class Avvisi
 	
 	public Avvisi() {}
 
-	public Avvisi(int id, int idDipendente, String titolo, String ruoli, String note, LocalDateTime data) {
+	public Avvisi(int id, int idPersona, String titolo, String ruoli, String note, LocalDateTime data) {
 		super();
 		this.id = id;
-		this.idDipendente = idDipendente;
+		this.idPersona = idPersona;
 		this.titolo = titolo;
 		this.ruoli = ruoli;
 		this.note = note;
@@ -48,12 +48,12 @@ public class Avvisi
 		this.id = id;
 	}
 
-	public int getIdDipendente() {
-		return idDipendente;
+	public int getidPersona() {
+		return idPersona;
 	}
 
-	public void setIdDipendente(int idDipendente) {
-		this.idDipendente = idDipendente;
+	public void setidPersona(int idPersona) {
+		this.idPersona = idPersona;
 	}
 
 	public String getTitolo() {

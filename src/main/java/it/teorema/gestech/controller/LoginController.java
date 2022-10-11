@@ -20,14 +20,14 @@ import it.teorema.gestech.service.AziendeDipendentiService;
 import it.teorema.gestech.service.CCNLService;
 import it.teorema.gestech.service.DipendentiCCNLService;
 import it.teorema.gestech.service.DipendentiRichiesteService;
-import it.teorema.gestech.service.DipendentiService;
+import it.teorema.gestech.service.PersoneService;
 import it.teorema.gestech.service.RuoliDipendentiService;
 import it.teorema.gestech.session.LocalSession;
 
 @Controller
 public class LoginController {
 	@Autowired
-	DipendentiService dipendentiService;
+	PersoneService dipendentiService;
 	@Autowired
 	AuthService authService;
 	@Autowired

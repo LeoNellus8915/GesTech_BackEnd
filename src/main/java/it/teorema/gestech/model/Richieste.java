@@ -16,8 +16,8 @@ public class Richieste {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "id_dipendente")
-	private int idDipendente;
+	@Column(name = "id_persona")
+	private int idPersona;
 	@Column(name = "data")
 	private LocalDateTime data;
 	@Column(name = "id_linguaggio")
@@ -26,8 +26,8 @@ public class Richieste {
 	private int idProfilo;
 	@Column(name = "id_livello")
 	private int idLivello;
-	@Column(name = "cliente")
-	private String cliente;
+	@Column(name = "id_idCliente")
+	private int idCliente;
 	@Column(name = "citta")
 	private String citta;
 	@Column(name = "costo")
@@ -40,29 +40,26 @@ public class Richieste {
 	private int idStato;
 	@Column(name = "priorita")
 	private int priorita;
-	@Column(name = "candidati")
-	private String candidati;
 	
 	public Richieste() {}
 
-	public Richieste(int id, int idDipendente, LocalDateTime data, int idLinguaggio, int idProfilo, int idLivello,
-			String cliente, String citta, double costo, String note, String recruiter, int idStato, int priorita,
+	public Richieste(int id, int idPersona, LocalDateTime data, int idLinguaggio, int idProfilo, int idLivello,
+			int idCliente, String citta, double costo, String note, String recruiter, int idStato, int priorita,
 			String candidati) {
 		super();
 		this.id = id;
-		this.idDipendente = idDipendente;
+		this.idPersona = idPersona;
 		this.data = data;
 		this.idLinguaggio = idLinguaggio;
 		this.idProfilo = idProfilo;
 		this.idLivello = idLivello;
-		this.cliente = cliente;
+		this.idCliente = idCliente;
 		this.citta = citta;
 		this.costo = costo;
 		this.note = note;
 		this.recruiter = recruiter;
 		this.idStato = idStato;
 		this.priorita = priorita;
-		this.candidati = candidati;
 	}
 
 	public int getId() {
@@ -73,12 +70,12 @@ public class Richieste {
 		this.id = id;
 	}
 
-	public int getIdDipendente() {
-		return idDipendente;
+	public int getIdPersona() {
+		return idPersona;
 	}
 
-	public void setIdDipendente(int idDipendente) {
-		this.idDipendente = idDipendente;
+	public void setIdPersona(int idPersona) {
+		this.idPersona = idPersona;
 	}
 
 	public LocalDateTime getData() {
@@ -113,12 +110,12 @@ public class Richieste {
 		this.idLivello = idLivello;
 	}
 
-	public String getCliente() {
-		return cliente;
+	public int getCliente() {
+		return idCliente;
 	}
 
-	public void setCliente(String cliente) {
-		this.cliente = cliente;
+	public void setCliente(int idCliente) {
+		this.idCliente = idCliente;
 	}
 
 	public String getCitta() {
@@ -167,13 +164,5 @@ public class Richieste {
 
 	public void setPriorita(int priorita) {
 		this.priorita = priorita;
-	}
-
-	public String getCandidati() {
-		return candidati;
-	}
-
-	public void setCandidati(String candidati) {
-		this.candidati = candidati;
 	}
 }

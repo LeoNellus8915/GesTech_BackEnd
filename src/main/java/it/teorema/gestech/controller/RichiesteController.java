@@ -22,7 +22,7 @@ import it.teorema.gestech.model.DipendentiRichieste;
 import it.teorema.gestech.service.CommentiRichiesteService;
 import it.teorema.gestech.service.RichiesteService;
 import it.teorema.gestech.service.DipendentiRichiesteService;
-import it.teorema.gestech.service.DipendentiService;
+import it.teorema.gestech.service.PersoneService;
 import it.teorema.gestech.service.StatiRichiestaService;
 
 @Controller
@@ -30,7 +30,7 @@ public class RichiesteController {
 	@Autowired
 	RichiesteService richiesteService;
 	@Autowired
-	DipendentiService dipendentiService;
+	PersoneService dipendentiService;
 	@Autowired
 	CommentiRichiesteService commentiRichiesteService;
 	@Autowired

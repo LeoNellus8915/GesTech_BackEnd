@@ -13,11 +13,11 @@ import it.teorema.gestech.model.Auth;
 public interface AuthService extends JpaRepository <Auth, Integer> {
 	@Modifying
 	@Transactional
-	@Query("update Auth set password = :password where idDipendente = :idDipendente")
-	void changePassword(String password, int idDipendente);
+	@Query("update Auth set password = :password where idPersona = :idPersona")
+	void changePassword(String password, int idPersona);
 	
 	@Query("select d.id "
-			+ "from Dipendenti d, Auth a, RuoliDipendenti rd "
-			+ "where d.id = a.idDipendente and d.id = rd.idDipendente and d.email = :email and a.password = :password")
+			+ "from Persone p, Auth a, RuoliPersona rp "
+			+ "where p.id = a.idDipendente and p.id = rp.idDipendente and p.email = :email and a.password = :password")
 	List<Integer> login(String email, String password);
 }

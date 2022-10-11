@@ -16,8 +16,8 @@ public class CommentiRichieste {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "id_dipendente")
-	private int idDipendente;
+	@Column(name = "id_dettaglio_candidato")
+	private int idDettaglioCandidato;
 	@Column(name = "id_richiesta")
 	private int idRichiesta;
 	@Column(name = "note")
@@ -29,10 +29,10 @@ public class CommentiRichieste {
 	
 	public CommentiRichieste(){}
 
-	public CommentiRichieste(int id, int idDipendente, int idRichiesta, String note, LocalDateTime data, boolean nascosto) {
+	public CommentiRichieste(int id, int idDettaglioCandidato, int idRichiesta, String note, LocalDateTime data, boolean nascosto) {
 		super();
 		this.id = id;
-		this.idDipendente = idDipendente;
+		this.idDettaglioCandidato = idDettaglioCandidato;
 		this.idRichiesta = idRichiesta;
 		this.note = note;
 		this.data = data;
@@ -47,12 +47,12 @@ public class CommentiRichieste {
 		this.id = id;
 	}
 
-	public int getIdDipendente() {
-		return idDipendente;
+	public int getidDettaglioCandidato() {
+		return idDettaglioCandidato;
 	}
 
-	public void setIdDipendente(int idDipendente) {
-		this.idDipendente = idDipendente;
+	public void setidDettaglioCandidato(int idDettaglioCandidato) {
+		this.idDettaglioCandidato = idDettaglioCandidato;
 	}
 
 	public int getIdRichiesta() {

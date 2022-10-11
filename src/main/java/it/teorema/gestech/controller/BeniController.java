@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import it.teorema.gestech.model.Beni;
 import it.teorema.gestech.service.BeniService;
-import it.teorema.gestech.service.DipendentiService;
+import it.teorema.gestech.service.PersoneService;
 
 @Controller
 public class BeniController {
 	@Autowired
 	BeniService beniService;
 	@Autowired
-	DipendentiService dipendentiService;
+	PersoneService dipendentiService;
 	
 	@RequestMapping("/all-beni")
 	public ResponseEntity<List<Object>> allBeni() {

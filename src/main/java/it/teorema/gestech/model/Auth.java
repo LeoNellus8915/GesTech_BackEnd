@@ -17,8 +17,8 @@ public class Auth
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
-	@Column(name = "id_dipendente")
-	private int idDipendente;
+	@Column(name = "id_persona")
+	private int idPersona;
 	@Column(name = "password")
 	private String password;
 	@Column(name = "data")
@@ -26,10 +26,10 @@ public class Auth
 
 	public Auth(){}
 
-	public Auth(int id, int idDipendente, String password, LocalDate data) {
+	public Auth(int id, int idPersona, String password, LocalDate data) {
 		super();
 		this.id = id;
-		this.idDipendente = idDipendente;
+		this.idPersona = idPersona;
 		this.password = password;
 		this.data = data;
 	}
@@ -42,12 +42,12 @@ public class Auth
 		this.id = id;
 	}
 
-	public int getIdDipendente() {
-		return idDipendente;
+	public int getidPersona() {
+		return idPersona;
 	}
 
-	public void setIdDipendente(int idDipendente) {
-		this.idDipendente = idDipendente;
+	public void setidPersona(int idPersona) {
+		this.idPersona = idPersona;
 	}
 
 	public String getPassword() {
