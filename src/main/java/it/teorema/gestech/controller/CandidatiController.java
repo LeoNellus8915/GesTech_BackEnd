@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import it.teorema.gestech.model.CommentiCandidati;
+import it.teorema.gestech.model.Cv;
 import it.teorema.gestech.model.DettagliCandidati;
-import it.teorema.gestech.model.Candidati;
+import it.teorema.gestech.model.Lingue;
+import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.service.CommentiCandidatiService;
 import it.teorema.gestech.service.DettagliCandidatiService;
 import it.teorema.gestech.service.PersoneService;
@@ -29,14 +31,11 @@ import it.teorema.gestech.service.LinguaggiService;
 import it.teorema.gestech.service.LingueService;
 import it.teorema.gestech.service.LivelliService;
 import it.teorema.gestech.service.ProfiliService;
-import it.teorema.gestech.service.CandidatiService;
 
 @Controller
 public class CandidatiController {
 	@Autowired
-	CandidatiService candidatiService;
-	@Autowired
-	PersoneService dipendentiService;
+	PersoneService personeService;
 	@Autowired
 	EsitiColloquioService esitiColloquioService;
 	@Autowired
@@ -55,7 +54,7 @@ public class CandidatiController {
 	@RequestMapping("/all-candidati")
 	public ResponseEntity<List<Object>> allCandidati(HttpServletRequest request) {
 		List<Object> lista = new ArrayList<>();
-		lista.add(dettagliCandidatiService.allCandidati());
+		//lista.add(dettagliCandidatiService.allCandidati());
 		lista.add(SecurityController.getListaCodiciCandidati());
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
@@ -63,13 +62,14 @@ public class CandidatiController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/salva-candidato")
 	public ResponseEntity<?> salvaCandidato(@RequestBody JSONObject formCandidato) {
-		if (candidatiService.existsByEmail((String) formCandidato.get("email")) != null ||
-				dipendentiService.existsByEmail((String) formCandidato.get("email")) != null)
+		if (personeService.existsByEmail((String) formCandidato.get("email")) != null ||
+				personeService.existsByEmail((String) formCandidato.get("email")) != null)
 			return new ResponseEntity<>(0, HttpStatus.OK);
 		else
 		{
-			Candidati candidato = new Candidati();
+			Persone persona = new Persone();
 			DettagliCandidati dettagliCandidato = new DettagliCandidati();
+			Cv cv = new Cv();
 			CommentiCandidati commentiCandidato = new CommentiCandidati();
 			
 			DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
@@ -77,22 +77,21 @@ public class CandidatiController {
 			LocalDateTime now = LocalDateTime.now();  
 			LocalDateTime data = LocalDateTime.parse(format1.format(now), format1);	
 	
-			candidato.setNomeCognome((String)formCandidato.get("nomeCognome"));
-			candidato.setCellulare((String)formCandidato.get("cellulare"));
-			candidato.setEmail((String)formCandidato.get("email"));
-			candidato.setProfiloLinkedin((String)formCandidato.get("profiloLinkedin"));
-			candidato.setCitta((String)formCandidato.get("citta"));
+			persona.setNome((String)formCandidato.get("nome"));
+			persona.setCognome((String)formCandidato.get("cognome"));
+			persona.setCellulare((String)formCandidato.get("cellulare"));
+			persona.setEmail((String)formCandidato.get("email"));
+			persona.setCittaDiNascita((String)formCandidato.get("citta"));
 			
-			System.out.println(formCandidato);
+			personeService.save(persona);
 			
-			candidatiService.save(candidato);
-			
-			int idCandidato = candidatiService.findIdByEmail(candidato.getEmail());
+			int idCandidato = personeService.findIdByEmail(persona.getEmail());
 			
 			if (((String)formCandidato.get("dataColloquio")).equals(""))
 				dettagliCandidato.setDataColloquio(null);
 			else
 				dettagliCandidato.setDataColloquio(LocalDate.parse((String)formCandidato.get("dataColloquio"), format2));
+			dettagliCandidato.setProfiloLinkedin((String)formCandidato.get("profiloLinkedin"));
 			dettagliCandidato.setAnnoColloquio((Integer)formCandidato.get("annoColloquio"));
 			dettagliCandidato.setFonteReperimento((String)formCandidato.get("fonteReperimento"));
 			dettagliCandidato.setCompetenzaPrincipale((String)formCandidato.get("competenzaPrincipale"));
@@ -102,28 +101,18 @@ public class CandidatiController {
 			dettagliCandidato.setCompetenzeTotali((String)formCandidato.get("competenzeTotali"));
 			dettagliCandidato.setCertificazioni((String)formCandidato.get("certificazioni"));
 			dettagliCandidato.setDataInserimento(data);
-			if ((String)formCandidato.get("cv") == null)
-				dettagliCandidato.setFileBase64(null);
-			else
-				dettagliCandidato.setFileBase64((String)formCandidato.get("cv").toString());
 			dettagliCandidato.setIdEsitoColloquio(Integer.parseInt((String)formCandidato.get("esitoColloquio")));
-			dettagliCandidato.setIdProfilo(Integer.parseInt((String)formCandidato.get("profilo")));
-			dettagliCandidato.setIdLingua1(Integer.parseInt((String)formCandidato.get("lingua1")));
-			dettagliCandidato.setIdLingua2(Integer.parseInt((String)formCandidato.get("lingua2")));
-			dettagliCandidato.setIdLingua3(Integer.parseInt((String)formCandidato.get("lingua3")));
-			dettagliCandidato.setIdCandidato(idCandidato);
-			dettagliCandidato.setIdLivello(Integer.parseInt((String)formCandidato.get("livello")));
-			dettagliCandidato.setIdLinguaggio1(Integer.parseInt((String)formCandidato.get("linguaggio1")));
-			dettagliCandidato.setIdLinguaggio2(Integer.parseInt((String)formCandidato.get("linguaggio2")));
-			dettagliCandidato.setIdLinguaggio3(Integer.parseInt((String)formCandidato.get("linguaggio3")));
-			dettagliCandidato.setIdLinguaggio4(Integer.parseInt((String)formCandidato.get("linguaggio4")));
-			dettagliCandidato.setIdLinguaggio5(Integer.parseInt((String)formCandidato.get("linguaggio5")));
+			
+			if ((String)formCandidato.get("cv") == null)
+				cv.setCvBase64(null);
+			else
+				cv.setCvBase64((String)formCandidato.get("cv").toString());
 				
 			if ((String)formCandidato.get("commento") != "")
 			{
 				commentiCandidato.setData(LocalDate.parse(format1.format(now), format1));
-				commentiCandidato.setIdDipendente(Integer.parseInt((String)formCandidato.get("idDipendente")));
-				commentiCandidato.setIdCandidato(idCandidato);
+				commentiCandidato.setIdPersona(idCandidato);
+				commentiCandidato.setIdDettaglioCandidato(idCandidato);
 				commentiCandidato.setNote((String)formCandidato.get("commento"));
 				commentiCandidatiService.save(commentiCandidato);
 			}
@@ -141,39 +130,32 @@ public class CandidatiController {
 	
 	@RequestMapping("/get-candidato-visualizza/{codiceCandidato}")
 	public ResponseEntity<List<Object>> getCandidatoVisualizza(@PathVariable("codiceCandidato") String codiceCandidato) {
-		int idCandidato = 0;
+		int idPersona = 0;
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
 		
 		for (JSONObject codice : listaCodici)
 			if (((String)codice.get(("codice"))).equals(codiceCandidato))
-				idCandidato = (Integer)codice.get("id");
+				idPersona = (Integer)codice.get("id");
 		
-		if (idCandidato != 0) {
-			Candidati candidato = candidatiService.findByIdCandidato(idCandidato);
-			if (candidato == null)
+		if (idPersona != 0) {
+			Persone persona = personeService.findByIdPersona(idPersona);
+			if (persona == null)
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			else {
 				List<Object> datiCandidato = new ArrayList<Object>();
 				List<Object> dettagliCandidato = new ArrayList<Object>();
 				
-				dettagliCandidato.add(dettagliCandidatiService.getDettagliCandidato(idCandidato));
-				dettagliCandidato.add(esitiColloquioService.getEsitoColloquio(idCandidato));
-				dettagliCandidato.add(profiliService.getProfilo(idCandidato));
-				dettagliCandidato.add(linguaggiService.getLinguaggio1(idCandidato));
-				dettagliCandidato.add(linguaggiService.getLinguaggio2(idCandidato));
-				dettagliCandidato.add(linguaggiService.getLinguaggio3(idCandidato));
-				dettagliCandidato.add(linguaggiService.getLinguaggio4(idCandidato));
-				dettagliCandidato.add(linguaggiService.getLinguaggio5(idCandidato));
-				dettagliCandidato.add(lingueService.getLingua1(idCandidato));
-				dettagliCandidato.add(lingueService.getLingua2(idCandidato));
-				dettagliCandidato.add(lingueService.getLingua3(idCandidato));
-				dettagliCandidato.add(livelliService.getSeniority(idCandidato));
+				dettagliCandidato.add(dettagliCandidatiService.getDettagliCandidato(idPersona));
+				dettagliCandidato.add(esitiColloquioService.getEsitoColloquio(idPersona));
+				dettagliCandidato.add(profiliService.getProfilo(idPersona));
+				dettagliCandidato.add(linguaggiService.getLinguaggio(idPersona));
+				dettagliCandidato.add(lingueService.getLingua(idPersona));
+				dettagliCandidato.add(livelliService.getSeniority(idPersona));
 						
-				datiCandidato.add(candidato);
+				datiCandidato.add(persona);
 				datiCandidato.add(dettagliCandidato);
-				datiCandidato.add(commentiCandidatiService.findByIdCandidato(idCandidato));
+				datiCandidato.add(commentiCandidatiService.findByIdCandidato(idPersona));
 				datiCandidato.add(esitiColloquioService.getColore((String)dettagliCandidato.get(1)));
-				datiCandidato.add(dettagliCandidatiService.getFile64(idCandidato));
 				return new ResponseEntity<>(datiCandidato, HttpStatus.OK);
 			}
 		}
@@ -183,67 +165,47 @@ public class CandidatiController {
 	
 	@RequestMapping("/get-candidato-modifica/{codiceCandidato}")
 	public ResponseEntity<List<Object>> getCandidatoModifica(@PathVariable("codiceCandidato") String codiceCandidato) {
-		int idCandidato = 0;
+		int idPersona = 0;
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
 		
 		for (JSONObject codice : listaCodici)
 			if (((String)codice.get(("codice"))).equals(codiceCandidato))
-				idCandidato = (Integer)codice.get("id");
+				idPersona = (Integer)codice.get("id");
 		
-		if (idCandidato != 0) {
-			Candidati candidato = candidatiService.findByIdCandidato(idCandidato);
-			DettagliCandidati listaSelects = dettagliCandidatiService.findByIdCandidato(idCandidato);
-			if (candidato == null)
+		if (idPersona != 0) {
+			Persone persona = personeService.findByIdPersona(idPersona);
+			DettagliCandidati listaSelects = dettagliCandidatiService.findByIdCandidato(idPersona);
+			if (persona == null)
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			else {
 				List<Object> datiCandidato = new ArrayList<Object>();
 				List<Object> dettagliCandidato = new ArrayList<Object>();
 				
-				String esitoColloquio = esitiColloquioService.getEsitoColloquio(idCandidato);
+				String esitoColloquio = esitiColloquioService.getEsitoColloquio(idPersona);
 				dettagliCandidato.add(esitoColloquio);
 				dettagliCandidato.add(esitiColloquioService.findAllException(esitoColloquio));
 				
-				String profilo = profiliService.getProfilo(idCandidato);
+				String profilo = profiliService.getProfilo(idPersona);
 				dettagliCandidato.add(profilo);
 				dettagliCandidato.add(profiliService.findAllException(profilo));
 				
-				String linguaggio1 = linguaggiService.getLinguaggio1(idCandidato);
-				dettagliCandidato.add(linguaggio1);
-				dettagliCandidato.add(linguaggiService.findAllException(linguaggio1));
+				String[] linguaggi = linguaggiService.getLinguaggio(idPersona);
+				dettagliCandidato.add(linguaggi);
+				for (String linguaggio : linguaggi) {
+					dettagliCandidato.add(linguaggiService.findAllException(linguaggio));
+				}
 				
-				String linguaggio2 = linguaggiService.getLinguaggio2(idCandidato);
-				dettagliCandidato.add(linguaggio2);
-				dettagliCandidato.add(linguaggiService.findAllException(linguaggio2));
+				String[] lingue = lingueService.getLingua(idPersona);
+				dettagliCandidato.add(lingue);
+				for (String lingua : lingue) {
+					dettagliCandidato.add(lingueService.findAllException(lingua));
+				}
 				
-				String linguaggio3 = linguaggiService.getLinguaggio3(idCandidato);
-				dettagliCandidato.add(linguaggio3);
-				dettagliCandidato.add(linguaggiService.findAllException(linguaggio3));
-				
-				String linguaggio4 = linguaggiService.getLinguaggio4(idCandidato);
-				dettagliCandidato.add(linguaggio4);
-				dettagliCandidato.add(linguaggiService.findAllException(linguaggio4));
-				
-				String linguaggio5 = linguaggiService.getLinguaggio5(idCandidato);
-				dettagliCandidato.add(linguaggio5);
-				dettagliCandidato.add(linguaggiService.findAllException(linguaggio5));
-				
-				String lingua1 = lingueService.getLingua1(idCandidato);
-				dettagliCandidato.add(lingua1);
-				dettagliCandidato.add(lingueService.findAllException(lingua1));
-				
-				String lingua2 = lingueService.getLingua2(idCandidato);
-				dettagliCandidato.add(lingua2);
-				dettagliCandidato.add(lingueService.findAllException(lingua2));
-				
-				String lingua3 = lingueService.getLingua3(idCandidato);
-				dettagliCandidato.add(lingua3);
-				dettagliCandidato.add(lingueService.findAllException(lingua3));
-				
-				String livello = livelliService.getSeniority(idCandidato);
+				String livello = livelliService.getSeniority(idPersona);
 				dettagliCandidato.add(livello);
 				dettagliCandidato.add(livelliService.findAllException(livello));
 				
-				datiCandidato.add(candidato);
+				datiCandidato.add(persona);
 				datiCandidato.add(dettagliCandidato);
 				datiCandidato.add(listaSelects);
 			
@@ -256,26 +218,26 @@ public class CandidatiController {
 	
 	@RequestMapping("/elimina-candidato/{codiceCandidato}")
 	public ResponseEntity<?> eliminaCandidato(@PathVariable("codiceCandidato") String codiceCandidato) {
-		int idCandidato = 0;
+		int idPersona = 0;
 		JSONObject appoggio = null;
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
 		for (JSONObject codice : listaCodici) {
 			if (((String)codice.get(("codice"))).equals(codiceCandidato)) {
-				idCandidato = (Integer)codice.get("id");
+				idPersona = (Integer)codice.get("id");
 				appoggio = codice;
 			}
 		}
 		listaCodici.remove(appoggio);
 		
-		candidatiService.deleteById(idCandidato);
-		dettagliCandidatiService.deleteByIdCandidato(idCandidato);
-		commentiCandidatiService.deleteByIdCandidato(idCandidato);
+		personeService.deleteById(idPersona);
+		dettagliCandidatiService.deleteByIdCandidato(idPersona);
+		commentiCandidatiService.deleteByIdCandidato(idPersona);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@RequestMapping("/controllo-email-modifica")
 	public ResponseEntity<Integer> controlloEmailModifica(@RequestBody String email) {
-		if (candidatiService.existsByEmail(email) != null)
+		if (personeService.existsByEmail(email) != null)
 			return new ResponseEntity<>(0, HttpStatus.OK);
 		else
 			return new ResponseEntity<>(1, HttpStatus.OK);
@@ -284,13 +246,13 @@ public class CandidatiController {
 	@RequestMapping("/modifica-candidato/{codiceCandidato}/{idDipendente}")
 	public ResponseEntity<?> modificaCandidato(@PathVariable("codiceCandidato") String codiceCandidato, @PathVariable("idDipendente") int idDipendente, 
 											@RequestBody JSONObject updateForm) {
-		int idCandidato = 0;
+		int idPersona = 0;
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
 		for (JSONObject codice : listaCodici)
 			if (((String)codice.get(("codice"))).equals(codiceCandidato))
-				idCandidato = (Integer)codice.get("id");
+				idPersona = (Integer)codice.get("id");
 		
-		candidatiService.updateCandidato(idCandidato,
+		personeService.updatePersona(idPersona,
 			(String)updateForm.get("nomeCognome"), 
 			(String)updateForm.get("cellulare"),
 			(String)updateForm.get("email"), 
@@ -298,7 +260,7 @@ public class CandidatiController {
 			(String)updateForm.get("citta"));
 			
 		
-		dettagliCandidatiService.updateCandidato(idCandidato, 
+		/*dettagliCandidatiService.updateCandidato(idPersona, 
 			Integer.parseInt((String)updateForm.get("esitoColloquio")), 
 			Integer.parseInt((String)updateForm.get("profilo")), 
 			Integer.parseInt((String)updateForm.get("skill1")),
@@ -318,7 +280,7 @@ public class CandidatiController {
 			(String)updateForm.get("possibilitaLavorativa"), 
 			(String)updateForm.get("linguaggioCampoLibero"), 
 			(String)updateForm.get("competenzeTotali"), 
-			(String)updateForm.get("certificazioni"));
+			(String)updateForm.get("certificazioni"));*/
 		
 		if ((String)updateForm.get("commento") != "")
 		{
@@ -326,8 +288,8 @@ public class CandidatiController {
 			DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
 			LocalDateTime now = LocalDateTime.now();
 			commentiCandidato.setData(LocalDate.parse(format.format(now), format));
-			commentiCandidato.setIdDipendente(idDipendente);
-			commentiCandidato.setIdCandidato(idCandidato);
+			commentiCandidato.setIdPersona(idDipendente);
+			commentiCandidato.setIdDettaglioCandidato(idPersona);
 			commentiCandidato.setNote((String)updateForm.get("commento"));
 			commentiCandidatiService.save(commentiCandidato);
 		}

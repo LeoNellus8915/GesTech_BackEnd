@@ -9,9 +9,9 @@ import it.teorema.gestech.model.Livelli;
 
 public interface LivelliService extends JpaRepository <Livelli, Integer> {	
 	@Query("select l.nome "
-			+ "from Livelli l, DettagliCandidati dc "
-			+ "where l.id = dc.idLivello and dc.idCandidato = :idCandidato")
-	String getSeniority(int idCandidato);
+			+ "from Livelli l, DettagliCandidati dc, ProfiliDettagliCandidati pdc "
+			+ "where l.id = pdc.idLivello and dc.idPersona = :idPersona")
+	String getSeniority(int idPersona);
 	
 	@Query("from Livelli "
 			+ "where nome != :seniority")

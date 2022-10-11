@@ -26,7 +26,7 @@ public class Richieste {
 	private int idProfilo;
 	@Column(name = "id_livello")
 	private int idLivello;
-	@Column(name = "id_idCliente")
+	@Column(name = "id_Cliente")
 	private int idCliente;
 	@Column(name = "citta")
 	private String citta;
@@ -110,11 +110,11 @@ public class Richieste {
 		this.idLivello = idLivello;
 	}
 
-	public int getCliente() {
+	public int getIdCliente() {
 		return idCliente;
 	}
 
-	public void setCliente(int idCliente) {
+	public void setIdCliente(int idCliente) {
 		this.idCliente = idCliente;
 	}
 

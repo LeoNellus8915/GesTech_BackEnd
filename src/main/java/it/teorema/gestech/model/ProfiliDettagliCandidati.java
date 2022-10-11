@@ -19,14 +19,14 @@ public class ProfiliDettagliCandidati {
 	private int idDettaglioCandidato;
 	@Column(name = "id_profilo")
 	private int idProfilo;
-	@Column(name = "id_livelli")
-	private int idLivelli;
+	@Column(name = "id_livello")
+	private int idLivello;
 	@Column(name = "id_linguaggio")
 	private int idLinguaggio;
 	@Column(name = "descrizione")
 	private String descrizione;
 	
-	private ProfiliDettagliCandidati() {}
+	public ProfiliDettagliCandidati() {}
 
 	public ProfiliDettagliCandidati(int id, int idDettaglioCandidato, int idProfilo, int idLivelli, int idLinguaggio,
 			String descrizione) {
@@ -34,7 +34,7 @@ public class ProfiliDettagliCandidati {
 		this.id = id;
 		this.idDettaglioCandidato = idDettaglioCandidato;
 		this.idProfilo = idProfilo;
-		this.idLivelli = idLivelli;
+		this.idLivello = idLivello;
 		this.idLinguaggio = idLinguaggio;
 		this.descrizione = descrizione;
 	}
@@ -62,13 +62,13 @@ public class ProfiliDettagliCandidati {
 	public void setIdProfilo(int idProfilo) {
 		this.idProfilo = idProfilo;
 	}
-
-	public int getIdLivelli() {
-		return idLivelli;
+	
+	public int getIdLivello() {
+		return idLivello;
 	}
 
-	public void setIdLivelli(int idLivelli) {
-		this.idLivelli = idLivelli;
+	public void setIdLivello(int idLivello) {
+		this.idLivello = idLivello;
 	}
 
 	public int getIdLinguaggio() {

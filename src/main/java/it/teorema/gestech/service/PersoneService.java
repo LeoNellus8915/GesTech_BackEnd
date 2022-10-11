@@ -17,7 +17,7 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 //			+ "where d.id = rd.idDipendente group by d.nomeCognome")
 //	String[] getDipendenti();
 	
-	@Query("select nome, cognome from Persona where id = :idPersona")
+	@Query("select nome, cognome from Persone where id = :idPersona")
 	Persone getNomeCognome(int idPersona);
 //	
 //	@Query("select id "
@@ -26,7 +26,7 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 //	Integer findByName(String nomeCognome);
 	
 	@Query("select p.nome, p.cognome "
-			+ "from Persone p, RuoliPersona rp, Ruoli ru "
+			+ "from Persone p, RuoliPersone rp, Ruoli ru "
 			+ "where p.id = rp.idPersona and rp.idRuolo = ru.id and ru.nome like 'Recruiter'")
 	List<Persone> getNomiRecruiter();
 	
@@ -36,7 +36,7 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 	@Query("select id from Persone where email = :email")
 	Integer findIdByEmail(String email);
 	
-	@Query("select p.nome,p.cognome "
+	@Query("select p.nome, p.cognome "
 			+ "from Persone p, RuoliPersone rp "
 			+ "where p.id = rp.idPersona and p.nome != :nome and p.cognome != :cognome group by p.nome,p.cognome")
 	String[] findAllException(String nome,String cognome);
@@ -44,9 +44,9 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 	
 	@Modifying
 	@Transactional
-	@Query("update Persone set nome =: nome,cognome = :cognome, cellulare = :cellulare, email = :email, profiloLinkedin = :profiloLinkedin, citta = :citta "
+	@Query("update Persone set nome = :nome, cognome = :cognome, cellulare = :cellulare, email = :email, cittaDiResidenza = :cittaDiResidenza "
 			+ "where id = :idPersona")
-	void updatePersona(int idPersona, String nome,String cognome, String cellulare, String email, String profiloLinkedin, String citta);
+	void updatePersona(int idPersona, String nome, String cognome, String cellulare, String email, String cittaDiResidenza);
 	
 	@Query("from Persone where id = :idPersona")
 	Persone findByIdPersona(int idPersona);
@@ -55,6 +55,4 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 			+ "from Persone p, DettagliCandidati dc "
 			+ "where p.id = dc.idPersona")
 	List<Integer> getIdPersone();
-	
-
 }

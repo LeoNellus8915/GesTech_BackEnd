@@ -3,17 +3,24 @@ package it.teorema.gestech.session;
 import java.util.List;
 
 public class LocalSession {
-	private String nomeCognome;
+	private String nome;
+	private String cognome;
 	private List<String> ruolo;
 	private String azienda;
 	private int idDipendente;
 	private int numeroRichieste;
 	
-	public String getNomeCognome() {
-		return nomeCognome;
+	public String getNome() {
+		return nome;
 	}
-	public void setNomeCognome(String nomeCognome) {
-		this.nomeCognome = nomeCognome;
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+	public String getCognome() {
+		return cognome;
+	}
+	public void setCognome(String cognome) {
+		this.cognome = cognome;
 	}
 	public List<String> getRuolo() {
 		return ruolo;

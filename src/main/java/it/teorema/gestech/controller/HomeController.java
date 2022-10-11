@@ -46,7 +46,7 @@ public class HomeController {
 		avviso.setTitolo((String) addForm.get("titolo"));
 		avviso.setRuoli((String) addForm.get("ruoli").toString().replace(",", "").replace("[", "").replace("]", ""));
 		avviso.setData(LocalDateTime.parse(dtf.format(now), dtf));
-		avviso.setIdDipendente(Integer.parseInt((String) addForm.get("idDipendente")));
+		avviso.setIdPersona(Integer.parseInt((String) addForm.get("idDipendente")));
 		avviso.setNote((String) addForm.get("note"));
 		avvisiService.save(avviso);
 		return new ResponseEntity<>(HttpStatus.OK);

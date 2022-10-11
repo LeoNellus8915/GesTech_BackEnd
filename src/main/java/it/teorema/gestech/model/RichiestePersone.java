@@ -1,6 +1,6 @@
 package it.teorema.gestech.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="hy_commenti_richieste")
-public class CommentiRichieste {
+@Table(name="sy_richieste_persone")
+public class RichiestePersone
+{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -20,70 +21,41 @@ public class CommentiRichieste {
 	private int idPersona;
 	@Column(name = "id_richiesta")
 	private int idRichiesta;
-	@Column(name = "note")
-	private String note;
-	@Column(name = "data")
-	private LocalDateTime data;
-	@Column(name = "nascosto")
-	private boolean nascosto;
+	@Column(name = "visualizzato")
+	private boolean visualizzato;
 	
-	public CommentiRichieste(){}
-
-	public CommentiRichieste(int id, int idPersona, int idRichiesta, String note, LocalDateTime data, boolean nascosto) {
+	public RichiestePersone() {}
+	
+	public RichiestePersone(int id, int idPersona, int idRichiesta, boolean visualizzato) {
 		super();
 		this.id = id;
 		this.idPersona = idPersona;
 		this.idRichiesta = idRichiesta;
-		this.note = note;
-		this.data = data;
-		this.nascosto = nascosto;
+		this.visualizzato = visualizzato;
 	}
-
+	
 	public int getId() {
 		return id;
 	}
-
 	public void setId(int id) {
 		this.id = id;
 	}
-
 	public int getIdPersona() {
 		return idPersona;
 	}
-
 	public void setIdPersona(int idPersona) {
 		this.idPersona = idPersona;
 	}
-
 	public int getIdRichiesta() {
 		return idRichiesta;
 	}
-
 	public void setIdRichiesta(int idRichiesta) {
 		this.idRichiesta = idRichiesta;
 	}
-
-	public String getNote() {
-		return note;
+	public boolean isVisualizzato() {
+		return visualizzato;
 	}
-
-	public void setNote(String note) {
-		this.note = note;
-	}
-
-	public LocalDateTime getData() {
-		return data;
-	}
-
-	public void setData(LocalDateTime data) {
-		this.data = data;
-	}
-
-	public boolean isNascosto() {
-		return nascosto;
-	}
-
-	public void setNascosto(boolean nascosto) {
-		this.nascosto = nascosto;
+	public void setVisualizzato(boolean visualizzato) {
+		this.visualizzato = visualizzato;
 	}
 }

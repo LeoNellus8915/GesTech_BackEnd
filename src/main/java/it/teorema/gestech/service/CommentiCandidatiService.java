@@ -12,14 +12,14 @@ import it.teorema.gestech.model.CommentiCandidati;
 import it.teorema.gestech.model.mapper.AllCommentiCandidato;
 
 public interface CommentiCandidatiService extends JpaRepository <CommentiCandidati, Integer> {
-	@Query("select cc.data as data, d.nomeCognome as nomeCognome, cc.note as note "
-			+ "from CommentiCandidati cc, Dipendenti d "
-			+ "where d.id = cc.idDipendente and cc.idCandidato = :idCandidato "
+	@Query("select cc.data as data, p.nome as nome, p.cognome as cognome, cc.note as note "
+			+ "from CommentiCandidati cc, Persone p "
+			+ "where p.id = cc.idPersona and cc.idPersona = :idPersona "
 			+ "order by cc.data desc")
-	List<AllCommentiCandidato> findByIdCandidato(int idCandidato);
+	List<AllCommentiCandidato> findByIdCandidato(int idPersona);
 	
 	@Modifying
 	@Transactional
-	@Query("delete from CommentiCandidati where idCandidato = :idCandidato")
-	void deleteByIdCandidato(int idCandidato);
+	@Query("delete from CommentiCandidati where idPersona = :idPersona")
+	void deleteByIdCandidato(int idPersona);
 } 

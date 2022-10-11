@@ -14,80 +14,60 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import it.teorema.gestech.model.Auth;
-import it.teorema.gestech.model.AziendeDipendenti;
-import it.teorema.gestech.model.Dipendenti;
-import it.teorema.gestech.model.RuoliPersona;
-import it.teorema.gestech.model.mapper.AllDipendenti;
+import it.teorema.gestech.model.Persone;
+import it.teorema.gestech.model.RuoliPersone;
 import it.teorema.gestech.service.AuthService;
-import it.teorema.gestech.service.AziendeDipendentiService;
-import it.teorema.gestech.service.CandidatiService;
-import it.teorema.gestech.service.DettagliDipendentiService;
 import it.teorema.gestech.service.PersoneService;
-import it.teorema.gestech.service.RuoliDipendentiService;
+import it.teorema.gestech.service.RuoliPersoneService;
 
 @Controller
 public class DipendentiController {
 	
 	@Autowired
-	DettagliDipendentiService dettagliDipendentiService;
-	@Autowired
-	PersoneService dipendentiService;
-	@Autowired
-	CandidatiService candidatiService;
+	PersoneService personeService;
 	@Autowired
 	AuthService authService;
 	@Autowired
-	RuoliDipendentiService ruoliDipendentiService;
-	@Autowired
-	AziendeDipendentiService aziendeDipendentiService;
-	
-	@RequestMapping("/all-dipendenti")
-	public ResponseEntity<List<AllDipendenti>> allDipendenti() {
-		return new ResponseEntity<>(dettagliDipendentiService.allDipendenti(), HttpStatus.OK);
-	}
-	
-	@RequestMapping("/get-dipendenti")
-	public ResponseEntity<String[]> getDipendenti() {
-		return new ResponseEntity<> (dipendentiService.getDipendenti(), HttpStatus.OK);
-	}
+	RuoliPersoneService ruoliDipendentiService;
 	
 	@RequestMapping("/salva-utente")
 	public ResponseEntity<Integer> salvaUtente(@RequestBody JSONObject formUtente) {
-		if (candidatiService.existsByEmail((String) formUtente.get("email")) != null ||
-				dipendentiService.existsByEmail((String) formUtente.get("email")) != null)
+		if (personeService.existsByEmail((String) formUtente.get("email")) != null ||
+				personeService.existsByEmail((String) formUtente.get("email")) != null)
 			return new ResponseEntity<>(0, HttpStatus.OK);
 		else
 		{
-			Dipendenti dipendente = new Dipendenti();
+			Persone persona = new Persone();
 			Auth auth = new Auth();
 			
 			DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 			LocalDate now = LocalDate.now(); 
 			
-			dipendente.setNomeCognome((String) formUtente.get("nomeCognome"));
-			dipendente.setEmail((String) formUtente.get("email"));
+			persona.setNome((String) formUtente.get("nome"));
+			persona.setCognome((String) formUtente.get("cognome"));
+			persona.setEmail((String) formUtente.get("email"));
 			
-			dipendentiService.save(dipendente);
+			personeService.save(persona);
 			
-			int idDipendente = dipendentiService.findIdByEmail((String) formUtente.get("email"));
+			int idPersona = personeService.findIdByEmail((String) formUtente.get("email"));
 	        
 			auth.setPassword((String)formUtente.get("password"));
-			auth.setIdDipendente(idDipendente);
+			auth.setIdPersona(idPersona);
 			auth.setData(LocalDate.parse(format.format(now), format));
 			
 			authService.save(auth);
 			
 			if ((String)formUtente.get("ruolo") != "") {
-				List<RuoliPersona> ruoli = new ArrayList<RuoliPersona>();
-				RuoliPersona ruoloDipendente = new RuoliPersona();
+				List<RuoliPersone> ruoli = new ArrayList<RuoliPersone>();
+				RuoliPersone ruoloPersona = new RuoliPersone();
 				
-				ruoloDipendente.setIdDipendente(idDipendente);
-				ruoloDipendente.setIdRuolo(7);
-				ruoli.add(ruoloDipendente);
+				ruoloPersona.setIdPersona(idPersona);
+				ruoloPersona.setIdRuolo(7);
+				ruoli.add(ruoloPersona);
 				
-				RuoliPersona ruoloAlternativo = new RuoliPersona();
+				RuoliPersone ruoloAlternativo = new RuoliPersone();
 				
-				ruoloAlternativo.setIdDipendente(idDipendente);
+				ruoloAlternativo.setIdPersona(idPersona);
 				ruoloAlternativo.setIdRuolo(Integer.parseInt((String) formUtente.get("ruolo")));
 				ruoli.add(ruoloAlternativo);
 			
@@ -95,20 +75,12 @@ public class DipendentiController {
 				
 			}
 			else {
-				RuoliPersona ruoliRisorse = new RuoliPersona();
-				ruoliRisorse.setIdDipendente(idDipendente);
+				RuoliPersone ruoliRisorse = new RuoliPersone();
+				ruoliRisorse.setIdPersona(idPersona);
 				ruoliRisorse.setIdRuolo(4);
 				
 				ruoliDipendentiService.save(ruoliRisorse);
-			}
-			
-			AziendeDipendenti aziendeDipendenti = new AziendeDipendenti();
-			
-			aziendeDipendenti.setIdDipendente(idDipendente);
-			aziendeDipendenti.setIdAzienda(Integer.parseInt((String) formUtente.get("azienda")));
-			
-			aziendeDipendentiService.save(aziendeDipendenti);
-			
+			}			
 			return new ResponseEntity<>(1, HttpStatus.OK);
 		}
 	}

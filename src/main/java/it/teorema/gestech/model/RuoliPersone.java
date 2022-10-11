@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="hy_ruoli_persona")
-public class RuoliPersona
+public class RuoliPersone
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +20,9 @@ public class RuoliPersona
 	@Column(name = "id_ruolo")
 	private int idRuolo;
 	
-	public RuoliPersona() {}
+	public RuoliPersone() {}
 
-	public RuoliPersona(int id, int idPersona, int idRuolo) {
+	public RuoliPersone(int id, int idPersona, int idRuolo) {
 		super();
 		this.id = id;
 		this.idPersona = idPersona;
@@ -37,11 +37,11 @@ public class RuoliPersona
 		this.id = id;
 	}
 
-	public int getidPersona() {
+	public int getIdPersona() {
 		return idPersona;
 	}
 
-	public void setidPersona(int idPersona) {
+	public void setIdPersona(int idPersona) {
 		this.idPersona = idPersona;
 	}
 

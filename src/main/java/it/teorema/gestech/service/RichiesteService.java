@@ -15,7 +15,7 @@ import it.teorema.gestech.model.mapper.AllRichiesteChiuse;
 import it.teorema.gestech.model.mapper.GetRichiesta;
 
 public interface RichiesteService extends JpaRepository <Richieste, Integer> {
-	@Query("select ri.id as id, ri.data as data, ri.cliente as cliente, ri.citta as citta , ri.costo as costo, "
+	/*@Query("select ri.id as id, ri.data as data, ri.idCliente as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
 			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
@@ -24,16 +24,16 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "order by ri.priorita, ri.data desc")
 	List<AllRichieste> stampaCardAperteAdmin();
 	
-	@Query("select ri.id as id, ri.data as data, ri.cliente as cliente, ri.citta as citta , ri.costo as costo, "
+	@Query("select ri.id as id, ri.data as data, ri.idCliente as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
 			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita "
-			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, Dipendenti d "
+			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, Persone p "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
-			+ "and sr.nome != 'Chiusa' and ri.idDipendente = d.id and d.id = :idDipendente "
+			+ "and sr.nome != 'Chiusa' and ri.idPersona = p.id and p.id = :idPersona "
 			+ "order by ri.data desc")
-	List<AllRichieste> stampaCardAperteAccount(int idDipendente);
+	List<AllRichieste> stampaCardAperteAccount(int idPersona);
 	
-	@Query("select ri.id as id, ri.data as data, ri.cliente as cliente, ri.citta as citta , ri.costo as costo, "
+	@Query("select ri.id as id, ri.data as data, ri.idCliente as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
 			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
@@ -42,7 +42,7 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "order by ri.priorita, ri.data desc")
 	List<AllRichieste> stampaCardAperteCommerciale();
 	
-	@Query("select ri.id as id, ri.data as data, ri.cliente as cliente, ri.citta as citta , ri.costo as costo, "
+	@Query("select ri.id as id, ri.data as data, ri.idCliente as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
 			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
@@ -51,17 +51,17 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "order by ri.priorita, ri.data desc")
 	List<AllRichieste> stampaCardAperteRecruiter();
 	
-	@Query("select ri.id as id, ri.data as data, ri.cliente as cliente, ri.citta as citta, ri.costo as costo, "
+	@Query("select ri.id as id, ri.data as data, ri.idCliente as idCliente, ri.citta as citta, ri.costo as costo, "
 			+ "ri.note as note, li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
 			+ "sr.nome as statiRichiestaNome, ri.priorita as priorita, dr.visualizzato as visualizzato "
-			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, DipendentiRichieste dr "
-			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id and ri.id = dr.idRichiesta "
-			+ "and sr.nome != 'Chiusa' and dr.idDipendente = :idDipendente "
+			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, RichiestePersone rp "
+			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id and ri.id = rp.idRichiesta "
+			+ "and sr.nome != 'Chiusa' and dr.idPersona = :idPersona "
 			+ "and (ri.recruiter like %:nomeCognome% or ri.recruiter like '%Tutti%') "
 			+ "order by ri.priorita, ri.data desc")
-	List<AllRichiesteAperte> stampaCardAperte(String nomeCognome, int idDipendente);
+	List<AllRichiesteAperte> stampaCardAperte(String nomeCognome, int idPersona);
 	
-	@Query("select ri.id as id, ri.data as data, ri.cliente as cliente, ri.citta as citta, ri.costo as costo, "
+	@Query("select ri.id as id, ri.data as data, ri.idCliente as cliente, ri.citta as citta, ri.costo as costo, "
 			+ "ri.note as note, li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
 			+ "sr.nome as statiRichiestaNome, ri.recruiter as recruiter "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
@@ -78,11 +78,11 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	List<Integer> getIdRichiesteAperteAdmin();
 	
 	@Query("select r.id "
-			+ "from Richieste r, StatiRichiesta sr, Dipendenti d "
-			+ "where r.idStato = sr.id and r.idDipendente = d.id "
-			+ "and sr.nome != 'Chiusa' and r.idDipendente = :idDipendente "
+			+ "from Richieste r, StatiRichiesta sr, Persone p "
+			+ "where r.idStato = sr.id and r.idPersona = p.id "
+			+ "and sr.nome != 'Chiusa' and r.idPersona = :idPersona "
 			+ "order by r.data desc")
-	List<Integer> getIdRichiesteAperteAccount(int idDipendente);
+	List<Integer> getIdRichiesteAperteAccount(int idPersona);
 	
 	@Query("select r.id "
 			+ "from Richieste r, StatiRichiesta sr "
@@ -117,7 +117,7 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ " from Richieste")
 	Integer getLastId();
 	
-	@Query("select ri.id as id, ri.data as data, ri.cliente as cliente, ri.citta as citta , ri.costo as costo, "
+	@Query("select ri.id as id, ri.data as data, ri.idCliente as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
 			+ "sr.nome as statiRichiesteNome, ri.recruiter as recruiter, ri.candidati as candidati, ri.priorita as priorita "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
@@ -139,67 +139,5 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	@Modifying
 	@Transactional
 	@Query("update Richieste set candidati = :listaCandidati where id = :idRichiesta")
-	void assegnaCandidati(String listaCandidati, int idRichiesta);
-	
-	/*@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome "
-			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
-			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
-			+ "and sr.nome != 'Chiusa' "
-			+ "order by ri.data desc")
-	List<Object> stampaCardAperte();
-	
-	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.recruiter, dr.visualizzato "
-			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, DipendentiRichieste dr "
-			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id and ri.id = dr.idRichiesta "
-			+ "and (ri.recruiter like '%Tutti%' or ri.recruiter like %:nomeCognome%) and dr.idDipendente = :idDipendente "
-			+ "and sr.nome != 'Chiusa' "
-			+ "order by ri.data desc")
-	List<Object> stampaCardByNameAperte(String nomeCognome, int idDipendente);
-	
-	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.recruiter "
-			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
-			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
-			+ "and sr.nome = 'Chiusa' "
-			+ "order by ri.data desc")
-	List<Object> stampaCardChiuse();
-	
-	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.recruiter, dr.visualizzato "
-			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, DipendentiRichieste dr "
-			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id and ri.id = dr.idRichiesta "
-			+ "and (ri.recruiter like '%Tutti%' or ri.recruiter like %:nomeCognome%) and dr.idDipendente = :idDipendente "
-			+ "and sr.nome = 'Chiusa' "
-			+ "order by ri.data desc")
-	List<Object> stampaCardByNameChiuse(String nomeCognome, int idDipendente);
-	
-	@Query("select ri.id, ri.data, ri.cliente, ri.citta, ri.costo, ri.note, li.nome, pro.nome, liv.nome, sr.nome, ri.recruiter "
-			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr "
-			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
-			+ "and ri.id = :idRichiesta")
-	Object visualizzaRichiesta(int idRichiesta);
-	
-	@Modifying
-	@Transactional
-	@Query("update Richieste set idStato = :idStato where id = :idRichiesta")
-	void updateStato(int idStato, int idRichiesta);
-
-	@Query("select max(id) from Richieste")
-	Integer findLastId();
-	
-	@Query("select r.id "
-			+ "from Richieste r, StatiRichiesta sr "
-			+ "where r.idStato = sr.id "
-			+ "and sr.nome != 'Chiusa' "
-			+ "order by r.data desc")
-	List<Integer> getIdRichiesteAperte();
-	
-	@Query("select r.id "
-			+ "from Richieste r, StatiRichiesta sr "
-			+ "where r.idStato = sr.id "
-			+ "and sr.nome = 'Chiusa' "
-			+ "order by r.data desc")
-	List<Integer> getIdRichiesteChiuse();
-
-	@Query("select max(id) "
-			+ " from Richieste")
-	Integer getLastId();*/
+	void assegnaCandidati(String listaCandidati, int idRichiesta);*/
 }

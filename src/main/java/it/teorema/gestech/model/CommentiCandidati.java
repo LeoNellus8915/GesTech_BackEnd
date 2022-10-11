@@ -44,19 +44,19 @@ public class CommentiCandidati
 		this.id = id;
 	}
 
-	public int getidPersona() {
+	public int getIdPersona() {
 		return idPersona;
 	}
 
-	public void setidPersona(int idPersona) {
+	public void setIdPersona(int idPersona) {
 		this.idPersona = idPersona;
 	}
 
-	public int getidDettaglioCandidato() {
+	public int getIdDettaglioCandidato() {
 		return idDettaglioCandidato;
 	}
 
-	public void setidDettaglioCandidato(int idDettaglioCandidato) {
+	public void setIdDettaglioCandidato(int idDettaglioCandidato) {
 		this.idDettaglioCandidato = idDettaglioCandidato;
 	}
 

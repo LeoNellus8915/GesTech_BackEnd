@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public interface AllCommentiRichieste {
 	LocalDateTime getData();
-	String getNomeCognome();
+	String getNome();
+	String getCognome();
 	String getNote();
 }

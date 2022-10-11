@@ -10,8 +10,8 @@ import it.teorema.gestech.model.EsitiColloquio;
 public interface EsitiColloquioService extends JpaRepository <EsitiColloquio, Integer> {	
 	@Query("select e.nome "
 			+ "from EsitiColloquio e, DettagliCandidati dc "
-			+ "where e.id = dc.idEsitoColloquio and dc.idCandidato = :idCandidato")
-	String getEsitoColloquio(int idCandidato);
+			+ "where e.id = dc.idEsitoColloquio and dc.idPersona = :idPersona")
+	String getEsitoColloquio(int idPersona);
 
 	@Query("from EsitiColloquio "
 			+ "where nome != :esitoColloquio")

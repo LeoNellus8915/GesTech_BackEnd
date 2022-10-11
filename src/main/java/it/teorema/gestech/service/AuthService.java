@@ -16,8 +16,8 @@ public interface AuthService extends JpaRepository <Auth, Integer> {
 	@Query("update Auth set password = :password where idPersona = :idPersona")
 	void changePassword(String password, int idPersona);
 	
-	@Query("select d.id "
-			+ "from Persone p, Auth a, RuoliPersona rp "
-			+ "where p.id = a.idDipendente and p.id = rp.idDipendente and p.email = :email and a.password = :password")
+	@Query("select p.id "
+			+ "from Persone p, Auth a, RuoliPersone rp "
+			+ "where p.id = a.idPersona and p.id = rp.idPersona and p.email = :email and a.password = :password")
 	List<Integer> login(String email, String password);
 }

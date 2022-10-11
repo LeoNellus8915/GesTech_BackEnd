@@ -9,31 +9,11 @@ import it.teorema.gestech.model.Linguaggi;
 
 public interface LinguaggiService extends JpaRepository <Linguaggi, Integer> {	
 	@Query("select l.nome "
-			+ "from Linguaggi l, DettagliCandidati dc "
-			+ "where l.id = dc.idLinguaggio1 and dc.idCandidato = :idCandidato")
-	String getLinguaggio1(int idCandidato);
-	
-	@Query("select l.nome "
-			+ "from Linguaggi l, DettagliCandidati dc "
-			+ "where l.id = dc.idLinguaggio2 and dc.idCandidato = :idCandidato")
-	String getLinguaggio2(int idCandidato);
-	
-	@Query("select l.nome "
-			+ "from Linguaggi l, DettagliCandidati dc "
-			+ "where l.id = dc.idLinguaggio3 and dc.idCandidato = :idCandidato")
-	String getLinguaggio3(int idCandidato);
-	
-	@Query("select l.nome "
-			+ "from Linguaggi l, DettagliCandidati dc "
-			+ "where l.id = dc.idLinguaggio4 and dc.idCandidato = :idCandidato")
-	String getLinguaggio4(int idCandidato);
-	
-	@Query("select l.nome "
-			+ "from Linguaggi l, DettagliCandidati dc "
-			+ "where l.id = dc.idLinguaggio5 and dc.idCandidato = :idCandidato")
-	String getLinguaggio5(int idCandidato);
+			+ "from Linguaggi l, DettagliCandidati dc, ProfiliDettagliCandidati pdc "
+			+ "where l.id = pdc.idLinguaggio and pdc.idDettaglioCandidato = dc.id and dc.idPersona = :idPersona")
+	String[] getLinguaggio(int idPersona);
 
 	@Query("from Linguaggi "
-			+ "where nome != :skill")
-	List<Linguaggi> findAllException(String skill);
+			+ "where nome != :linguaggio")
+	List<Linguaggi> findAllException(String linguaggio);
 }

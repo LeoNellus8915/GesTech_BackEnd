@@ -9,19 +9,9 @@ import it.teorema.gestech.model.Lingue;
 
 public interface LingueService extends JpaRepository <Lingue, Integer> {	
 	@Query("select l.nome "
-			+ "from Lingue l, DettagliCandidati dc "
-			+ "where l.id = dc.idLingua1 and dc.idCandidato = :idCandidato")
-	String getLingua1(int idCandidato);
-	
-	@Query("select l.nome "
-			+ "from Lingue l, DettagliCandidati dc "
-			+ "where l.id = dc.idLingua2 and dc.idCandidato = :idCandidato")
-	String getLingua2(int idCandidato);
-	
-	@Query("select l.nome "
-			+ "from Lingue l, DettagliCandidati dc "
-			+ "where l.id = dc.idLingua3 and dc.idCandidato = :idCandidato")
-	String getLingua3(int idCandidato);
+			+ "from Lingue l, DettagliCandidati dc, LingueDettagliCandidati ldc "
+			+ "where l.id = ldc.idLingua and dc.idPersona = :idPersona")
+	String[] getLingua(int idPersona);
 
 	@Query("from Lingue "
 			+ "where nome != :lingua")

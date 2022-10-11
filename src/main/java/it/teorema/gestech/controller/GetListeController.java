@@ -15,10 +15,6 @@ import it.teorema.gestech.model.EsitiColloquio;
 import it.teorema.gestech.model.Linguaggi;
 import it.teorema.gestech.model.Lingue;
 import it.teorema.gestech.model.Livelli;
-import it.teorema.gestech.model.LivelliContratto;
-import it.teorema.gestech.model.Mansioni;
-import it.teorema.gestech.model.PeriodiDiPreavviso;
-import it.teorema.gestech.model.PeriodiDiProva;
 import it.teorema.gestech.model.Profili;
 import it.teorema.gestech.model.Ruoli;
 import it.teorema.gestech.model.StatiRichiesta;
@@ -28,11 +24,7 @@ import it.teorema.gestech.service.ContrattiService;
 import it.teorema.gestech.service.EsitiColloquioService;
 import it.teorema.gestech.service.LinguaggiService;
 import it.teorema.gestech.service.LingueService;
-import it.teorema.gestech.service.LivelliContrattoService;
 import it.teorema.gestech.service.LivelliService;
-import it.teorema.gestech.service.MansioniService;
-import it.teorema.gestech.service.PeriodiDiPreavvisoService;
-import it.teorema.gestech.service.PeriodiDiProvaService;
 import it.teorema.gestech.service.ProfiliService;
 import it.teorema.gestech.service.RuoliService;
 import it.teorema.gestech.service.StatiRichiestaService;
@@ -59,14 +51,6 @@ public class GetListeController {
 	ClientiService clientiService;
 	@Autowired
 	ContrattiService contrattiService;
-	@Autowired
-	LivelliContrattoService livelliContrattoService;
-	@Autowired
-	MansioniService mansioniService;
-	@Autowired
-	PeriodiDiProvaService periodiDiProvaService;
-	@Autowired
-	PeriodiDiPreavvisoService periodiDiPreavvisoService;
 
 	@RequestMapping("/all-esiti-colloquio")
 	public ResponseEntity<List<EsitiColloquio>> allEsitiColloquio() {
@@ -126,25 +110,5 @@ public class GetListeController {
 	@RequestMapping("/all-contratti")
 	public ResponseEntity<List<Contratti>> allContratti() {
 		return new ResponseEntity<>(contrattiService.findAll(), HttpStatus.OK);
-	}
-	
-	@RequestMapping("/all-livelli-contratto")
-	public ResponseEntity<List<LivelliContratto>> allLivelliContratto() {
-		return new ResponseEntity<>(livelliContrattoService.findAll(), HttpStatus.OK);
-	}
-	
-	@RequestMapping("/all-mansioni")
-	public ResponseEntity<List<Mansioni>> allMansioni() {
-		return new ResponseEntity<>(mansioniService.findAll(), HttpStatus.OK);
-	}
-	
-	@RequestMapping("/all-periodi-di-prova")
-	public ResponseEntity<List<PeriodiDiProva>> allPeriodiDiProva() {
-		return new ResponseEntity<>(periodiDiProvaService.findAll(), HttpStatus.OK);
-	}
-	
-	@RequestMapping("/all-periodi-di-preavviso")
-	public ResponseEntity<List<PeriodiDiPreavviso>> allPeriodiDiPreavviso() {
-		return new ResponseEntity<>(periodiDiPreavvisoService.findAll(), HttpStatus.OK);
 	}
 }

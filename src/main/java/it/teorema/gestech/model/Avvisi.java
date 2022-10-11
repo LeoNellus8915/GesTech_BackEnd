@@ -48,11 +48,11 @@ public class Avvisi
 		this.id = id;
 	}
 
-	public int getidPersona() {
+	public int getIdPersona() {
 		return idPersona;
 	}
 
-	public void setidPersona(int idPersona) {
+	public void setIdPersona(int idPersona) {
 		this.idPersona = idPersona;
 	}
 
