@@ -38,8 +38,9 @@ public class LoginController {
 		else {
 			LocalSession localSession = new LocalSession();
 	        localSession.setIdDipendente(listaIdDipendente.get(0));
-	        localSession.setNome(personeService.getNome(listaIdDipendente.get(0)));
-	        localSession.setCognome(personeService.getCognome(listaIdDipendente.get(0)));
+	        Persone persona = personeService.getNomeCognome(listaIdDipendente.get(0));
+	        localSession.setNome(persona.getNome());
+	        localSession.setCognome(persona.getCognome());
 	        localSession.setNumeroRichieste(dipendentiRichiesteService.getNumeroRichieste(listaIdDipendente.get(0)));
 	        localSession.setRuolo(ruoliDipendentiService.getRuoloByIdPersona(listaIdDipendente.get(0)));
 	        return new ResponseEntity<>(localSession, HttpStatus.OK);
