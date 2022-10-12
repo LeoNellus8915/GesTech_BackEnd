@@ -17,8 +17,11 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 //			+ "where d.id = rd.idDipendente group by d.nomeCognome")
 //	String[] getDipendenti();
 	
-	@Query("select nome, cognome from Persone where id = :idPersona")
-	Persone getNomeCognome(int idPersona);
+	@Query("select nome from Persone where id = :idPersona")
+	String getNome(int idPersona);
+	
+	@Query("select cognome from Persone where id = :idPersona")
+	String getCognome(int idPersona);
 //	
 //	@Query("select id "
 //			+ "from Dipendenti "
