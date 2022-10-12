@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="sy_auth")
+@Table(name="ap_auth")
 public class Auth
 {
 	@Id

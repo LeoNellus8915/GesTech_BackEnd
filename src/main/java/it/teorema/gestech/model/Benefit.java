@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="ty_profili")
-public class Profili
+@Table(name="ty_benefit")
+public class Benefit
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,13 +17,16 @@ public class Profili
 	private int id;
 	@Column(name = "nome")
 	private String nome;
+	@Column(name = "note")
+	private String note;
 	
-	public Profili() {}
+	public Benefit() {}
 
-	public Profili(int id, String nome) {
+	public Benefit(int id, String nome, String note) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.note = note;
 	}
 
 	public int getId() {
@@ -40,5 +43,13 @@ public class Profili
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 }

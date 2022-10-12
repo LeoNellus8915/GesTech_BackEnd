@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.service.AuthService;
+import it.teorema.gestech.service.ContrattiService;
 import it.teorema.gestech.service.RichiestePersoneService;
 import it.teorema.gestech.service.PersoneService;
 import it.teorema.gestech.service.RuoliPersoneService;
@@ -27,6 +28,8 @@ public class LoginController {
 	RuoliPersoneService ruoliDipendentiService;
 	@Autowired
 	RichiestePersoneService dipendentiRichiesteService;
+	@Autowired
+	ContrattiService contrattiService;
 	
 	@RequestMapping("/login")
 	public ResponseEntity<?> login(@RequestBody JSONObject formLogin){
@@ -38,11 +41,12 @@ public class LoginController {
 		else {
 			LocalSession localSession = new LocalSession();
 	        localSession.setIdDipendente(listaIdDipendente.get(0));
-	        Persone persona = personeService.getNomeCognome(listaIdDipendente.get(0));
+	        Persone persona = personeService.findByIdPersona(listaIdDipendente.get(0));
 	        localSession.setNome(persona.getNome());
 	        localSession.setCognome(persona.getCognome());
 	        localSession.setNumeroRichieste(dipendentiRichiesteService.getNumeroRichieste(listaIdDipendente.get(0)));
 	        localSession.setRuolo(ruoliDipendentiService.getRuoloByIdPersona(listaIdDipendente.get(0)));
+	        localSession.setAzienda(contrattiService.getAziendaByIdPersona(listaIdDipendente.get(0)));
 	        return new ResponseEntity<>(localSession, HttpStatus.OK);
 		}
 	}

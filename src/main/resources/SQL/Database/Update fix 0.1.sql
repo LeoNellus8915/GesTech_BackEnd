@@ -14,3 +14,6 @@ CREATE TABLE sy_richieste_persone (
   visualizzato tinyint(1) DEFAULT NULL,
   PRIMARY KEY (id)
 )
+
+DELETE FROM `gestech`.`hr_contratti` WHERE (`id` = '1');
+INSERT INTO `gestech`.`hr_contratti` (`id`, `id_persona`, `id_azienda`) VALUES ('1', '1', '5');

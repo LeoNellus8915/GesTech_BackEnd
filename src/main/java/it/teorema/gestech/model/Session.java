@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="hy_session")
+@Table(name="ap_session")
 public class Session {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

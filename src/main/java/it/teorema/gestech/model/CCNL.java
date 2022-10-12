@@ -8,9 +8,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="ty_nome")
-public class CCNL
-{
+@Table(name="ty_ccnl")
+public class CCNL {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -37,19 +37,19 @@ public class CCNL
 		this.id = id;
 	}
 
-	public int getcodice() {
+	public int getCodice() {
 		return codice;
 	}
 
-	public void setcodice(int codice) {
+	public void setCodice(int codice) {
 		this.codice = codice;
 	}
 
-	public String getCcnl() {
+	public String getNome() {
 		return nome;
 	}
 
-	public void setCcnl(String nome) {
+	public void setNome(String nome) {
 		this.nome = nome;
 	}
 }

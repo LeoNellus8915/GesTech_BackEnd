@@ -10,5 +10,5 @@ public interface ContrattiService extends JpaRepository <Contratti, Integer> {
 	@Query("select a.nome "
 			+ "from Contratti c, Aziende a "
 			+ "where c.idAzienda = a.id and c.idPersona = :idPersona")
-	String getAziendaByIdDipendente(int idPersona);
+	String getAziendaByIdPersona(int idPersona);
 }
