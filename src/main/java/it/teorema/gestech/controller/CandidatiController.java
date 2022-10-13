@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import it.teorema.gestech.model.CommentiCandidati;
 import it.teorema.gestech.model.Cv;
 import it.teorema.gestech.model.DettagliCandidati;
-import it.teorema.gestech.model.Lingue;
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.service.CommentiCandidatiService;
 import it.teorema.gestech.service.DettagliCandidatiService;
@@ -67,25 +66,24 @@ public class CandidatiController {
 			return new ResponseEntity<>(0, HttpStatus.OK);
 		else
 		{
+			DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
+			DateTimeFormatter format2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
+			LocalDateTime now = LocalDateTime.now();  
+			LocalDateTime data = LocalDateTime.parse(format1.format(now), format1);
+			
 			Persone persona = new Persone();
+			persona.setAnagrafica(formCandidato);
+			personeService.save(persona);
+			
+			int idCandidato = personeService.findIdByEmail(persona.getEmail());
+			
+			DettagliCandidati dettagliCandidato = new DettagliCandidati();
+			
+			/*Persone persona = new Persone();
 			DettagliCandidati dettagliCandidato = new DettagliCandidati();
 			Cv cv = new Cv();
 			CommentiCandidati commentiCandidato = new CommentiCandidati();
 			
-			DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
-			DateTimeFormatter format2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
-			LocalDateTime now = LocalDateTime.now();  
-			LocalDateTime data = LocalDateTime.parse(format1.format(now), format1);	
-	
-			persona.setNome((String)formCandidato.get("nome"));
-			persona.setCognome((String)formCandidato.get("cognome"));
-			persona.setCellulare((String)formCandidato.get("cellulare"));
-			persona.setEmail((String)formCandidato.get("email"));
-			persona.setCittaDiNascita((String)formCandidato.get("citta"));
-			
-			personeService.save(persona);
-			
-			int idCandidato = personeService.findIdByEmail(persona.getEmail());
 			
 			if (((String)formCandidato.get("dataColloquio")).equals(""))
 				dettagliCandidato.setDataColloquio(null);
@@ -123,7 +121,7 @@ public class CandidatiController {
 			UUID codice = UUID.randomUUID();
 			oggetto.put("id", idCandidato);
 			oggetto.put("codice", codice.toString().replaceAll("-", ""));
-			listaCodici.add(oggetto);
+			listaCodici.add(oggetto);*/
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 	}

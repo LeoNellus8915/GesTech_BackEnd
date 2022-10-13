@@ -40,7 +40,7 @@ public class DettagliCandidati
 	private double  costoGiornaliero;
 	@Column(name = "possibilita_lavorativa")
 	private String possibilitaLavorativa;
-	@Column(name = "competenza_totali")
+	@Column(name = "competenze_totali")
 	private String competenzeTotali;
 	@Column(name = "certificazioni")
 	private String certificazioni;
