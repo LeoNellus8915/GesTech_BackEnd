@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public interface AllRichiesteAperte {
 	int getId();
 	LocalDateTime getData();
-	int getIdCliente();
+	String getCliente();
 	String getCitta();
 	double getCosto();
 	String getNote();

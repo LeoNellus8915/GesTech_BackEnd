@@ -34,19 +34,19 @@ public class LoginController {
 	@RequestMapping("/login")
 	public ResponseEntity<?> login(@RequestBody JSONObject formLogin){
         
-        List<Integer> listaIdDipendente = authService.login((String)formLogin.get("email"), (String)formLogin.get("password"));
+        Integer idDipendente = authService.login((String)formLogin.get("email"), (String)formLogin.get("password"));
         
-		if (listaIdDipendente.size() == 0)
+		if (idDipendente == null)
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		else {
 			LocalSession localSession = new LocalSession();
-	        localSession.setIdDipendente(listaIdDipendente.get(0));
-	        Persone persona = personeService.findByIdPersona(listaIdDipendente.get(0));
+	        localSession.setIdDipendente(idDipendente);
+	        Persone persona = personeService.findByIdPersona(idDipendente);
 	        localSession.setNome(persona.getNome());
 	        localSession.setCognome(persona.getCognome());
-	        localSession.setNumeroRichieste(dipendentiRichiesteService.getNumeroRichieste(listaIdDipendente.get(0)));
-	        localSession.setRuolo(ruoliDipendentiService.getRuoloByIdPersona(listaIdDipendente.get(0)));
-	        localSession.setAzienda(contrattiService.getAziendaByIdPersona(listaIdDipendente.get(0)));
+	        localSession.setNumeroRichieste(dipendentiRichiesteService.getNumeroRichieste(idDipendente));
+	        localSession.setRuolo(ruoliDipendentiService.getRuoloByIdPersona(idDipendente));
+	        localSession.setAzienda(contrattiService.getAziendaByIdPersona(idDipendente));
 	        return new ResponseEntity<>(localSession, HttpStatus.OK);
 		}
 	}
