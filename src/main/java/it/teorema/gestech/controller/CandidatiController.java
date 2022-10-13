@@ -23,7 +23,6 @@ import it.teorema.gestech.model.Cv;
 import it.teorema.gestech.model.DettagliCandidati;
 import it.teorema.gestech.model.Lingue;
 import it.teorema.gestech.model.Persone;
-import it.teorema.gestech.model.mapper.AllCandidati;
 import it.teorema.gestech.service.CommentiCandidatiService;
 import it.teorema.gestech.service.DettagliCandidatiService;
 import it.teorema.gestech.service.PersoneService;
@@ -53,11 +52,11 @@ public class CandidatiController {
 	CommentiCandidatiService commentiCandidatiService;
 		
 	@RequestMapping("/all-candidati")
-	public ResponseEntity<List<AllCandidati>> allCandidati(HttpServletRequest request) {
-		List<AllCandidati> listaCandidati = dettagliCandidatiService.allCandidati();
-		//lista.add(dettagliCandidatiService.allCandidati());
-//		lista.add(SecurityController.getListaCodiciCandidati());
-		return new ResponseEntity<>(listaCandidati, HttpStatus.OK);
+	public ResponseEntity<List<Object>> allCandidati(HttpServletRequest request) {
+		List<Object> lista = new ArrayList<>();
+		lista.add(dettagliCandidatiService.allCandidati());
+		lista.add(SecurityController.getListaCodiciCandidati());
+		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
 	@SuppressWarnings("unchecked")
