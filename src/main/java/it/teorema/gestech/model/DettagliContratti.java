@@ -1,5 +1,7 @@
 package it.teorema.gestech.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,6 +17,10 @@ public class DettagliContratti {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
+	@Column(name = "id_contratto")
+	private int idContratto;
+	@Column(name = "data")
+	private Date data;
 	
 	public DettagliContratti() {}
 

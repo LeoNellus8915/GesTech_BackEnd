@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 
 import it.teorema.gestech.model.Persone;
+import it.teorema.gestech.model.mapper.AllDipendenti;
 
 public interface PersoneService extends JpaRepository<Persone, Integer>{
 //	@Query("select d.nomeCognome "
@@ -38,7 +39,6 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 			+ "where p.id = rp.idPersona and p.nome != :nome and p.cognome != :cognome group by p.nome,p.cognome")
 	String[] findAllException(String nome,String cognome);
 	
-	
 	@Modifying
 	@Transactional
 	@Query("update Persone set nome = :nome, cognome = :cognome, cellulare = :cellulare, email = :email, cittaDiResidenza = :cittaDiResidenza "
@@ -52,4 +52,20 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 			+ "from Persone p, DettagliCandidati dc "
 			+ "where p.id = dc.idPersona")
 	List<Integer> getIdPersone();
+	
+	@Query("select p.id as id, p.nome as nome, p.cognome as cognome, a.nome as azienda "
+			+ "from Persone p, Contratti c, Aziende a "
+			+ "where c.idPersona = p.id and c.idAzienda = a.id")
+	List<AllDipendenti> getAllDipendenti();
 }
+
+
+
+
+
+
+
+
+
+
+

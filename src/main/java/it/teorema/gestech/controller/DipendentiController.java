@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import it.teorema.gestech.model.Auth;
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.RuoliPersone;
+import it.teorema.gestech.model.mapper.AllDipendenti;
 import it.teorema.gestech.service.AuthService;
 import it.teorema.gestech.service.PersoneService;
 import it.teorema.gestech.service.RuoliPersoneService;
@@ -83,5 +84,11 @@ public class DipendentiController {
 			}			
 			return new ResponseEntity<>(1, HttpStatus.OK);
 		}
+	}
+	
+	@RequestMapping("/all-dipendenti")
+	public ResponseEntity<List<AllDipendenti>> allDipendenti() {
+		List<AllDipendenti> dipendenti = personeService.getAllDipendenti();
+		return new ResponseEntity<>(dipendenti, HttpStatus.OK);
 	}
 }

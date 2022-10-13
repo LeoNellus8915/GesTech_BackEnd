@@ -2,6 +2,7 @@ package it.teorema.gestech.model.mapper;
 
 public interface AllDipendenti {
 	int getId();
-	String getNomeCognome();
-	String getnome();
+	String getNome();
+	String getCognome();
+	String getAzienda();
 }
