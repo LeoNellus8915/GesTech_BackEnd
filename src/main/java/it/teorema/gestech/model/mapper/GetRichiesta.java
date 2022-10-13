@@ -14,6 +14,5 @@ public interface GetRichiesta{
 	String getLivelliNome();
 	String getStatiRichiestaNome();
 	String getRecruiter();
-	String getCandidati();
 	String getPriorita();
 }

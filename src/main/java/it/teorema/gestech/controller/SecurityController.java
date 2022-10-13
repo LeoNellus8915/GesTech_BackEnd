@@ -72,7 +72,7 @@ public class SecurityController {
 	public static List<JSONObject> getListaCodiciRichiesteAperteAccount() {
 		return listaCodiciRichiesteAperteAccount;
 	}
-	/*
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/get-codici-richieste-aperte-commerciale")
 	public ResponseEntity<?> getCodiciRichiesteAperteCommerciale() {
@@ -89,7 +89,6 @@ public class SecurityController {
 		listaCodiciRichiesteAperteCommerciale = listaCodici;
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	*/
 	public static List<JSONObject> getListaCodiciRichiesteAperteCommerciale() {
 		return listaCodiciRichiesteAperteCommerciale;
 	}
@@ -110,7 +109,7 @@ public class SecurityController {
 		listaCodiciRichiesteAperteRecruiter = listaCodici;
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+	*/
 	public static List<JSONObject> getListaCodiciRichiesteAperteRecruiter() {
 		return listaCodiciRichiesteAperteRecruiter;
 	}
@@ -131,7 +130,7 @@ public class SecurityController {
 		listaCodiciRichiesteAperteAdmin = listaCodici;
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	*/
+	
 	public static List<JSONObject> getListaCodiciRichiesteAperteAdmin() {
 		return listaCodiciRichiesteAperteAdmin;
 	}
@@ -152,11 +151,11 @@ public class SecurityController {
 		listaCodiciRichiesteAperte = listaCodici;
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+	*/
 	public static List<JSONObject> getListaCodiciRichiesteAperte() {
 		return listaCodiciRichiesteAperte;
 	}
-	
+	/*
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/get-codici-richieste-chiuse")
 	public ResponseEntity<?> getCodiciRichiesteChiuse() {

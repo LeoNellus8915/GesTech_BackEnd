@@ -88,7 +88,7 @@ public class RichiesteController {
 		lista.add(richiesteService.stampaCardAperteCommerciale());
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	/*
+	
 	@RequestMapping("/all-richieste-aperte-recruiter")
 	public ResponseEntity<List<Object>> allRichiesteAperteRecruiter() {
 		List <Object> lista = new ArrayList<Object>();
@@ -96,7 +96,7 @@ public class RichiesteController {
 		lista.add(richiesteService.stampaCardAperteRecruiter());
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	*/
+	
 	@RequestMapping("/all-richieste-aperte-admin")
 	public ResponseEntity<List<Object>> allRichiesteAperteAdmin() {
 		List <Object> lista = new ArrayList<Object>();
@@ -120,7 +120,7 @@ public class RichiesteController {
 		lista.add(richiesteService.stampaCardChiuse());
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
+	*/
 	@RequestMapping("/get-richiesta/{codiceRichiesta}/{pagina}/{ruolo}")
 	public ResponseEntity<List<Object>> getRichiesta(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("pagina") int pagina, @PathVariable("ruolo") String ruolo) {
 		int idRichiesta = 0;
@@ -167,6 +167,7 @@ public class RichiesteController {
 		dati.add(nomeStatoRichiesta);
 		dati.add(statiRichiestaService.getIdStatoRichiesta(nomeStatoRichiesta).toString());
 		dati.add(statiRichiestaService.findAllException(nomeStatoRichiesta));
+		dati.add(richiesteService.getCandidatiSelezionati(idRichiesta));
 		if (ruolo.equals("Direttore Recruiter")) {
 			dati.add(commentiRichiesteService.findRecruiterById(idRichiesta));
 		}
@@ -193,7 +194,7 @@ public class RichiesteController {
 			}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+	/*
 	@RequestMapping("/elimina-richiesta/{codiceRichiesta}/{pagina}/{ruolo}")
 	public ResponseEntity<?> eliminaRichiesta(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("pagina") int pagina,
 												@PathVariable("ruolo") String ruolo) {
@@ -377,7 +378,7 @@ public class RichiesteController {
 			}
 		return new ResponseEntity<> (HttpStatus.OK);  
 	}
-	
+	*/
 	@RequestMapping("/set-visualizzato/{codiceRichiesta}/{idDipendente}")
 	public ResponseEntity<?> setVisualizzato(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("idDipendente") int idDipendente) {
 		int idRichiesta = 0;
@@ -390,7 +391,7 @@ public class RichiesteController {
 		dipendentiRichiesteService.setVisualizzato(idRichiesta, idDipendente);
 		return new ResponseEntity<> (HttpStatus.OK);
 	}
-	
+	/*
 	@RequestMapping("/assegna-candidati/{idRichiesta}")
 	public ResponseEntity<?> assegnaCandidati(@RequestBody String listaCandidati, @PathVariable("idRichiesta") int idRichiesta) {
 		richiesteService.assegnaCandidati(listaCandidati, idRichiesta);
