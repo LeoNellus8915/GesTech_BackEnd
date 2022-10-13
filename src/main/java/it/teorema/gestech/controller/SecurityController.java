@@ -51,7 +51,7 @@ public class SecurityController {
 		return listaCodiciCandidati;
 	}
 	
-	/*@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/get-codici-richieste-aperte-account/{idDipendente}")
 	public ResponseEntity<?> getCodiciRichiesteAperteAccount(@PathVariable("idDipendente") int idDipendente) {
 		List<JSONObject> listaCodici = new ArrayList<JSONObject>();
@@ -68,10 +68,11 @@ public class SecurityController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
+	
 	public static List<JSONObject> getListaCodiciRichiesteAperteAccount() {
 		return listaCodiciRichiesteAperteAccount;
 	}
-	
+	/*
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/get-codici-richieste-aperte-commerciale")
 	public ResponseEntity<?> getCodiciRichiesteAperteCommerciale() {
@@ -88,11 +89,11 @@ public class SecurityController {
 		listaCodiciRichiesteAperteCommerciale = listaCodici;
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+	*/
 	public static List<JSONObject> getListaCodiciRichiesteAperteCommerciale() {
 		return listaCodiciRichiesteAperteCommerciale;
 	}
-	
+	/*
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/get-codici-richieste-aperte-recruiter")
 	public ResponseEntity<?> getCodiciRichiesteAperteRecruiter() {
@@ -130,11 +131,11 @@ public class SecurityController {
 		listaCodiciRichiesteAperteAdmin = listaCodici;
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+	*/
 	public static List<JSONObject> getListaCodiciRichiesteAperteAdmin() {
 		return listaCodiciRichiesteAperteAdmin;
 	}
-	
+	/*
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/get-codici-richieste-aperte/{nomeCognome}")
 	public ResponseEntity<?> getCodiciRichiesteAperte(@PathVariable("nomeCognome") String nomeCognome) {
@@ -172,8 +173,8 @@ public class SecurityController {
 		listaCodiciRichiesteChiuse = listaCodici;
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+	*/
 	public static List<JSONObject> getListaCodiciRichiesteChiuse() {
 		return listaCodiciRichiesteChiuse;
-	}*/
+	}
 }
