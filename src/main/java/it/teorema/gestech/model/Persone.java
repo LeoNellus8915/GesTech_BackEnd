@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.json.simple.JSONObject;
+
 @Entity
 @Table(name = "hr_persone")
 public class Persone {
@@ -57,7 +59,7 @@ public class Persone {
 		this.indirizzoDiResidenza = indirizzoDiResidenza;
 		this.capDiResidenza = capDiResidenza;
 	}
-
+	
 	public int getId() {
 		return id;
 	}
@@ -145,12 +147,12 @@ public class Persone {
 	public void setCapDiResidenza(int capDiResidenza) {
 		this.capDiResidenza = capDiResidenza;
 	}
-	
-	public String getnomeCognome(String nome ,String cognome) {
-		
-		return nome + cognome;
-		
-	}
-	
 
+	public void setAnagrafica(JSONObject anagrafica) {
+		this.nome = (String)anagrafica.get("nome");
+		this.cognome = (String)anagrafica.get("cognome");
+		this.cellulare = (String)anagrafica.get("cellulare");
+		this.email = (String)anagrafica.get("email");
+		this.cittaDiResidenza = (String)anagrafica.get("cittaDiResidenza");
+	}
 }
