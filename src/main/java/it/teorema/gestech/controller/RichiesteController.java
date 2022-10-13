@@ -38,7 +38,7 @@ public class RichiesteController {
 	@Autowired
 	StatiRichiestaService statiRichiestaService;
 	
-	/*@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/salva-richiesta/{ruolo}")
 	public ResponseEntity<?> salvaRichiesta(@RequestBody JSONObject addForm, @PathVariable("ruolo") String ruolo) {
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
@@ -49,7 +49,7 @@ public class RichiesteController {
 		richiesta.setIdLinguaggio(Integer.parseInt((String)addForm.get("linguaggio")));
 		richiesta.setIdProfilo(Integer.parseInt((String)addForm.get("profilo")));
 		richiesta.setIdLivello(Integer.parseInt((String)addForm.get("livello")));
-		richiesta.setIdCliente((Integer)addForm.get("cliente"));
+		richiesta.setIdCliente(Integer.parseInt((String)addForm.get("cliente")));
 		richiesta.setCitta((String)addForm.get("citta"));
 		richiesta.setCosto(Double.parseDouble((String)addForm.get("costo")));
 		richiesta.setNote((String)addForm.get("note"));
@@ -66,9 +66,9 @@ public class RichiesteController {
 		UUID codice = UUID.randomUUID();
 		oggetto.put("id", richiesteService.getLastId());
 		oggetto.put("codice", codice.toString().replaceAll("-", ""));
-		Collections.reverse(listaCodici);
-		listaCodici.add(oggetto);
-		Collections.reverse(listaCodici);
+			Collections.reverse(listaCodici);
+			listaCodici.add(oggetto);
+			Collections.reverse(listaCodici);
 
 		return new ResponseEntity<> (HttpStatus.OK); 
 	}
@@ -88,7 +88,7 @@ public class RichiesteController {
 		lista.add(richiesteService.stampaCardAperteCommerciale());
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
+	/*
 	@RequestMapping("/all-richieste-aperte-recruiter")
 	public ResponseEntity<List<Object>> allRichiesteAperteRecruiter() {
 		List <Object> lista = new ArrayList<Object>();
@@ -96,7 +96,7 @@ public class RichiesteController {
 		lista.add(richiesteService.stampaCardAperteRecruiter());
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
+	*/
 	@RequestMapping("/all-richieste-aperte-admin")
 	public ResponseEntity<List<Object>> allRichiesteAperteAdmin() {
 		List <Object> lista = new ArrayList<Object>();
@@ -104,7 +104,7 @@ public class RichiesteController {
 		lista.add(richiesteService.stampaCardAperteAdmin());
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
+	/*
 	@RequestMapping("/all-richieste-aperte/{nomeCognome}/{idDipendente}")
 	public ResponseEntity<List<Object>> allRichiesteAperte(@PathVariable("nomeCognome") String nomeCognome, @PathVariable("idDipendente") int idDipendente) {
 		List <Object> lista = new ArrayList<Object>();
