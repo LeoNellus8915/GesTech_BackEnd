@@ -17,4 +17,9 @@ public interface RuoliPersoneService extends JpaRepository <RuoliPersone, Intege
 			+ "from RuoliPersone rp, Ruoli r "
 			+ "where rp.idRuolo = r.id and rp.idPersona = :idPersona and r.nome != 'Dipendente'")
 	String getSecondoRuoloByIdPersona(int idPersona);
+	
+	@Query("select rl.id "
+			+"from Ruoli rl "
+			+"where rl.nome like '%Dipendente%' ")
+	int getIdRuoloDipendente();
 }
