@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 public interface AllCandidati {
     int getId();
     LocalDateTime getDataInserimento();
-    String getNomeCognome();
+    String getNome();
+    String getCognome();
     String getCitta();
     String getProfiloNome();
     String getCompetenzaPrincipale();
