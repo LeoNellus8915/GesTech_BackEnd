@@ -32,6 +32,11 @@ public class RichiestePersone
 		this.visualizzato = visualizzato;
 	}
 	
+	public RichiestePersone(int idRichiesta, int idPersona) {
+		this.idRichiesta = idRichiesta;
+		this.idPersona = idPersona;
+	}
+
 	public int getId() {
 		return id;
 	}

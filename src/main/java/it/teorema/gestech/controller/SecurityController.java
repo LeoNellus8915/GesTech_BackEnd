@@ -92,7 +92,7 @@ public class SecurityController {
 	public static List<JSONObject> getListaCodiciRichiesteAperteCommerciale() {
 		return listaCodiciRichiesteAperteCommerciale;
 	}
-	/*
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/get-codici-richieste-aperte-recruiter")
 	public ResponseEntity<?> getCodiciRichiesteAperteRecruiter() {
@@ -109,7 +109,7 @@ public class SecurityController {
 		listaCodiciRichiesteAperteRecruiter = listaCodici;
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	*/
+	
 	public static List<JSONObject> getListaCodiciRichiesteAperteRecruiter() {
 		return listaCodiciRichiesteAperteRecruiter;
 	}
@@ -134,12 +134,13 @@ public class SecurityController {
 	public static List<JSONObject> getListaCodiciRichiesteAperteAdmin() {
 		return listaCodiciRichiesteAperteAdmin;
 	}
-	/*
+	
 	@SuppressWarnings("unchecked")
-	@RequestMapping("/get-codici-richieste-aperte/{nomeCognome}")
-	public ResponseEntity<?> getCodiciRichiesteAperte(@PathVariable("nomeCognome") String nomeCognome) {
+	@RequestMapping("/get-codici-richieste-aperte/{nome}/{cognome}")
+	public ResponseEntity<?> getCodiciRichiesteAperte(@PathVariable("nome") String nome, @PathVariable("cognome") String cognome) {
 		List<JSONObject> listaCodici = new ArrayList<JSONObject>();
-		List<Integer> listaId = richiesteService.getIdRichiesteAperte(nomeCognome);
+		String cognomeNome = cognome + "  " + nome;
+		List<Integer> listaId = richiesteService.getIdRichiesteAperte(cognomeNome);
 		for (Integer id : listaId) {
 			JSONObject oggetto = new JSONObject();
 			UUID codice = UUID.randomUUID();
@@ -151,7 +152,7 @@ public class SecurityController {
 		listaCodiciRichiesteAperte = listaCodici;
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	*/
+	
 	public static List<JSONObject> getListaCodiciRichiesteAperte() {
 		return listaCodiciRichiesteAperte;
 	}
