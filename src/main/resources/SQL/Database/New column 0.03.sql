@@ -1,0 +1,1 @@
+alter table am_hardware add column id_persona int after id
