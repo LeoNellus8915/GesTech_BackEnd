@@ -17,6 +17,8 @@ public class Hardware {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private int id;
+	@Column(name = "id_persona")
+	private int idPersona;
 	@Column(name = "id_dispositivo")
 	private int idDispositivo;
 	@Column(name = "marca")

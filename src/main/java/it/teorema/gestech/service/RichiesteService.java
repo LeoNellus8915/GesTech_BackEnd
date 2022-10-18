@@ -51,17 +51,17 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "and ri.idCliente = c.id and sr.nome != 'Chiusa' and ri.priorita > 0 "
 			+ "order by ri.priorita, ri.data desc")
 	List<AllRichieste> stampaCardAperteRecruiter();
-	/*
+	
 	@Query("select ri.id as id, ri.data as data, c.nome as cliente, ri.citta as citta, ri.costo as costo, "
 			+ "ri.note as note, li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
-			+ "sr.nome as statiRichiestaNome, ri.priorita as priorita, dr.visualizzato as visualizzato "
+			+ "sr.nome as statiRichiestaNome, ri.priorita as priorita, rp.visualizzato as visualizzato "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, RichiestePersone rp, Clienti c "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id and ri.id = rp.idRichiesta "
-			+ "and ri.idCliente = c.id and sr.nome != 'Chiusa' and dr.idPersona = :idPersona "
-			+ "and (ri.recruiter like %:nomeCognome% or ri.recruiter like '%Tutti%') "
+			+ "and ri.idCliente = c.id and sr.nome != 'Chiusa' and rp.idPersona = :idPersona "
+			+ "and (ri.recruiter like %:cognomeNome% or ri.recruiter like '%Tutti%') "
 			+ "order by ri.priorita, ri.data desc")
-	List<AllRichiesteAperte> stampaCardAperte(String nomeCognome, int idPersona);
-	
+	List<AllRichiesteAperte> stampaCardAperte(String cognomeNome, int idPersona);
+	/*
 	@Query("select ri.id as id, ri.data as data, c.nome as cliente, ri.citta as citta, ri.costo as costo, "
 			+ "ri.note as note, li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
 			+ "sr.nome as statiRichiestaNome, ri.recruiter as recruiter "
@@ -91,7 +91,7 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "and sr.nome != 'Chiusa' "
 			+ "order by r.priorita, r.data desc")
 	List<Integer> getIdRichiesteAperteCommerciale();
-	/*
+	
 	@Query("select r.id "
 			+ "from Richieste r, StatiRichiesta sr "
 			+ "where r.idStato = sr.id "
@@ -103,10 +103,10 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "from Richieste r, StatiRichiesta sr "
 			+ "where r.idStato = sr.id "
 			+ "and sr.nome != 'Chiusa' "
-			+ "and (r.recruiter like %:nomeCognome% or r.recruiter like '%Tutti%') "
+			+ "and (r.recruiter like %:cognomeNome% or r.recruiter like '%Tutti%') "
 			+ "order by r.priorita, r.data desc")
-	List<Integer> getIdRichiesteAperte(String nomeCognome);
-	
+	List<Integer> getIdRichiesteAperte(String cognomeNome);
+	/*
 	@Query("select r.id "
 			+ "from Richieste r, StatiRichiesta sr "
 			+ "where r.idStato = sr.id "
@@ -130,8 +130,7 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	@Transactional
 	@Query("update Richieste set priorita = :priorita "
 			+ "where id = :idRichiesta")
-	void setPriorita(int idRichiesta, int priorita);
-	
+	void setPriorita(int idRichiesta, int priorita);	
 	
 	//da ottimizzare con classe mapper quando decidimo i campi dei candidati da stampare
 	//nella tabella della richiesta
@@ -139,12 +138,12 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "from Persone p, DettagliCandidati dc, RichiesteDettagliCandidati rdc "
 			+ "where rdc.idDettaglioCandidato = dc.id and dc.idPersona = p.id and rdc.idRichiesta = :idRichiesta")
 	List<Persone> getCandidatiSelezionati(int idRichiesta);
-	/*
+	
 	@Modifying
 	@Transactional
 	@Query("update Richieste set idStato = :idStato, priorita = :priorita, recruiter = :recruiter where id = :idRichiesta")
 	void updateRichiesta(int idStato, int idRichiesta, int priorita, String recruiter);
-
+/*
 	@Modifying
 	@Transactional
 	@Query("update Richieste set candidati = :listaCandidati where id = :idRichiesta")
