@@ -101,4 +101,8 @@ public class DipendentiController {
 		List<AllDipendenti> dipendenti = personeService.getAllDipendenti();
 		return new ResponseEntity<>(dipendenti, HttpStatus.OK);
 	}
+//	@RequestMapping("/get-dipendenti")
+//	public ResponseEntity<AllDipendenti> getDipendenti() {
+//		return new ResponseEntity<> (personeService.getDipendenti(), HttpStatus.OK);
+//	}
 }

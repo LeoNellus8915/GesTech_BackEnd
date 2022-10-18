@@ -36,10 +36,11 @@ public class Hardware {
 	
 	public Hardware() {}
 
-	public Hardware(int id, int idDispositivo, String marca, String modello, String seriale, LocalDate dataConsegna,
+	public Hardware(int id, int idPersona, int idDispositivo, String marca, String modello, String seriale, LocalDate dataConsegna,
 			LocalDate dataRestituzione, String note) {
 		super();
 		this.id = id;
+		this.idPersona = idPersona;
 		this.idDispositivo = idDispositivo;
 		this.marca = marca;
 		this.modello = modello;
@@ -55,6 +56,15 @@ public class Hardware {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+
+	public int getIdPersona() {
+		return idPersona;
+	}
+
+	public void setIdPersona(int idPersona) {
+		this.idPersona = idPersona;
 	}
 
 	public int getIdDispositivo() {

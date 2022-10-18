@@ -11,23 +11,23 @@ import org.springframework.data.jpa.repository.Query;
 
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.mapper.AllDipendenti;
-import it.teorema.gestech.model.mapper.GetNomiRecruiter;
+import it.teorema.gestech.model.mapper.FindAllDipendentiException;
 
 public interface PersoneService extends JpaRepository<Persone, Integer>{
-//	@Query("select d.nomeCognome "
-//			+ "from Dipendenti d, RuoliDipendenti rd "
-//			+ "where d.id = rd.idDipendente group by d.nomeCognome")
-//	String[] getDipendenti();
+//	@Query("select p.id as id, p.nome as nome, p.cognome as cognome,a.nome as azienda "
+//			+ "from Persone p, Contratti c, Aziende a "
+//			+ "where p.id = c.idPersona and c.idAzienda = a.id ")
+//	List getDipendenti();
 //	
-	@Query("select id "
-			+ "from Persone "
-			+ "where nome = :nome and cognome = :cognome")
-	Integer findByName(String nome, String cognome);
+//	@Query("select id "
+//			+ "from Dipendenti "
+//			+ "where nomeCognome = :nomeCognome")
+//	Integer findByName(String nomeCognome);
 	
-	@Query("select p.nome as nome, p.cognome as cognome "
+	@Query("select p.nome, p.cognome "
 			+ "from Persone p, RuoliPersone rp, Ruoli ru "
 			+ "where p.id = rp.idPersona and rp.idRuolo = ru.id and ru.nome like 'Recruiter'")
-	List<GetNomiRecruiter> getNomiRecruiter();
+	List<Persone> getNomiRecruiter();
 	
 	@Query("from Persone where email = :email")
 	Persone existsByEmail(String email);
@@ -39,6 +39,11 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 			+ "from Persone p, RuoliPersone rp "
 			+ "where p.id = rp.idPersona and p.nome != :nome and p.cognome != :cognome group by p.nome,p.cognome")
 	String[] findAllException(String nome,String cognome);
+	
+	@Query("select p.nome as nome, p.cognome as cognome "
+			+ "from Persone p, Contratti c, Hardware h "
+			+ "where p.id = c.idPersona and p.id = h.idPersona and h.idPersona = :idPersona ")
+	FindAllDipendentiException findAllDipendentiException(int idPersona);
 	
 	@Modifying
 	@Transactional

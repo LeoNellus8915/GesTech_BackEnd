@@ -17,13 +17,24 @@ public class Dispositivi
 	private int id;
 	@Column(name = "nome")
 	private String nome;
+	@Column(name = "note")
+	private String note;
 	
 	public Dispositivi() {}
 
-	public Dispositivi(int id, String nome) {
+	public Dispositivi(int id, String nome,String note) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.note = note;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 
 	public int getId() {
