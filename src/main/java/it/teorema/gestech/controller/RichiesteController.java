@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +22,9 @@ import it.teorema.gestech.model.CommentiRichieste;
 import it.teorema.gestech.model.Richieste;
 import it.teorema.gestech.model.RichiesteDettagliCandidati;
 import it.teorema.gestech.model.RichiestePersone;
+import it.teorema.gestech.model.mapper.AllCandidati;
+import it.teorema.gestech.model.mapper.AllRichieste;
+import it.teorema.gestech.model.mapper.AllRichiesteAperte;
 import it.teorema.gestech.model.mapper.GetNomiRecruiter;
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.service.CommentiRichiesteService;
@@ -96,7 +100,7 @@ public class RichiesteController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
-	@RequestMapping("/all-richieste-aperte-recruiter")
+	@RequestMapping("/all-richieste-aperte-recruiter") //Direttore Recruiter
 	public ResponseEntity<List<Object>> allRichiesteAperteRecruiter() {
 		List <Object> lista = new ArrayList<Object>();
 		lista.add(SecurityController.getListaCodiciRichiesteAperteRecruiter());
@@ -120,7 +124,7 @@ public class RichiesteController {
 		lista.add(richiesteService.stampaCardAperte(cognomeNome, idDipendente));
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	/*
+	
 	@RequestMapping("/all-richieste-chiuse/{ruolo}/{nomeCognome}/{idDipendente}")
 	public ResponseEntity<List<Object>> allRichiesteChiuse(@PathVariable String ruolo, @PathVariable String nomeCognome, @PathVariable("idDipendente") int idDipendente) {
 		List <Object> lista = new ArrayList<Object>();
@@ -128,7 +132,7 @@ public class RichiesteController {
 		lista.add(richiesteService.stampaCardChiuse());
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	*/
+	
 	@RequestMapping("/get-richiesta/{codiceRichiesta}/{pagina}/{ruolo}")
 	public ResponseEntity<List<Object>> getRichiesta(@PathVariable("codiceRichiesta") String codiceRichiesta, @PathVariable("pagina") int pagina, @PathVariable("ruolo") String ruolo) {
 		int idRichiesta = 0;
@@ -314,7 +318,6 @@ public class RichiesteController {
 			
 			String[] recruiters = updateForm.get("listaRecruiters").toString().replace("[", "").replace("]", "").split(", ");
 			List<GetNomiRecruiter> recruiter = new ArrayList<GetNomiRecruiter>();
-			
 			if (ruolo.equals("Direttore Recruiter") && !recruiters[0].equals("")) {
 				if (updateForm.get("listaRecruiters").toString().indexOf("Tutti") > -1)
 				{
@@ -326,6 +329,9 @@ public class RichiesteController {
 					if (recruiters.length > 0)
 						for (int c=0; c<recruiters.length; c++) {
 							String[] rec = recruiters[c].toString().split("  ");
+							for (int i = 0; i < rec.length; i++) {
+								System.out.println(rec[i]);
+							}
 							richiestePersoneService.save(new RichiestePersone(idRichiesta, dipendentiService.findByName((String)rec[1], (String)rec[0])));
 						}
 			}
@@ -406,10 +412,24 @@ public class RichiesteController {
 		richiestePersoneService.setVisualizzato(idRichiesta, idDipendente);
 		return new ResponseEntity<> (HttpStatus.OK);
 	}
-	/*
+
 	@RequestMapping("/assegna-candidati/{idRichiesta}")
 	public ResponseEntity<?> assegnaCandidati(@RequestBody String listaCandidati, @PathVariable("idRichiesta") int idRichiesta) {
-		richiesteService.assegnaCandidati(listaCandidati, idRichiesta);
+		String[] candidati = listaCandidati.split(",");
+		for(int i=0; i<candidati.length; i++) {
+			for (JSONObject codice : SecurityController.getListaCodiciCandidati()) {
+				if(codice.get("codice").equals(candidati[i])) {
+					int idCandidato = (int) codice.get("id");
+					RichiesteDettagliCandidati rdc = new RichiesteDettagliCandidati(idCandidato, idRichiesta);
+					richiesteDettagliCandidatiService.save(rdc);
+				}
+			}
+		}
+		richiesteService.setStato(idRichiesta);
+		/*for(int i=0; i<candidati.length; i++) {
+			RichiesteDettagliCandidati rdc = new RichiesteDettagliCandidati(Integer.parseInt((String)candidati[i]), idRichiesta);
+			richiesteDettagliCandidatiService.save(rdc);
+		}*/
 		return new ResponseEntity<> (HttpStatus.OK);
-	}*/
+	}
 }

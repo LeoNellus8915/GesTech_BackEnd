@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.mapper.AllDipendenti;
 import it.teorema.gestech.model.mapper.FindAllDipendentiException;
+import it.teorema.gestech.model.mapper.GetNomiRecruiter;
 
 public interface PersoneService extends JpaRepository<Persone, Integer>{
 //	@Query("select p.id as id, p.nome as nome, p.cognome as cognome,a.nome as azienda "
@@ -19,15 +20,15 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 //			+ "where p.id = c.idPersona and c.idAzienda = a.id ")
 //	List getDipendenti();
 //	
-//	@Query("select id "
-//			+ "from Dipendenti "
-//			+ "where nomeCognome = :nomeCognome")
-//	Integer findByName(String nomeCognome);
+	@Query("select p.id "			
+			+ "from Persone p "
+			+ "where p.nome = :nome and p.cognome = :cognome")
+	Integer findByName(String nome, String cognome);
 	
-	@Query("select p.nome, p.cognome "
+	@Query("select p.nome as nome, p.cognome as cognome "
 			+ "from Persone p, RuoliPersone rp, Ruoli ru "
-			+ "where p.id = rp.idPersona and rp.idRuolo = ru.id and ru.nome like 'Recruiter'")
-	List<Persone> getNomiRecruiter();
+			+ "where rp.idPersona = p.id and rp.idRuolo = ru.id and ru.nome like 'Recruiter'")
+	List<GetNomiRecruiter> getNomiRecruiter();
 	
 	@Query("from Persone where email = :email")
 	Persone existsByEmail(String email);

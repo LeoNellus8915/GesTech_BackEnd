@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
-import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.Richieste;
+import it.teorema.gestech.model.mapper.AllCandidati;
 import it.teorema.gestech.model.mapper.AllRichieste;
 import it.teorema.gestech.model.mapper.AllRichiesteAperte;
 import it.teorema.gestech.model.mapper.AllRichiesteChiuse;
@@ -18,7 +18,7 @@ import it.teorema.gestech.model.mapper.GetRichiesta;
 public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	@Query("select ri.id as id, ri.data as data, c.nome as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
-			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita "
+			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita, ri.recruiter as recruiters "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, Clienti c "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and ri.idCliente = c.id and sr.nome != 'Chiusa' "
@@ -27,7 +27,7 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	
 	@Query("select ri.id as id, ri.data as data, c.nome as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
-			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita "
+			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita, ri.recruiter as recruiters "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, Persone p, Clienti c "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and ri.idCliente = c.id and sr.nome != 'Chiusa' and ri.idPersona = p.id and p.id = :idPersona "
@@ -36,7 +36,7 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	
 	@Query("select ri.id as id, ri.data as data, c.nome as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
-			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita "
+			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita, ri.recruiter as recruiters "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, Clienti c "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and ri.idCliente = c.id and sr.nome != 'Chiusa' "
@@ -45,7 +45,7 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	
 	@Query("select ri.id as id, ri.data as data, c.nome as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
-			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita "
+			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita, ri.recruiter as recruiters "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, Clienti c "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and ri.idCliente = c.id and sr.nome != 'Chiusa' and ri.priorita > 0 "
@@ -54,23 +54,25 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	
 	@Query("select ri.id as id, ri.data as data, c.nome as cliente, ri.citta as citta, ri.costo as costo, "
 			+ "ri.note as note, li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
-			+ "sr.nome as statiRichiestaNome, ri.priorita as priorita, rp.visualizzato as visualizzato "
-			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, RichiestePersone rp, Clienti c "
-			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id and ri.id = rp.idRichiesta "
+			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita, rp.visualizzato as visualizzato "
+			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, "
+			+ "RichiestePersone rp, Clienti c "
+			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and "
+			+ "ri.idStato = sr.id and ri.id = rp.idRichiesta "
 			+ "and ri.idCliente = c.id and sr.nome != 'Chiusa' and rp.idPersona = :idPersona "
 			+ "and (ri.recruiter like %:cognomeNome% or ri.recruiter like '%Tutti%') "
 			+ "order by ri.priorita, ri.data desc")
 	List<AllRichiesteAperte> stampaCardAperte(String cognomeNome, int idPersona);
-	/*
+	
 	@Query("select ri.id as id, ri.data as data, c.nome as cliente, ri.citta as citta, ri.costo as costo, "
 			+ "ri.note as note, li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
-			+ "sr.nome as statiRichiestaNome, ri.recruiter as recruiter "
+			+ "sr.nome as statiRichiesteNome, ri.recruiter as recruiter "
 			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, Clienti c "
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and ri.idStato = sr.id "
 			+ "and ri.idCliente = c.id and sr.nome = 'Chiusa' "
 			+ "order by ri.data desc")
 	List<AllRichiesteChiuse> stampaCardChiuse();
-	*/
+	
 	@Query("select r.id "
 			+ "from Richieste r, StatiRichiesta sr "
 			+ "where r.idStato = sr.id "
@@ -106,14 +108,14 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "and (r.recruiter like %:cognomeNome% or r.recruiter like '%Tutti%') "
 			+ "order by r.priorita, r.data desc")
 	List<Integer> getIdRichiesteAperte(String cognomeNome);
-	/*
+	
 	@Query("select r.id "
 			+ "from Richieste r, StatiRichiesta sr "
 			+ "where r.idStato = sr.id "
 			+ "and sr.nome = 'Chiusa' "
 			+ "order by r.data desc")
 	List<Integer> getIdRichiesteChiuse();
-	*/
+	
 	@Query("select max(id) "
 			+ "from Richieste")
 	Integer getLastId();
@@ -130,21 +132,35 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	@Transactional
 	@Query("update Richieste set priorita = :priorita "
 			+ "where id = :idRichiesta")
-	void setPriorita(int idRichiesta, int priorita);	
+	void setPriorita(int idRichiesta, int priorita);
+	
+	@Modifying
+	@Transactional
+	@Query("update Richieste "
+			+ "set idStato = 3 "
+			+ "where id = :idRichiesta")
+	void setStato(int idRichiesta);
 	
 	//da ottimizzare con classe mapper quando decidimo i campi dei candidati da stampare
 	//nella tabella della richiesta
-	@Query("select p.nome, p.cognome "
-			+ "from Persone p, DettagliCandidati dc, RichiesteDettagliCandidati rdc "
-			+ "where rdc.idDettaglioCandidato = dc.id and dc.idPersona = p.id and rdc.idRichiesta = :idRichiesta")
-	List<Persone> getCandidatiSelezionati(int idRichiesta);
+	
+	@Query("select p.id as id, dc.dataInserimento as dataInserimento, p.nome as nome, p.cognome as cognome, "
+			+ "pf.nome as profiloNome, dc.competenzaPrincipale as competenzaPrincipale, ec.nome as esitoNome, "
+			+ "p.cittaDiResidenza as citta "
+			+"from Persone p, DettagliCandidati dc, ProfiliDettagliCandidati pdc, Profili pf, EsitiColloquio ec, "
+			+ "RichiesteDettagliCandidati rdc "
+			+"where p.id = dc.idPersona and dc.id = pdc.idDettaglioCandidato and pdc.idProfilo = pf.id and "
+			+ "dc.idEsitoColloquio = ec.id and rdc.idRichiesta = :idRichiesta and rdc.idDettaglioCandidato = dc.id")
+	List<AllCandidati> getCandidatiSelezionati(int idRichiesta);
 	
 	@Modifying
 	@Transactional
 	@Query("update Richieste set idStato = :idStato, priorita = :priorita, recruiter = :recruiter where id = :idRichiesta")
 	void updateRichiesta(int idStato, int idRichiesta, int priorita, String recruiter);
-/*
-	@Modifying
+
+	
+
+	/*@Modifying
 	@Transactional
 	@Query("update Richieste set candidati = :listaCandidati where id = :idRichiesta")
 	void assegnaCandidati(String listaCandidati, int idRichiesta);*/

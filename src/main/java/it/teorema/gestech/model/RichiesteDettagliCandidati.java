@@ -37,6 +37,11 @@ public class RichiesteDettagliCandidati {
 		this.note = note;
 	}
 
+	public RichiesteDettagliCandidati(int idDettaglioCandidato, int idRichiesta) {
+		this.idDettaglioCandidato = idDettaglioCandidato;
+		this.idRichiesta = idRichiesta;
+	}
+
 	public int getId() {
 		return id;
 	}
