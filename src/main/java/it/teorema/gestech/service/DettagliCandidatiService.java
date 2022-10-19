@@ -20,6 +20,10 @@ public interface DettagliCandidatiService extends JpaRepository <DettagliCandida
 			+ "from DettagliCandidati dc, Persone p, EsitiColloquio e, Profili p "
 			+ "where p.id = dc.idCandidato and e.id = dc.idEsitoColloquio and p.id = dc.idProfilo")
 	List<AllCandidati> allCandidati();*/
+	@Query("select dc.id "
+			+ "from DettagliCandidati dc, Persone p "
+			+ "where dc.idPersona = p.id and p.id = :idPersona")
+	int getIdDettaglioCandidato(int idPersona);
 	
 	@Modifying
 	@Transactional

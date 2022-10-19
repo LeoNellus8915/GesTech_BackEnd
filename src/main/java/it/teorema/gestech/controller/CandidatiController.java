@@ -21,12 +21,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import it.teorema.gestech.model.CommentiCandidati;
 import it.teorema.gestech.model.Cv;
 import it.teorema.gestech.model.DettagliCandidati;
+import it.teorema.gestech.model.LingueDettagliCandidati;
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.ProfiliDettagliCandidati;
 import it.teorema.gestech.service.CommentiCandidatiService;
 import it.teorema.gestech.service.CvService;
 import it.teorema.gestech.service.DettagliCandidatiService;
 import it.teorema.gestech.service.PersoneService;
+import it.teorema.gestech.service.ProfiliDettagliCandidatiService;
 import it.teorema.gestech.service.EsitiColloquioService;
 import it.teorema.gestech.service.LinguaggiService;
 import it.teorema.gestech.service.LingueDettagliCandidatiService;
@@ -56,6 +58,8 @@ public class CandidatiController {
 	CvService cvService;
 	@Autowired
 	LingueDettagliCandidatiService lingueDettagliCandidatiService;
+	@Autowired
+	ProfiliDettagliCandidatiService profiliDettagliCandidatiService;
 		
 	@RequestMapping("/all-candidati")
 	public ResponseEntity<List<Object>> allCandidati(HttpServletRequest request) {
@@ -84,6 +88,57 @@ public class CandidatiController {
 			DettagliCandidati dettagliCandidato = new DettagliCandidati();
 			dettagliCandidato.setDettagliCandidato(formCandidato, idCandidato);
 			dettagliCandidatiService.save(dettagliCandidato);
+			
+//Profilo Candidato
+			
+			int idDettaglioCandidato = dettagliCandidatiService.getIdDettaglioCandidato(idCandidato);
+			int c=0;
+			ProfiliDettagliCandidati pcd = new ProfiliDettagliCandidati(idDettaglioCandidato);
+			List<ProfiliDettagliCandidati> listapdc = new ArrayList<ProfiliDettagliCandidati>();
+			String[] arrayprofili = formCandidato.get("profilo").toString().replace("[{", "").replace("}]", "").replace("}", "").replace(" {", " ").split(", ");
+			for (String profilo : arrayprofili) {
+				if(c==0) {
+					pcd.setIdProfilo(Integer.parseInt((String)profilo.substring(profilo.lastIndexOf("=") + 1)));
+				}
+				if(c==1) {
+					pcd.setIdLinguaggio(Integer.parseInt((String)profilo.substring(profilo.lastIndexOf("=") + 1)));
+				}
+				if(c==2) {
+					pcd.setIdLivello(Integer.parseInt((String)profilo.substring(profilo.lastIndexOf("=") + 1)));
+				}
+				if(c==3) {
+					pcd.setDescrizione(profilo.substring(profilo.lastIndexOf("=") + 1));
+				}
+				c++;
+				if(c==4) {
+					listapdc.add(pcd);
+					c=0;
+					pcd = new ProfiliDettagliCandidati(idDettaglioCandidato);
+				}
+			}
+			for (ProfiliDettagliCandidati string : listapdc) {
+				System.out.println(string.toString());
+			}
+			profiliDettagliCandidatiService.saveAll(listapdc);
+			
+			//Lingue Candidato
+			
+			LingueDettagliCandidati ldc = new LingueDettagliCandidati(idDettaglioCandidato);
+			List<LingueDettagliCandidati> listaldc = new ArrayList<LingueDettagliCandidati>();
+			String[] arraylingue = formCandidato.get("lingue").toString().replace("[{", "").replace("}]", "").replace("}", "").replace(" {", " ").split(", ");
+			for (String lingue : arraylingue) {
+				ldc.setIdLingua(Integer.parseInt((String)lingue.substring(lingue.lastIndexOf("=") + 1)));
+				ldc.setDescrizione("");
+				listaldc.add(ldc);
+				ldc = new LingueDettagliCandidati(idDettaglioCandidato);
+			}
+			lingueDettagliCandidatiService.saveAll(listaldc);
+			
+			if ((String)formCandidato.get("cv") != null) {
+				Cv cv = new Cv();
+				cv.setCv(formCandidato, idCandidato);
+				cvService.save(cv);
+			}
 				
 			if ((String)formCandidato.get("commento") != "")
 			{

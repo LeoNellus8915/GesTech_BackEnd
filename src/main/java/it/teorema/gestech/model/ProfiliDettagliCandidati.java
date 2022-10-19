@@ -27,8 +27,12 @@ public class ProfiliDettagliCandidati {
 	private String descrizione;
 	
 	public ProfiliDettagliCandidati() {}
+	
+	public ProfiliDettagliCandidati(int idDettaglioCandidato) {
+		this.idDettaglioCandidato = idDettaglioCandidato;
+	}
 
-	public ProfiliDettagliCandidati(int id, int idDettaglioCandidato, int idProfilo, int idLivelli, int idLinguaggio,
+	public ProfiliDettagliCandidati(int id, int idDettaglioCandidato, int idProfilo, int idLivello, int idLinguaggio,
 			String descrizione) {
 		super();
 		this.id = id;

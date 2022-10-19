@@ -23,6 +23,10 @@ public class LingueDettagliCandidati {
 	private String descrizione;
 	
 	public LingueDettagliCandidati() {}
+	
+	public LingueDettagliCandidati(int idDettaglioCandidato) {
+		this.idDettaglioCandidato = idDettaglioCandidato;
+	}
 
 	public LingueDettagliCandidati(int id, int idDettaglioCandidato, int idLingua, String descrizione) {
 		super();
