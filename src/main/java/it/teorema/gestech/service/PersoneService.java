@@ -52,8 +52,8 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 			+ "where id = :idPersona")
 	void updatePersona(int idPersona, String nome, String cognome, String cellulare, String email, String cittaDiResidenza);
 	
-	@Query("from Persone where id = :idPersona")
-	Persone findByIdPersona(int idPersona);
+	@Query("from Persone where id = :idCandidato")
+	Persone findByIdPersona(int idCandidato);
 	
 	@Query("select p.id "
 			+ "from Persone p, DettagliCandidati dc "

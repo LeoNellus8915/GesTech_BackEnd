@@ -20,6 +20,6 @@ public interface CommentiCandidatiService extends JpaRepository <CommentiCandida
 	
 	@Modifying
 	@Transactional
-	@Query("delete from CommentiCandidati where idPersona = :idPersona")
-	void deleteByIdCandidato(int idPersona);
+	@Query("delete from Cv where idPersona = :idCandidato")
+	void deleteByIdCandidato(int idCandidato);
 } 

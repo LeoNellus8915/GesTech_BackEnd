@@ -1,5 +1,6 @@
 package it.teorema.gestech.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,18 +39,14 @@ public interface DettagliCandidatiService extends JpaRepository <DettagliCandida
 		List<AllCandidati> allCandidati();
 	
 	
-	/*@Modifying
+	@Modifying
 	@Transactional
-	@Query("update DettagliCandidati set idEsitoColloquio = :idEsitoColloquio, idProfilo = :idProfilo, idLinguaggio1 = :idLinguaggio1, "
-			+ "idLinguaggio2 = :idLinguaggio2, idLinguaggio3 = :idLinguaggio3, idLinguaggio4 = :idLinguaggio4, "
-			+ "idLinguaggio5 = :idLinguaggio5, idLingua1 = :idLingua1, idLingua2 = :idLingua2, idLingua3 = :idLingua3, "
-			+ "idLivello = :idLivello, dataColloquio = :dataColloquio, annoColloquio = :annoColloquio, fonteReperimento = :fonteReperimento, "
-			+ "competenzaPrincipale = :competenzaPrincipale, costoGiornaliero = :costoGiornaliero, possibilitaLavorativa = :possibilitaLavorativa, "
-			+ "linguaggioCampoLibero = :linguaggioCampoLibero, competenzeTotali = :competenzeTotali, certificazioni = :certificazioni where idCandidato = :idCandidato")
-	void updateCandidato(int idCandidato, int idEsitoColloquio, int idProfilo, int idLinguaggio1, int idLinguaggio2, int idLinguaggio3, 
-			int idLinguaggio4, int idLinguaggio5, int idLingua1, int idLingua2, int idLingua3, int idLivello, LocalDate dataColloquio, 
-			Integer annoColloquio, String fonteReperimento, String competenzaPrincipale, double costoGiornaliero, String possibilitaLavorativa, 
-			String linguaggioCampoLibero, String competenzeTotali, String certificazioni);*/
+	@Query("update DettagliCandidati set idEsitoColloquio = :idEsitoColloquio, dataColloquio = :dataColloquio, annoColloquio = :annoColloquio, fonteReperimento = :fonteReperimento, "
+			+ "competenzaPrincipale = :competenzaPrincipale, profiloLinkedin = :profiloLinkedin, costoGiornaliero = :costoGiornaliero, possibilitaLavorativa = :possibilitaLavorativa, "
+			+ "competenzeTotali = :competenzeTotali, certificazioni = :certificazioni where idPersona = :idCandidato")
+	void updateCandidato(int idCandidato, int idEsitoColloquio, LocalDate dataColloquio, Integer annoColloquio, String fonteReperimento, 
+			String competenzaPrincipale, double costoGiornaliero, String possibilitaLavorativa,
+			String competenzeTotali, String certificazioni, String profiloLinkedin);
 
 	@Query("from DettagliCandidati where idPersona = :idPersona")
 	DettagliCandidati findByIdCandidato(int idPersona);

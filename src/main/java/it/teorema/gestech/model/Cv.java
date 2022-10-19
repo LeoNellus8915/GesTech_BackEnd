@@ -76,9 +76,6 @@ public class Cv {
 		
 		this.idPersona = idCandidato;
 		this.data = data;
-		if ((String)cv.get("cv") == null)
-			this.setCvBase64(null);
-		else
-			this.setCvBase64((String)cv.get("cv").toString());
+		this.setCvBase64((String)cv.get("cv").toString());
 	}
 }

@@ -76,18 +76,6 @@ public class CandidatiController {
 			LocalDateTime now = LocalDateTime.now();  
 			LocalDateTime data = LocalDateTime.parse(format1.format(now), format1);
 			
-			/*String[] x = formCandidato.get("profilo").toString().replace("[{", "").replace("}]", "").replace("}", "").replace(" {", "").split(",");
-			for (String object : x) {
-				System.err.println(x);
-			}
-			
-			ArrayList y = (ArrayList) formCandidato.get("lingue");
-			
-			for (int c=0; c<y.size(); c++) {
-				int idLingua = Integer.parseInt(y.get(c).toString().replace("{lingua=", "").replace("}", ""));
-				lingueDettagliCandidatiService.save(new LingueDettagliCandidati(idCandidato, idLingua));
-			}*/
-			
 			Persone persona = new Persone();
 			persona.setAnagrafica(formCandidato);
 			personeService.save(persona);
@@ -98,13 +86,15 @@ public class CandidatiController {
 			dettagliCandidato.setDettagliCandidato(formCandidato, idCandidato);
 			dettagliCandidatiService.save(dettagliCandidato);
 			
-			Cv cv = new Cv();
-			cv.setCv(formCandidato, idCandidato);
-			cvService.save(cv);
+			if ((String)formCandidato.get("cv") != null) {
+				Cv cv = new Cv();
+				cv.setCv(formCandidato, idCandidato);
+				cvService.save(cv);
+			}
 				
-			CommentiCandidati commentiCandidato = new CommentiCandidati();
 			if ((String)formCandidato.get("commento") != "")
 			{
+				CommentiCandidati commentiCandidato = new CommentiCandidati();
 				commentiCandidato.setCommentiCandidati(formCandidato, idCandidato);
 				commentiCandidatiService.save(commentiCandidato);
 			}
@@ -209,20 +199,21 @@ public class CandidatiController {
 	
 	@RequestMapping("/elimina-candidato/{codiceCandidato}")
 	public ResponseEntity<?> eliminaCandidato(@PathVariable("codiceCandidato") String codiceCandidato) {
-		int idPersona = 0;
+		int idCandidato = 0;
 		JSONObject appoggio = null;
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
 		for (JSONObject codice : listaCodici) {
 			if (((String)codice.get(("codice"))).equals(codiceCandidato)) {
-				idPersona = (Integer)codice.get("id");
+				idCandidato = (Integer)codice.get("id");
 				appoggio = codice;
 			}
 		}
 		listaCodici.remove(appoggio);
 		
-		personeService.deleteById(idPersona);
-		dettagliCandidatiService.deleteByIdCandidato(idPersona);
-		commentiCandidatiService.deleteByIdCandidato(idPersona);
+		personeService.deleteById(idCandidato);
+		dettagliCandidatiService.deleteByIdCandidato(idCandidato);
+		commentiCandidatiService.deleteByIdCandidato(idCandidato);
+		cvService.deleteByIdCandidato(idCandidato);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
@@ -244,34 +235,25 @@ public class CandidatiController {
 				idPersona = (Integer)codice.get("id");
 		
 		personeService.updatePersona(idPersona,
-			(String)updateForm.get("nomeCognome"), 
+			(String)updateForm.get("nome"),
+			(String)updateForm.get("cognome"),
 			(String)updateForm.get("cellulare"),
-			(String)updateForm.get("email"), 
-			(String)updateForm.get("profiloLinkedin"), 
+			(String)updateForm.get("email"),
 			(String)updateForm.get("citta"));
 			
 		
-		/*dettagliCandidatiService.updateCandidato(idPersona, 
-			Integer.parseInt((String)updateForm.get("esitoColloquio")), 
-			Integer.parseInt((String)updateForm.get("profilo")), 
-			Integer.parseInt((String)updateForm.get("skill1")),
-			Integer.parseInt((String)updateForm.get("skill2")), 
-			Integer.parseInt((String)updateForm.get("skill3")), 
-			Integer.parseInt((String)updateForm.get("skill4")), 
-			Integer.parseInt((String)updateForm.get("skill5")), 
-			Integer.parseInt((String)updateForm.get("lingua1")), 
-			Integer.parseInt((String)updateForm.get("lingua2")), 
-			Integer.parseInt((String)updateForm.get("lingua3")), 
-			Integer.parseInt((String)updateForm.get("livello")),
+		dettagliCandidatiService.updateCandidato(idPersona, 
+			Integer.parseInt((String)updateForm.get("esitoColloquio")),
 			LocalDate.parse((String)updateForm.get("dataColloquio")), 
 			(Integer)updateForm.get("annoColloquio"), 
 			(String)updateForm.get("fonteReperimento"), 
 			(String)updateForm.get("competenzaPrincipale"), 
 			Double.parseDouble((String)updateForm.get("costoGiornaliero")),
-			(String)updateForm.get("possibilitaLavorativa"), 
-			(String)updateForm.get("linguaggioCampoLibero"), 
+			(String)updateForm.get("possibilitaLavorativa"),
 			(String)updateForm.get("competenzeTotali"), 
-			(String)updateForm.get("certificazioni"));*/
+			(String)updateForm.get("certificazioni"),
+			(String)updateForm.get("profiloLinkedin"));
+		
 		
 		if ((String)updateForm.get("commento") != "")
 		{
