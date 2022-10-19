@@ -22,6 +22,7 @@ import it.teorema.gestech.model.CommentiCandidati;
 import it.teorema.gestech.model.Cv;
 import it.teorema.gestech.model.DettagliCandidati;
 import it.teorema.gestech.model.Persone;
+import it.teorema.gestech.model.ProfiliDettagliCandidati;
 import it.teorema.gestech.service.CommentiCandidatiService;
 import it.teorema.gestech.service.CvService;
 import it.teorema.gestech.service.DettagliCandidatiService;
@@ -66,8 +67,7 @@ public class CandidatiController {
 	
 	@RequestMapping("/salva-candidato")
 	public ResponseEntity<?> salvaCandidato(@RequestBody JSONObject formCandidato) {
-		if (personeService.existsByEmail((String) formCandidato.get("email")) != null ||
-				personeService.existsByEmail((String) formCandidato.get("email")) != null)
+		if (personeService.existsByEmail((String) formCandidato.get("email")) != null)
 			return new ResponseEntity<>(0, HttpStatus.OK);
 		else
 		{
@@ -75,7 +75,6 @@ public class CandidatiController {
 			DateTimeFormatter format2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
 			LocalDateTime now = LocalDateTime.now();  
 			LocalDateTime data = LocalDateTime.parse(format1.format(now), format1);
-			
 			Persone persona = new Persone();
 			persona.setAnagrafica(formCandidato);
 			personeService.save(persona);
@@ -85,12 +84,6 @@ public class CandidatiController {
 			DettagliCandidati dettagliCandidato = new DettagliCandidati();
 			dettagliCandidato.setDettagliCandidato(formCandidato, idCandidato);
 			dettagliCandidatiService.save(dettagliCandidato);
-			
-			if ((String)formCandidato.get("cv") != null) {
-				Cv cv = new Cv();
-				cv.setCv(formCandidato, idCandidato);
-				cvService.save(cv);
-			}
 				
 			if ((String)formCandidato.get("commento") != "")
 			{
