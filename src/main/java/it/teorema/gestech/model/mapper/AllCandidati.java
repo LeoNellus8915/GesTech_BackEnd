@@ -8,7 +8,6 @@ public interface AllCandidati {
     String getNome();
     String getCognome();
     String getCitta();
-    String getProfiloNome();
     String getCompetenzaPrincipale();
     String getEsitoNome();
 }

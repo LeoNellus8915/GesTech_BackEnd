@@ -1,12 +1,16 @@
 package it.teorema.gestech.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.json.simple.JSONObject;
 
 @Entity
 @Table(name="ms_commenti_candidati")
@@ -74,5 +78,19 @@ public class CommentiCandidati
 
 	public void setData(LocalDate data) {
 		this.data = data;
+	}
+	
+	public void setCommentiCandidati(JSONObject commentiCandidati, int idCandidato) {
+		DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
+		LocalDate now = LocalDate.now();  
+		LocalDate data = LocalDate.parse(format1.format(now), format1);
+		
+		if ((String)commentiCandidati.get("commento") != "")
+		{
+			this.setData(LocalDate.parse(format1.format(now), format1));
+			this.setIdPersona(Integer.parseInt((String)commentiCandidati.get("idDipendente")));
+			this.setIdDettaglioCandidato(idCandidato);
+			this.setNote((String)commentiCandidati.get("commento"));
+		}
 	}
 }

@@ -23,10 +23,12 @@ import it.teorema.gestech.model.Cv;
 import it.teorema.gestech.model.DettagliCandidati;
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.service.CommentiCandidatiService;
+import it.teorema.gestech.service.CvService;
 import it.teorema.gestech.service.DettagliCandidatiService;
 import it.teorema.gestech.service.PersoneService;
 import it.teorema.gestech.service.EsitiColloquioService;
 import it.teorema.gestech.service.LinguaggiService;
+import it.teorema.gestech.service.LingueDettagliCandidatiService;
 import it.teorema.gestech.service.LingueService;
 import it.teorema.gestech.service.LivelliService;
 import it.teorema.gestech.service.ProfiliService;
@@ -49,6 +51,10 @@ public class CandidatiController {
 	DettagliCandidatiService dettagliCandidatiService;
 	@Autowired
 	CommentiCandidatiService commentiCandidatiService;
+	@Autowired
+	CvService cvService;
+	@Autowired
+	LingueDettagliCandidatiService lingueDettagliCandidatiService;
 		
 	@RequestMapping("/all-candidati")
 	public ResponseEntity<List<Object>> allCandidati(HttpServletRequest request) {
@@ -58,7 +64,6 @@ public class CandidatiController {
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping("/salva-candidato")
 	public ResponseEntity<?> salvaCandidato(@RequestBody JSONObject formCandidato) {
 		if (personeService.existsByEmail((String) formCandidato.get("email")) != null ||
@@ -71,6 +76,18 @@ public class CandidatiController {
 			LocalDateTime now = LocalDateTime.now();  
 			LocalDateTime data = LocalDateTime.parse(format1.format(now), format1);
 			
+			/*String[] x = formCandidato.get("profilo").toString().replace("[{", "").replace("}]", "").replace("}", "").replace(" {", "").split(",");
+			for (String object : x) {
+				System.err.println(x);
+			}
+			
+			ArrayList y = (ArrayList) formCandidato.get("lingue");
+			
+			for (int c=0; c<y.size(); c++) {
+				int idLingua = Integer.parseInt(y.get(c).toString().replace("{lingua=", "").replace("}", ""));
+				lingueDettagliCandidatiService.save(new LingueDettagliCandidati(idCandidato, idLingua));
+			}*/
+			
 			Persone persona = new Persone();
 			persona.setAnagrafica(formCandidato);
 			personeService.save(persona);
@@ -78,50 +95,26 @@ public class CandidatiController {
 			int idCandidato = personeService.findIdByEmail(persona.getEmail());
 			
 			DettagliCandidati dettagliCandidato = new DettagliCandidati();
+			dettagliCandidato.setDettagliCandidato(formCandidato, idCandidato);
+			dettagliCandidatiService.save(dettagliCandidato);
 			
-			/*Persone persona = new Persone();
-			DettagliCandidati dettagliCandidato = new DettagliCandidati();
 			Cv cv = new Cv();
-			CommentiCandidati commentiCandidato = new CommentiCandidati();
-			
-			
-			if (((String)formCandidato.get("dataColloquio")).equals(""))
-				dettagliCandidato.setDataColloquio(null);
-			else
-				dettagliCandidato.setDataColloquio(LocalDate.parse((String)formCandidato.get("dataColloquio"), format2));
-			dettagliCandidato.setProfiloLinkedin((String)formCandidato.get("profiloLinkedin"));
-			dettagliCandidato.setAnnoColloquio((Integer)formCandidato.get("annoColloquio"));
-			dettagliCandidato.setFonteReperimento((String)formCandidato.get("fonteReperimento"));
-			dettagliCandidato.setCompetenzaPrincipale((String)formCandidato.get("competenzaPrincipale"));
-			dettagliCandidato.setCostoGiornaliero(Double.parseDouble((String)formCandidato.get("costoGiornaliero")));
-			dettagliCandidato.setPossibilitaLavorativa((String)formCandidato.get("possibilitaLavorativa"));
-			dettagliCandidato.setLinguaggioCampoLibero((String)formCandidato.get("skillCampoLibero"));
-			dettagliCandidato.setCompetenzeTotali((String)formCandidato.get("competenzeTotali"));
-			dettagliCandidato.setCertificazioni((String)formCandidato.get("certificazioni"));
-			dettagliCandidato.setDataInserimento(data);
-			dettagliCandidato.setIdEsitoColloquio(Integer.parseInt((String)formCandidato.get("esitoColloquio")));
-			
-			if ((String)formCandidato.get("cv") == null)
-				cv.setCvBase64(null);
-			else
-				cv.setCvBase64((String)formCandidato.get("cv").toString());
+			cv.setCv(formCandidato, idCandidato);
+			cvService.save(cv);
 				
+			CommentiCandidati commentiCandidato = new CommentiCandidati();
 			if ((String)formCandidato.get("commento") != "")
 			{
-				commentiCandidato.setData(LocalDate.parse(format1.format(now), format1));
-				commentiCandidato.setIdPersona(idCandidato);
-				commentiCandidato.setIdDettaglioCandidato(idCandidato);
-				commentiCandidato.setNote((String)formCandidato.get("commento"));
+				commentiCandidato.setCommentiCandidati(formCandidato, idCandidato);
 				commentiCandidatiService.save(commentiCandidato);
 			}
-			dettagliCandidatiService.save(dettagliCandidato);
 			
 			List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
 			JSONObject oggetto = new JSONObject();
 			UUID codice = UUID.randomUUID();
 			oggetto.put("id", idCandidato);
 			oggetto.put("codice", codice.toString().replaceAll("-", ""));
-			listaCodici.add(oggetto);*/
+			listaCodici.add(oggetto);
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 	}

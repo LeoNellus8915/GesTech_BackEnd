@@ -1,6 +1,7 @@
 package it.teorema.gestech.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import org.json.simple.JSONObject;
 
 @Entity
 @Table(name = "hs_cv")
@@ -66,6 +69,16 @@ public class Cv {
 		this.data = data;
 	}
 	
-	
-
+	public void setCv(JSONObject cv, int idCandidato) {
+		DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
+		LocalDateTime now = LocalDateTime.now();  
+		LocalDateTime data = LocalDateTime.parse(format1.format(now), format1);
+		
+		this.idPersona = idCandidato;
+		this.data = data;
+		if ((String)cv.get("cv") == null)
+			this.setCvBase64(null);
+		else
+			this.setCvBase64((String)cv.get("cv").toString());
+	}
 }
