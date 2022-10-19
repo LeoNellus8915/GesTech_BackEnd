@@ -22,6 +22,7 @@ import it.teorema.gestech.model.CommentiCandidati;
 import it.teorema.gestech.model.Cv;
 import it.teorema.gestech.model.DettagliCandidati;
 import it.teorema.gestech.model.Persone;
+import it.teorema.gestech.model.ProfiliDettagliCandidati;
 import it.teorema.gestech.service.CommentiCandidatiService;
 import it.teorema.gestech.service.CvService;
 import it.teorema.gestech.service.DettagliCandidatiService;
@@ -66,8 +67,7 @@ public class CandidatiController {
 	
 	@RequestMapping("/salva-candidato")
 	public ResponseEntity<?> salvaCandidato(@RequestBody JSONObject formCandidato) {
-		if (personeService.existsByEmail((String) formCandidato.get("email")) != null ||
-				personeService.existsByEmail((String) formCandidato.get("email")) != null)
+		if (personeService.existsByEmail((String) formCandidato.get("email")) != null)
 			return new ResponseEntity<>(0, HttpStatus.OK);
 		else
 		{
@@ -76,11 +76,7 @@ public class CandidatiController {
 			LocalDateTime now = LocalDateTime.now();  
 			LocalDateTime data = LocalDateTime.parse(format1.format(now), format1);
 			
-			/*String[] x = formCandidato.get("profilo").toString().replace("[{", "").replace("}]", "").replace("}", "").replace(" {", "").split(",");
-			for (String object : x) {
-				System.err.println(x);
-			}
-			
+			/*
 			ArrayList y = (ArrayList) formCandidato.get("lingue");
 			
 			for (int c=0; c<y.size(); c++) {
@@ -97,6 +93,12 @@ public class CandidatiController {
 			DettagliCandidati dettagliCandidato = new DettagliCandidati();
 			dettagliCandidato.setDettagliCandidato(formCandidato, idCandidato);
 			dettagliCandidatiService.save(dettagliCandidato);
+			
+			List<ProfiliDettagliCandidati> pdc = new ArrayList<ProfiliDettagliCandidati>();
+			String[] arrayprofili = formCandidato.get("profilo").toString().replace("[{", "").replace("}]", "").replace("}", "").replace(" {", "").split(",");
+			for (String profilo : arrayprofili) {
+				System.err.println(profilo);
+			}
 			
 			Cv cv = new Cv();
 			cv.setCv(formCandidato, idCandidato);
