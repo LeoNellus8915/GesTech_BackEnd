@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Query;
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.mapper.AllDipendenti;
 import it.teorema.gestech.model.mapper.FindAllDipendentiException;
+import it.teorema.gestech.model.mapper.GetDipendente;
 import it.teorema.gestech.model.mapper.GetNomiRecruiter;
 
 public interface PersoneService extends JpaRepository<Persone, Integer>{
@@ -64,6 +65,12 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 			+ "from Persone p, Contratti c, Aziende a "
 			+ "where c.idPersona = p.id and c.idAzienda = a.id")
 	List<AllDipendenti> getAllDipendenti();
+	
+	@Query("select p.id as id, p.nome as nome, p.cognome as cognome "
+			+ "from Persone p, Hardware h "
+			+ "where p.id = h.idPersona and h.idPersona = :id "
+			+ "group by p.id")
+	GetDipendente getDipendente(int id);
 }
 
 

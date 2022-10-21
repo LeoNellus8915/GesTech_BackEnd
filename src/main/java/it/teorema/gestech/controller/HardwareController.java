@@ -34,31 +34,30 @@ public class HardwareController {
 	@RequestMapping("/all-hardware")
 	public ResponseEntity<List<Object>> allHardware() {
 		List<Object> lista = new ArrayList<>();
-		lista.add(hardwareService.findHardware());
+		lista.add(hardwareService.allHardware());
 		lista.add(SecurityController.getListaCodiciHardware());
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
-	
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/salva-hardware")
 	public ResponseEntity<?> salvaHardware(@RequestBody JSONObject formHardware) {
-	    Hardware hardware = new Hardware();  
-		DateTimeFormatter format2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
+		Hardware hardware = new Hardware();
+		DateTimeFormatter format2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-		
-		
-	    hardware.setIdDispositivo(Integer.parseInt((String)formHardware.get("dispositivi")));
-	    hardware.setIdPersona(Integer.parseInt((String)formHardware.get("dipendente")));
-	    hardware.setMarca((String)formHardware.get("marca"));
-	    hardware.setModello((String)formHardware.get("modello"));
-	    hardware.setSeriale((String)formHardware.get("seriale"));
-	    hardware.setNote((String)formHardware.get("note"));
-	    hardware.setDataConsegna(LocalDate.parse((String)formHardware.get("dataConsegna"), format2));
-	    hardware.setDataRestituzione(LocalDate.parse((String)formHardware.get("dataRestituzione"), format2));
-	    
-		System.err.println(hardware.getId() + " id dispositivo:" + hardware.getIdDispositivo() + " id persona:" + hardware.getIdPersona());
+		hardware.setIdDispositivo(Integer.parseInt((String) formHardware.get("dispositivi")));
+		hardware.setIdPersona(Integer.parseInt((String) formHardware.get("dipendente")));
+		hardware.setMarca((String) formHardware.get("marca"));
+		hardware.setModello((String) formHardware.get("modello"));
+		hardware.setSeriale((String) formHardware.get("seriale"));
+		hardware.setNote((String) formHardware.get("note"));
+		hardware.setDataConsegna(LocalDate.parse((String) formHardware.get("dataConsegna"), format2));
+		if (formHardware.get("dataRestituzione") != "") {
+			hardware.setDataRestituzione(LocalDate.parse((String) formHardware.get("dataRestituzione"), format2));
+		}
+
+		System.err.println(hardware.getId() + " id dispositivo:" + hardware.getIdDispositivo() + " id persona:"
+				+ hardware.getIdPersona());
 		hardwareService.save(hardware);
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciHardware();
 		JSONObject oggetto = new JSONObject();
@@ -74,22 +73,25 @@ public class HardwareController {
 		List<Object> lista = new ArrayList<>();
 		int idHardware = 0;
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciHardware();
-
-		for (JSONObject codice : listaCodici)
-			if (((String) codice.get(("codice"))).equals(codiceHardware))
+		for (JSONObject codice : listaCodici) {
+			System.err.println(codice.get("codice"));
+			System.err.println(codice.get("id"));
+			if (((String) codice.get(("codice"))).equals(codiceHardware)) {
 				idHardware = (Integer) codice.get("id");
 
-		lista.add(hardwareService.getHardware(idHardware));
-		lista.add(hardwareService.findStoricoHardware());
+				lista.add(hardwareService.getMapperHardware(idHardware));
+				lista.add(hardwareService.findStoricoHardware());
+			}
+		}
 
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping("/get-all-dispositivi")
-	public ResponseEntity<List<Dispositivi>> getAllDispositivi(){
+	public ResponseEntity<List<Dispositivi>> getAllDispositivi() {
 		List<Dispositivi> listaDispositivi = dispositiviService.getDispositivi();
-		return new ResponseEntity<>(listaDispositivi,HttpStatus.OK);
-		
+		return new ResponseEntity<>(listaDispositivi, HttpStatus.OK);
+
 	}
 
 	@RequestMapping("/get-hardware-modifica/{codiceHardware}")
@@ -100,11 +102,15 @@ public class HardwareController {
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciHardware();
 
 		for (JSONObject codice : listaCodici)
-			if (((String) codice.get(("codice"))).equals(codiceHardware))
+			if (((String) codice.get(("codice"))).equals(codiceHardware)) {
 				idHardware = (Integer) codice.get("id");
+				System.err.println(idHardware);
+			}
 
 		Hardware hardware = hardwareService.getHardware(idHardware);
 		lista.add(hardware);
+		lista.add(personeService.getDipendente(hardware.getIdPersona()));
+		lista.add(dispositiviService.getDispositivo(hardware.getIdDispositivo()));
 		lista.add(personeService.findAllDipendentiException(hardware.getIdPersona()));
 		lista.add(hardwareService.findStoricoHardware());
 
@@ -112,29 +118,47 @@ public class HardwareController {
 	}
 
 	@RequestMapping("/modifica-hardware/{codiceHardware}")
-	public ResponseEntity<?> modificaHardware(@RequestBody Hardware hardware,
+	public ResponseEntity<?> modificaHardware(@RequestBody JSONObject updateForm,
 			@PathVariable("codiceHardware") String codiceHardware) {
+
+		DateTimeFormatter format2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		int idHardware = 0;
+		LocalDate ldRestituzione = null;
+		LocalDate ldConsegna = null;
+		
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciHardware();
 
-		for (JSONObject codice : listaCodici)
-			if (((String) codice.get(("codice"))).equals(codiceHardware))
+		for (JSONObject codice : listaCodici) {
+			if (((String) codice.get(("codice"))).equals(codiceHardware)) {
 				idHardware = (Integer) codice.get("id");
-
-		if (hardware.getDataRestituzione() != null) {
-			hardwareService.modificaHardwareRestituito(idHardware, hardware.getIdDispositivo(), hardware.getMarca(),
-					hardware.getModello(), hardware.getSeriale(), hardware.getModello(), hardware.getNote());
-
-			Hardware copia = new Hardware(hardware.getIdPersona(), hardware.getIdDispositivo(), hardware.getIdPersona(), hardware.getModello(),
-					hardware.getSeriale(), hardware.getMarca(), hardware.getDataConsegna(),
-					hardware.getDataRestituzione(), hardware.getNote());
-
-			hardwareService.save(copia);
-		} else {
-			hardwareService.modificaHardware(idHardware, hardware.getIdDispositivo(), hardware.getMarca(), hardware.getModello(),
-					hardware.getSeriale(), hardware.getIdPersona(), hardware.getDataConsegna(),
-					hardware.getNote());
+			}
 		}
+		
+		
+		int idDipendente = Integer.parseInt((String) updateForm.get("dipendente"));
+		String note = (String) updateForm.get("note");
+		LocalDate dataConsegna = null;
+		if ((String) updateForm.get("dataConsegna") != null) {
+			dataConsegna = LocalDate.parse((String) updateForm.get("dataConsegna"), format2);
+		}
+		LocalDate dataRestituzione = null;
+		if ((String) updateForm.get("dataRestituzione") != null) {
+			dataConsegna = LocalDate.parse((String) updateForm.get("dataRestituzione"), format2);
+		}
+		
+		if (ldRestituzione != null) {
+			idDipendente = 10;
+			Hardware hw = new Hardware(Integer.parseInt((String) updateForm.get("dipendente")),
+					Integer.parseInt((String) updateForm.get("dispositivo")), (String) updateForm.get("marca"),
+					(String) updateForm.get("modello"), (String) updateForm.get("seriale"), ldConsegna, ldRestituzione,
+					(String) updateForm.get("note"));
+			hardwareService.save(hw);
+		}
+
+		hardwareService.modificaHardware(idHardware, idDipendente,
+				Integer.parseInt((String) updateForm.get("dispositivo")), (String) updateForm.get("marca"),
+				(String) updateForm.get("modello"), (String) updateForm.get("seriale"), ldConsegna, ldRestituzione,
+				note);
 
 		/*
 		 * beniService.modificaBene(idBene, bene.getDispositivo(), bene.getMarca(),

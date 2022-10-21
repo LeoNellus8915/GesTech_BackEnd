@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.json.simple.JSONObject;
+
 @Entity
 @Table(name="am_hardware")
 public class Hardware {
@@ -35,6 +37,28 @@ public class Hardware {
 	private String note;
 	
 	public Hardware() {}
+	
+	public Hardware(int idDispositivo, String marca, String modello, String seriale) {
+		super();
+		this.idPersona = 10;
+		this.idDispositivo = idDispositivo;
+		this.marca = marca;
+		this.modello = modello;
+		this.seriale = seriale;
+	}
+	
+	public Hardware(int idPersona, int idDispositivo, String marca, String modello, String seriale, LocalDate dataConsegna,
+			LocalDate dataRestituzione, String note) {
+		super();
+		this.idPersona = idPersona;
+		this.idDispositivo = idDispositivo;
+		this.marca = marca;
+		this.modello = modello;
+		this.seriale = seriale;
+		this.dataConsegna = dataConsegna;
+		this.dataRestituzione = dataRestituzione;
+		this.note = note;
+	}
 
 	public Hardware(int id, int idPersona, int idDispositivo, String marca, String modello, String seriale, LocalDate dataConsegna,
 			LocalDate dataRestituzione, String note) {
@@ -122,4 +146,13 @@ public class Hardware {
 	public void setNote(String note) {
 		this.note = note;
 	}
+	
+//	public Hardware setUpdateHardware(JSONObject form,int id) {
+//		Hardware updateHardware = new Hardware();
+//		
+//		updateHardware.setId(id);
+//		updateHardware.setIdDispositivo(Integer.parseInt(form.con));
+//		
+//		return null;
+//	}
 }
