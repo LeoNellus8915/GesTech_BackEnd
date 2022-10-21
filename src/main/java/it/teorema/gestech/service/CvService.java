@@ -13,4 +13,8 @@ public interface CvService extends JpaRepository <Cv, Integer> {
 	@Transactional
 	@Query("delete from Cv where idPersona = :idCandidato")
 	void deleteByIdCandidato(int idCandidato);
+
+	@Query("select cvBase64 "
+			+ "from Cv where idPersona = :idCandidato")
+	String getCv(int idCandidato);
 }

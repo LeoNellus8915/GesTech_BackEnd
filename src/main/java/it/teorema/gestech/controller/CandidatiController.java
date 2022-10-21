@@ -95,43 +95,42 @@ public class CandidatiController {
 			int c=0;
 			ProfiliDettagliCandidati pcd = new ProfiliDettagliCandidati(idDettaglioCandidato);
 			List<ProfiliDettagliCandidati> listapdc = new ArrayList<ProfiliDettagliCandidati>();
-			String[] arrayprofili = formCandidato.get("profilo").toString().replace("[{", "").replace("}]", "").replace("}", "").replace(" {", " ").split(", ");
-			for (String profilo : arrayprofili) {
-				if(c==0) {
-					pcd.setIdProfilo(Integer.parseInt((String)profilo.substring(profilo.lastIndexOf("=") + 1)));
+			String[] arrayProfili = formCandidato.get("profilo").toString().replace("[{", "").replace("}]", "").replace("}", "").replace(" {", " ").split(", ");
+			if (arrayProfili.length > 1)
+				for (String profilo : arrayProfili) {
+					if(c==0) {
+						pcd.setIdProfilo(Integer.parseInt((String)profilo.substring(profilo.lastIndexOf("=") + 1)));
+					}
+					if(c==1) {
+						pcd.setIdLinguaggio(Integer.parseInt((String)profilo.substring(profilo.lastIndexOf("=") + 1)));
+					}
+					if(c==2) {
+						pcd.setIdLivello(Integer.parseInt((String)profilo.substring(profilo.lastIndexOf("=") + 1)));
+					}
+					if(c==3) {
+						pcd.setDescrizione(profilo.substring(profilo.lastIndexOf("=") + 1));
+					}
+					c++;
+					if(c==4) {
+						listapdc.add(pcd);
+						c=0;
+						pcd = new ProfiliDettagliCandidati(idDettaglioCandidato);
+					}
 				}
-				if(c==1) {
-					pcd.setIdLinguaggio(Integer.parseInt((String)profilo.substring(profilo.lastIndexOf("=") + 1)));
-				}
-				if(c==2) {
-					pcd.setIdLivello(Integer.parseInt((String)profilo.substring(profilo.lastIndexOf("=") + 1)));
-				}
-				if(c==3) {
-					pcd.setDescrizione(profilo.substring(profilo.lastIndexOf("=") + 1));
-				}
-				c++;
-				if(c==4) {
-					listapdc.add(pcd);
-					c=0;
-					pcd = new ProfiliDettagliCandidati(idDettaglioCandidato);
-				}
-			}
-			for (ProfiliDettagliCandidati string : listapdc) {
-				System.out.println(string.toString());
-			}
 			profiliDettagliCandidatiService.saveAll(listapdc);
 			
 			//Lingue Candidato
 			
 			LingueDettagliCandidati ldc = new LingueDettagliCandidati(idDettaglioCandidato);
 			List<LingueDettagliCandidati> listaldc = new ArrayList<LingueDettagliCandidati>();
-			String[] arraylingue = formCandidato.get("lingue").toString().replace("[{", "").replace("}]", "").replace("}", "").replace(" {", " ").split(", ");
-			for (String lingue : arraylingue) {
-				ldc.setIdLingua(Integer.parseInt((String)lingue.substring(lingue.lastIndexOf("=") + 1)));
-				ldc.setDescrizione("");
-				listaldc.add(ldc);
-				ldc = new LingueDettagliCandidati(idDettaglioCandidato);
-			}
+			String[] arrayLingue = formCandidato.get("lingue").toString().replace("[{", "").replace("}]", "").replace("}", "").replace(" {", " ").split(", ");
+			if (arrayLingue.length > 1)
+				for (String lingue : arrayLingue) {
+					ldc.setIdLingua(Integer.parseInt((String)lingue.substring(lingue.lastIndexOf("=") + 1)));
+					ldc.setDescrizione("");
+					listaldc.add(ldc);
+					ldc = new LingueDettagliCandidati(idDettaglioCandidato);
+				}
 			lingueDettagliCandidatiService.saveAll(listaldc);
 			
 			if ((String)formCandidato.get("cv") != null) {
@@ -159,32 +158,28 @@ public class CandidatiController {
 	
 	@RequestMapping("/get-candidato-visualizza/{codiceCandidato}")
 	public ResponseEntity<List<Object>> getCandidatoVisualizza(@PathVariable("codiceCandidato") String codiceCandidato) {
-		int idPersona = 0;
+		int idCandidato = 0;
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
 		
 		for (JSONObject codice : listaCodici)
 			if (((String)codice.get(("codice"))).equals(codiceCandidato))
-				idPersona = (Integer)codice.get("id");
+				idCandidato = (Integer)codice.get("id");
 		
-		if (idPersona != 0) {
-			Persone persona = personeService.findByIdPersona(idPersona);
+		if (idCandidato != 0) {
+			Persone persona = personeService.findByIdPersona(idCandidato);
 			if (persona == null)
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			else {
 				List<Object> datiCandidato = new ArrayList<Object>();
-				List<Object> dettagliCandidato = new ArrayList<Object>();
 				
-				dettagliCandidato.add(dettagliCandidatiService.getDettagliCandidato(idPersona));
-				dettagliCandidato.add(esitiColloquioService.getEsitoColloquio(idPersona));
-				dettagliCandidato.add(profiliService.getProfilo(idPersona));
-				dettagliCandidato.add(linguaggiService.getLinguaggio(idPersona));
-				dettagliCandidato.add(lingueService.getLingua(idPersona));
-				dettagliCandidato.add(livelliService.getSeniority(idPersona));
-						
 				datiCandidato.add(persona);
-				datiCandidato.add(dettagliCandidato);
-				datiCandidato.add(commentiCandidatiService.findByIdCandidato(idPersona));
-				datiCandidato.add(esitiColloquioService.getColore((String)dettagliCandidato.get(1)));
+				datiCandidato.add(dettagliCandidatiService.getDettagliCandidato(idCandidato));
+				datiCandidato.add(profiliDettagliCandidatiService.getProfili(idCandidato));
+				datiCandidato.add(lingueDettagliCandidatiService.getLingue(idCandidato));
+				datiCandidato.add(commentiCandidatiService.findByIdCandidato(idCandidato));
+				datiCandidato.add(esitiColloquioService.getColore(idCandidato));
+				datiCandidato.add(esitiColloquioService.getEsitoColloquio(idCandidato));
+				datiCandidato.add(cvService.getCv(idCandidato));
 				return new ResponseEntity<>(datiCandidato, HttpStatus.OK);
 			}
 		}
@@ -194,49 +189,28 @@ public class CandidatiController {
 	
 	@RequestMapping("/get-candidato-modifica/{codiceCandidato}")
 	public ResponseEntity<List<Object>> getCandidatoModifica(@PathVariable("codiceCandidato") String codiceCandidato) {
-		int idPersona = 0;
+		int idCandidato = 0;
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
 		
 		for (JSONObject codice : listaCodici)
 			if (((String)codice.get(("codice"))).equals(codiceCandidato))
-				idPersona = (Integer)codice.get("id");
+				idCandidato = (Integer)codice.get("id");
 		
-		if (idPersona != 0) {
-			Persone persona = personeService.findByIdPersona(idPersona);
-			DettagliCandidati listaSelects = dettagliCandidatiService.findByIdCandidato(idPersona);
+		if (idCandidato != 0) {
+			Persone persona = personeService.findByIdPersona(idCandidato);
 			if (persona == null)
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			else {
 				List<Object> datiCandidato = new ArrayList<Object>();
-				List<Object> dettagliCandidato = new ArrayList<Object>();
-				
-				String esitoColloquio = esitiColloquioService.getEsitoColloquio(idPersona);
-				dettagliCandidato.add(esitoColloquio);
-				dettagliCandidato.add(esitiColloquioService.findAllException(esitoColloquio));
-				
-				String profilo = profiliService.getProfilo(idPersona);
-				dettagliCandidato.add(profilo);
-				dettagliCandidato.add(profiliService.findAllException(profilo));
-				
-				String[] linguaggi = linguaggiService.getLinguaggio(idPersona);
-				dettagliCandidato.add(linguaggi);
-				for (String linguaggio : linguaggi) {
-					dettagliCandidato.add(linguaggiService.findAllException(linguaggio));
-				}
-				
-				String[] lingue = lingueService.getLingua(idPersona);
-				dettagliCandidato.add(lingue);
-				for (String lingua : lingue) {
-					dettagliCandidato.add(lingueService.findAllException(lingua));
-				}
-				
-				String livello = livelliService.getSeniority(idPersona);
-				dettagliCandidato.add(livello);
-				dettagliCandidato.add(livelliService.findAllException(livello));
+				DettagliCandidati dettagliCandidato = dettagliCandidatiService.findByIdCandidato(idCandidato);
+
+				String esitoColloquio = esitiColloquioService.getEsitoColloquio(idCandidato);
 				
 				datiCandidato.add(persona);
 				datiCandidato.add(dettagliCandidato);
-				datiCandidato.add(listaSelects);
+				datiCandidato.add(profiliDettagliCandidatiService.getProfili(idCandidato));
+				datiCandidato.add(lingueDettagliCandidatiService.getLingue(idCandidato));
+				datiCandidato.add(esitoColloquio);
 			
 				return new ResponseEntity<>(datiCandidato, HttpStatus.OK);
 			}
