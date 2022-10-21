@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -71,10 +72,13 @@ public class CandidatiController {
 	
 	@RequestMapping("/salva-candidato")
 	public ResponseEntity<?> salvaCandidato(@RequestBody JSONObject formCandidato) {
+		HashMap<String, Object> x = (HashMap)formCandidato.get("anagrafica");
 		if (personeService.existsByEmail((String) formCandidato.get("email")) != null)
 			return new ResponseEntity<>(0, HttpStatus.OK);
 		else
 		{
+			
+			
 			DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
 			DateTimeFormatter format2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");  
 			LocalDateTime now = LocalDateTime.now();  
