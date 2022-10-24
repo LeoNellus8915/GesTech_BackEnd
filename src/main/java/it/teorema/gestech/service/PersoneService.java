@@ -42,10 +42,10 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 			+ "where p.id = rp.idPersona and p.nome != :nome and p.cognome != :cognome group by p.nome,p.cognome")
 	String[] findAllException(String nome,String cognome);
 	
-	@Query("select p.nome as nome, p.cognome as cognome "
+	/*@Query("select p.nome as nome, p.cognome as cognome "
 			+ "from Persone p, Contratti c, Hardware h "
 			+ "where p.id = c.idPersona and p.id = h.idPersona and h.idPersona = :idPersona ")
-	FindAllDipendentiException findAllDipendentiException(int idPersona);
+	FindAllDipendentiException findAllDipendentiException(int idPersona);*/
 	
 	@Modifying
 	@Transactional

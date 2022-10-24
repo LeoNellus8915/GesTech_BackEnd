@@ -9,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.json.simple.JSONObject;
-
 @Entity
 @Table(name="am_hardware")
 public class Hardware {
@@ -37,15 +35,6 @@ public class Hardware {
 	private String note;
 	
 	public Hardware() {}
-	
-	public Hardware(int idDispositivo, String marca, String modello, String seriale) {
-		super();
-		this.idPersona = 10;
-		this.idDispositivo = idDispositivo;
-		this.marca = marca;
-		this.modello = modello;
-		this.seriale = seriale;
-	}
 	
 	public Hardware(int idPersona, int idDispositivo, String marca, String modello, String seriale, LocalDate dataConsegna,
 			LocalDate dataRestituzione, String note) {

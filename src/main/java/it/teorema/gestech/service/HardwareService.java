@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import it.teorema.gestech.model.Hardware;
 import it.teorema.gestech.model.mapper.AllHardware;
+import it.teorema.gestech.model.mapper.AllStoriciBeni;
 
 public interface HardwareService extends JpaRepository <Hardware, Integer> {
 	@Query("from Hardware where id = :idHardware")
@@ -31,28 +32,10 @@ public interface HardwareService extends JpaRepository <Hardware, Integer> {
 	
 	
 	
-	@Query("select h.id as id, p.nome as nomePersona, p.cognome as cognomePersona, d.nome as nomeDispositivo, h.modello as modello, h.marca as marca, h.dataRestituzione as dataRestituzione, h.dataConsegna as dataConsegna, h.note as note "
-			+"from Persone p, Dispositivi d, Hardware h "
-			+"where p.id = h.idPersona and h.idDispositivo = d.id and h.dataRestituzione IS NOT NULL")
-	List<AllHardware> findStoricoHardware ();
-	
-	/*@Modifying
-	@Transactional
-	@Query("update Hardware set idDispositivo = :idDispositivo, marca = :marca, "
-			+ "modello = :modello, seriale = :seriale, "
-			+ "idPersona = :idPersona, dataConsegna = :dataConsegna, "
-			+ "note = :note "
-			+ "where id = :idHardware")
-	void modificaHardware(int idHardware, int idDispositivo, String marca, String modello, String seriale,
-			int idPersona, LocalDate dataConsegna, String note);*/
-	
-	/*@Modifying
-	@Transactional
-	@Query("update Hardware set idDispositivo = :idDispositivo, marca = :marca, modello = :modello, seriale = :seriale, "
-			+ "idPersona = NULL, dataConsegna = NULL, "
-			+ "dataRestituzione = null, note = :note where id = :idHardware")
-	void modificaHardwareRestituito(int idHardware, int idDispositivo, String marca, String modello, 
-			String seriale, String note);*/
+	@Query("select h.id as id, p.nome as nome, p.cognome as cognome, h.dataConsegna as dataConsegna, h.dataRestituzione as dataRestituzione "
+			+"from Persone p, Hardware h "
+			+"where p.id = h.idPersona and h.dataRestituzione IS NOT NULL")
+	List<AllStoriciBeni> findStoricoHardware ();
 	
 	@Modifying
 	@Transactional

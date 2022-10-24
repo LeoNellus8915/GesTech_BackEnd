@@ -1,7 +1,6 @@
 package it.teorema.gestech.controller;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,8 +73,6 @@ public class HardwareController {
 		int idHardware = 0;
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciHardware();
 		for (JSONObject codice : listaCodici) {
-			System.err.println(codice.get("codice"));
-			System.err.println(codice.get("id"));
 			if (((String) codice.get(("codice"))).equals(codiceHardware)) {
 				idHardware = (Integer) codice.get("id");
 
@@ -104,28 +101,23 @@ public class HardwareController {
 		for (JSONObject codice : listaCodici)
 			if (((String) codice.get(("codice"))).equals(codiceHardware)) {
 				idHardware = (Integer) codice.get("id");
-				System.err.println(idHardware);
 			}
 
 		Hardware hardware = hardwareService.getHardware(idHardware);
 		lista.add(hardware);
 		lista.add(personeService.getDipendente(hardware.getIdPersona()));
 		lista.add(dispositiviService.getDispositivo(hardware.getIdDispositivo()));
-		lista.add(personeService.findAllDipendentiException(hardware.getIdPersona()));
+		lista.add(personeService.getAllDipendenti());
 		lista.add(hardwareService.findStoricoHardware());
-
+		
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}
 
 	@RequestMapping("/modifica-hardware/{codiceHardware}")
-	public ResponseEntity<?> modificaHardware(@RequestBody JSONObject updateForm,
+	public ResponseEntity<?> modificaHardware(@RequestBody Hardware updateForm,
 			@PathVariable("codiceHardware") String codiceHardware) {
 
-		DateTimeFormatter format2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		int idHardware = 0;
-		LocalDate ldRestituzione = null;
-		LocalDate ldConsegna = null;
-		
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciHardware();
 
 		for (JSONObject codice : listaCodici) {
@@ -134,39 +126,49 @@ public class HardwareController {
 			}
 		}
 		
+		Hardware hw = new Hardware(updateForm.getIdPersona(), updateForm.getIdDispositivo(), updateForm.getMarca(), updateForm.getModello(), 
+				updateForm.getSeriale(), updateForm.getDataConsegna(), updateForm.getDataRestituzione(), updateForm.getNote());
 		
-		int idDipendente = Integer.parseInt((String) updateForm.get("dipendente"));
-		String note = (String) updateForm.get("note");
-		LocalDate dataConsegna = null;
-		if ((String) updateForm.get("dataConsegna") != null) {
-			dataConsegna = LocalDate.parse((String) updateForm.get("dataConsegna"), format2);
-		}
-		LocalDate dataRestituzione = null;
-		if ((String) updateForm.get("dataRestituzione") != null) {
-			dataConsegna = LocalDate.parse((String) updateForm.get("dataRestituzione"), format2);
-		}
 		
-		if (ldRestituzione != null) {
-			idDipendente = 10;
-			Hardware hw = new Hardware(Integer.parseInt((String) updateForm.get("dipendente")),
-					Integer.parseInt((String) updateForm.get("dispositivo")), (String) updateForm.get("marca"),
-					(String) updateForm.get("modello"), (String) updateForm.get("seriale"), ldConsegna, ldRestituzione,
-					(String) updateForm.get("note"));
+		if(hw.getDataRestituzione() != null) {
 			hardwareService.save(hw);
+			hardwareService.modificaHardware(idHardware, 10, hw.getIdDispositivo(), hw.getMarca(), hw.getModello(), 
+					hw.getSeriale(), null, null, "");
 		}
-
-		hardwareService.modificaHardware(idHardware, idDipendente,
-				Integer.parseInt((String) updateForm.get("dispositivo")), (String) updateForm.get("marca"),
-				(String) updateForm.get("modello"), (String) updateForm.get("seriale"), ldConsegna, ldRestituzione,
-				note);
-
-		/*
-		 * beniService.modificaBene(idBene, bene.getDispositivo(), bene.getMarca(),
-		 * bene.getModello(), bene.getNumeroSeriale(), bene.getPassword(),
-		 * bene.getDipendente(), bene.getSocieta(), bene.getDataConsegna(),
-		 * bene.getDataRestituzione(), bene.getNote());
-		 */
+		else {
+			hardwareService.modificaHardware(idHardware, hw.getIdPersona(), hw.getIdDispositivo(), hw.getMarca(), hw.getModello(), 
+					hw.getSeriale(), hw.getDataConsegna(), hw.getDataRestituzione(), hw.getNote());
+		}
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
