@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -33,8 +34,7 @@ public class LoginController {
 	ContrattiService contrattiService;
 	
 	@RequestMapping("/login")
-	public ResponseEntity<?> login(@RequestBody JSONObject formLogin){
-        
+	public ResponseEntity<?> login(@RequestBody JSONObject formLogin){		 
         Integer idDipendente = authService.login((String)formLogin.get("email"), (String)formLogin.get("password"));
         
 		if (idDipendente == null)
@@ -42,21 +42,23 @@ public class LoginController {
 		else {
 			LocalSession localSession = new LocalSession();
 	        localSession.setIdDipendente(idDipendente);
-	        Persone persona = personeService.findByIdPersona(idDipendente);
+	        Persone persona = personeService.findByIdPersona(idDipendente);	
 	        localSession.setNome(persona.getNome());
 	        localSession.setCognome(persona.getCognome());
 	        localSession.setNumeroRichieste(dipendentiRichiesteService.getNumeroRichieste(idDipendente));
 	        localSession.setRuolo(ruoliDipendentiService.getRuoloByIdPersona(idDipendente));
 	        localSession.setAzienda(contrattiService.getAziendaByIdPersona(idDipendente));
-	        localSession.setUuid(generateString());	         
+	        localSession.setUuid(generateString());	
+	        
 	        return new ResponseEntity<>(localSession, HttpStatus.OK);
 		}
 	}
 	
 	public static String generateString() {
-        String uuid = UUID.randomUUID().toString();
-       System.out.println(uuid.replaceAll("[-]+",""));
+		String uuid="";
+        uuid = UUID.randomUUID().toString().replaceAll("-", "");      
         return "uuid = " + uuid;
         
     }
+
 }
