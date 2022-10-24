@@ -1,5 +1,8 @@
 package it.teorema.gestech.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,12 +15,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import it.teorema.gestech.model.Auth;
 import it.teorema.gestech.model.Persone;
+import it.teorema.gestech.model.Session;
 import it.teorema.gestech.service.AuthService;
 import it.teorema.gestech.service.ContrattiService;
 import it.teorema.gestech.service.RichiestePersoneService;
 import it.teorema.gestech.service.PersoneService;
 import it.teorema.gestech.service.RuoliPersoneService;
+import it.teorema.gestech.service.SessionService;
 import it.teorema.gestech.session.LocalSession;
 
 @Controller
@@ -32,9 +38,16 @@ public class LoginController {
 	RichiestePersoneService dipendentiRichiesteService;
 	@Autowired
 	ContrattiService contrattiService;
+	@Autowired
+	SessionService sessionService;
+	 
+	 
+	
 	
 	@RequestMapping("/login")
-	public ResponseEntity<?> login(@RequestBody JSONObject formLogin){		 
+	public ResponseEntity<?> login(@RequestBody JSONObject formLogin){	
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDateTime ldt = LocalDateTime.now();
         Integer idDipendente = authService.login((String)formLogin.get("email"), (String)formLogin.get("password"));
         
 		if (idDipendente == null)
@@ -48,8 +61,10 @@ public class LoginController {
 	        localSession.setNumeroRichieste(dipendentiRichiesteService.getNumeroRichieste(idDipendente));
 	        localSession.setRuolo(ruoliDipendentiService.getRuoloByIdPersona(idDipendente));
 	        localSession.setAzienda(contrattiService.getAziendaByIdPersona(idDipendente));
-	        localSession.setUuid(generateString());	
+	        localSession.setUuid(generateString());		        
 	        
+	       Session session = new Session(idDipendente,generateString(),LocalDateTime.parse(dtf.format(ldt)));	        
+	       sessionService.save(session);
 	        return new ResponseEntity<>(localSession, HttpStatus.OK);
 		}
 	}
@@ -60,5 +75,4 @@ public class LoginController {
         return "uuid = " + uuid;
         
     }
-
 }

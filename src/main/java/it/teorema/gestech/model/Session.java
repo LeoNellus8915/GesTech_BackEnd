@@ -24,6 +24,13 @@ public class Session {
 	private LocalDateTime data;
 	
 	public Session() {}
+	
+	public Session(int idPersona, String token, LocalDateTime data) {
+		super();		 
+		this.idPersona = idPersona;
+		this.token = token;
+		this.data = data;
+	}
 
 	public Session(int id, int idPersona, String token, LocalDateTime data) {
 		super();
