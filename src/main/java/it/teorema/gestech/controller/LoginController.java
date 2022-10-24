@@ -1,6 +1,7 @@
 package it.teorema.gestech.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,14 @@ public class LoginController {
 	        localSession.setNumeroRichieste(dipendentiRichiesteService.getNumeroRichieste(idDipendente));
 	        localSession.setRuolo(ruoliDipendentiService.getRuoloByIdPersona(idDipendente));
 	        localSession.setAzienda(contrattiService.getAziendaByIdPersona(idDipendente));
+	        localSession.setUuid(generateString());	         
 	        return new ResponseEntity<>(localSession, HttpStatus.OK);
 		}
 	}
+	
+	public static String generateString() {
+        String uuid = UUID.randomUUID().toString();
+       System.out.println(uuid);
+        return "uuid = " + uuid;
+    }
 }
