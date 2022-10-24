@@ -55,7 +55,8 @@ public class LoginController {
 	
 	public static String generateString() {
         String uuid = UUID.randomUUID().toString();
-       System.out.println(uuid);
+       System.out.println(uuid.replaceAll("[-]+",""));
         return "uuid = " + uuid;
+        
     }
 }
