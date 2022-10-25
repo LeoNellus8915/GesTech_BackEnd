@@ -8,9 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import it.teorema.gestech.model.StatiRichiesta;
 
 public interface StatiRichiestaService extends JpaRepository <StatiRichiesta, Integer> {
-	@Query("from StatiRichiesta "
-			+ "where nome != :statiRichiesta")
-	List<StatiRichiesta> findAllException(String statiRichiesta);
 
 	@Query("select s.nome "
 			+ "from StatiRichiesta s, Richieste r "
@@ -21,4 +18,8 @@ public interface StatiRichiestaService extends JpaRepository <StatiRichiesta, In
 			+ "from StatiRichiesta "
 			+ "where nome = :nomeStatoRichiesta")
 	Integer getIdStatoRichiesta(String nomeStatoRichiesta);
+	
+	@Query("from StatiRichiesta "
+			+ "where nome != :statiRichiesta")
+	List<StatiRichiesta> findAllException(String statiRichiesta);
 }

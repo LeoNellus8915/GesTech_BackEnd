@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import it.teorema.gestech.model.Lingue;
 
-public interface LingueService extends JpaRepository <Lingue, Integer> {	
+public interface LingueService extends JpaRepository <Lingue, Integer> {
+	
 	@Query("select l.nome "
 			+ "from Lingue l, DettagliCandidati dc, LingueDettagliCandidati ldc "
 			+ "where l.id = ldc.idLingua and dc.idPersona = :idPersona")

@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import it.teorema.gestech.model.Avvisi;
 
-public interface AvvisiService extends JpaRepository <Avvisi, Integer> {	
+public interface AvvisiService extends JpaRepository <Avvisi, Integer> {
+	
 	@Query("from Avvisi order by data desc")
 	List<Avvisi> findAll();
 

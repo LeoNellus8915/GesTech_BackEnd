@@ -17,6 +17,7 @@ import it.teorema.gestech.model.mapper.AllRichiesteChiuse;
 import it.teorema.gestech.model.mapper.GetRichiesta;
 
 public interface RichiesteService extends JpaRepository <Richieste, Integer> {
+	
 	@Query("select ri.id as id, ri.data as data, c.nome as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
 			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita, ri.recruiter as recruiters "

@@ -9,9 +9,11 @@ import org.springframework.data.jpa.repository.Query;
 import it.teorema.gestech.model.RichiestePersone;
 
 public interface RichiestePersoneService extends JpaRepository <RichiestePersone, Integer> {
+	
 	@Query("select count(rp.id) "
 			+ "from RichiestePersone rp, Richieste r "
-			+ "where rp.idRichiesta = r.id and rp.idPersona = :idPersona and rp.visualizzato = 0 and r.idStato != 3")
+			+ "where rp.idRichiesta = r.id and rp.idPersona = :idPersona and "
+			+ "rp.visualizzato = 0 and r.idStato != 3")
 	Integer getNumeroRichieste(int idPersona);
 
 	@Modifying
