@@ -46,7 +46,7 @@ public class LoginController {
 	
 	@RequestMapping("/login")
 	public ResponseEntity<?> login(@RequestBody JSONObject formLogin){	
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); 
 		LocalDateTime ldt = LocalDateTime.now();
         Integer idDipendente = authService.login((String)formLogin.get("email"), (String)formLogin.get("password"));
         
@@ -63,7 +63,7 @@ public class LoginController {
 	        localSession.setAzienda(contrattiService.getAziendaByIdPersona(idDipendente));
 	        localSession.setUuid(generateString());		        
 	        
-	       Session session = new Session(idDipendente,generateString(),LocalDateTime.parse(dtf.format(ldt)));	        
+	       Session session = new Session(idDipendente,generateString(),LocalDateTime.parse(dtf.format(ldt), dtf));	        
 	       sessionService.save(session);
 	        return new ResponseEntity<>(localSession, HttpStatus.OK);
 		}
@@ -72,7 +72,7 @@ public class LoginController {
 	public static String generateString() {
 		String uuid="";
         uuid = UUID.randomUUID().toString().replaceAll("-", "");      
-        return "uuid = " + uuid;
+        return  uuid;
         
     }
 }
