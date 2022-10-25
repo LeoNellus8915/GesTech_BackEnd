@@ -132,12 +132,16 @@ public class HardwareController {
 		
 		if(hw.getDataRestituzione() != null) {
 			hardwareService.save(hw);
-			hardwareService.modificaHardware(idHardware, 10, hw.getIdDispositivo(), hw.getMarca(), hw.getModello(), 
-					hw.getSeriale(), null, null, "");
+			
+			Hardware newHw = new Hardware(10, hw.getIdDispositivo(),
+					hw.getMarca(),hw.getModello(),hw.getSeriale()
+					,null,null,
+					"");
+			
+			hardwareService.modificaHardware(idHardware, newHw);
 		}
 		else {
-			hardwareService.modificaHardware(idHardware, hw.getIdPersona(), hw.getIdDispositivo(), hw.getMarca(), hw.getModello(), 
-					hw.getSeriale(), hw.getDataConsegna(), hw.getDataRestituzione(), hw.getNote());
+			hardwareService.modificaHardware(idHardware, hw);
 		}
 
 		return new ResponseEntity<>(HttpStatus.OK);

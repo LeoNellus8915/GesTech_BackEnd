@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import it.teorema.gestech.model.Hardware;
 import it.teorema.gestech.model.mapper.AllHardware;
@@ -40,11 +41,13 @@ public interface HardwareService extends JpaRepository <Hardware, Integer> {
 	@Modifying
 	@Transactional
 	@Query("update Hardware "
-			+ "set idPersona = :idDipendente, idDispositivo = :idDispositivo, "
-			+ "marca = :marca, modello = :modello, seriale = :seriale, dataConsegna = :dataConsegna, "
-			+ "dataRestituzione = :dataRestituzione, note = :note "
+			+ "set idPersona = :#{#hardware.idPersona}, idDispositivo = :#{#hardware.idDispositivo}, "
+			+ "marca = :#{#hardware.marca}, modello = :#{#hardware.modello}, seriale = :#{#hardware.seriale}, "
+			+ "dataConsegna = :#{#hardware.dataConsegna}, dataRestituzione = :#{#hardware.dataRestituzione}, "
+			+ "note = :#{#hardware.note} "
 			+ "where id = :idHardware")
-	void modificaHardware(int idHardware, int idDipendente, int idDispositivo, String marca, String modello, String seriale, LocalDate dataConsegna, LocalDate dataRestituzione, String note);
+	void modificaHardware(int idHardware, @Param("hardware")Hardware hardware);
+	
 
 	@Query("select id "
 			+ "from Hardware ")
