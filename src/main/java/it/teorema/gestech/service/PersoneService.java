@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.mapper.AllDipendenti;
-import it.teorema.gestech.model.mapper.FindAllDipendentiException;
 import it.teorema.gestech.model.mapper.GetDipendente;
 import it.teorema.gestech.model.mapper.GetNomiRecruiter;
 

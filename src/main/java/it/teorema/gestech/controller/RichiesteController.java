@@ -4,11 +4,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import org.hibernate.internal.build.AllowSysOut;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,11 +20,7 @@ import it.teorema.gestech.model.CommentiRichieste;
 import it.teorema.gestech.model.Richieste;
 import it.teorema.gestech.model.RichiesteDettagliCandidati;
 import it.teorema.gestech.model.RichiestePersone;
-import it.teorema.gestech.model.mapper.AllCandidati;
-import it.teorema.gestech.model.mapper.AllRichieste;
-import it.teorema.gestech.model.mapper.AllRichiesteAperte;
 import it.teorema.gestech.model.mapper.GetNomiRecruiter;
-import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.service.CommentiRichiesteService;
 import it.teorema.gestech.service.RichiesteService;
 import it.teorema.gestech.service.RichiestePersoneService;
@@ -313,8 +307,10 @@ public class RichiesteController {
 			else
 				listaRecruiters = (String)updateForm.get("listaRecruiters").toString().replace("[", "").replace("]", "");
 					
-			richiesteService.updateRichiesta(Integer.parseInt((String)updateForm.get("statoRichiesta")), idRichiesta, 
-									Integer.parseInt((String)updateForm.get("priorita")), listaRecruiters);
+			Richieste modificaRichiesta = new Richieste(idRichiesta, listaRecruiters, Integer.parseInt((String)updateForm.get("statoRichiesta")),
+					Integer.parseInt((String)updateForm.get("priorita")));
+			
+			richiesteService.updateRichiesta(modificaRichiesta);
 			
 			String[] recruiters = updateForm.get("listaRecruiters").toString().replace("[", "").replace("]", "").split(", ");
 			List<GetNomiRecruiter> recruiter = new ArrayList<GetNomiRecruiter>();
@@ -322,16 +318,15 @@ public class RichiesteController {
 				if (updateForm.get("listaRecruiters").toString().indexOf("Tutti") > -1)
 				{
 					recruiter = dipendentiService.getNomiRecruiter();
-					for (int c=0; c<recruiter.size(); c++)
-						richiesteDettagliCandidatiService.save(new RichiesteDettagliCandidati(idRichiesta, dipendentiService.findByName(recruiter.get(c).getNome(), recruiter.get(c).getCognome()), (String)updateForm.get("note")));
+					for (int c=0; c<recruiter.size(); c++) {
+						RichiesteDettagliCandidati rdc = new RichiesteDettagliCandidati(idRichiesta, dipendentiService.findByName(recruiter.get(c).getNome(), recruiter.get(c).getCognome()), (String)updateForm.get("note"));
+						richiesteDettagliCandidatiService.save(rdc);
+					}
 				}
 				else
 					if (recruiters.length > 0)
 						for (int c=0; c<recruiters.length; c++) {
 							String[] rec = recruiters[c].toString().split("  ");
-							for (int i = 0; i < rec.length; i++) {
-								System.out.println(rec[i]);
-							}
 							richiestePersoneService.save(new RichiestePersone(idRichiesta, dipendentiService.findByName((String)rec[1], (String)rec[0])));
 						}
 			}
@@ -426,10 +421,26 @@ public class RichiesteController {
 			}
 		}
 		richiesteService.setStato(idRichiesta);
-		/*for(int i=0; i<candidati.length; i++) {
-			RichiesteDettagliCandidati rdc = new RichiesteDettagliCandidati(Integer.parseInt((String)candidati[i]), idRichiesta);
-			richiesteDettagliCandidatiService.save(rdc);
-		}*/
 		return new ResponseEntity<> (HttpStatus.OK);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
