@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import it.teorema.gestech.model.Dispositivi;
 import it.teorema.gestech.model.Hardware;
+import it.teorema.gestech.model.mapper.AllHardware;
 import it.teorema.gestech.service.DispositiviService;
 import it.teorema.gestech.service.HardwareService;
 import it.teorema.gestech.service.PersoneService;
@@ -55,8 +56,6 @@ public class HardwareController {
 			hardware.setDataRestituzione(LocalDate.parse((String) formHardware.get("dataRestituzione"), format2));
 		}
 
-		System.err.println(hardware.getId() + " id dispositivo:" + hardware.getIdDispositivo() + " id persona:"
-				+ hardware.getIdPersona());
 		hardwareService.save(hardware);
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciHardware();
 		JSONObject oggetto = new JSONObject();
@@ -69,15 +68,20 @@ public class HardwareController {
 
 	@RequestMapping("/get-hardware-visualizza/{codiceHardware}")
 	public ResponseEntity<List<Object>> getHardwareVisualizza(@PathVariable("codiceHardware") String codiceHardware) {
+		
+		System.err.println(codiceHardware);
 		List<Object> lista = new ArrayList<>();
 		int idHardware = 0;
 		List<JSONObject> listaCodici = SecurityController.getListaCodiciHardware();
 		for (JSONObject codice : listaCodici) {
 			if (((String) codice.get(("codice"))).equals(codiceHardware)) {
 				idHardware = (Integer) codice.get("id");
+				
+				System.err.println(idHardware);
 
-				lista.add(hardwareService.getMapperHardware(idHardware));
-				lista.add(hardwareService.findStoricoHardware());
+				AllHardware allHardware = hardwareService.getMapperHardware(idHardware);
+				lista.add(allHardware);
+				lista.add(hardwareService.findStoricoHardware(allHardware.getSeriale()));
 			}
 		}
 
@@ -108,7 +112,7 @@ public class HardwareController {
 		lista.add(personeService.getDipendente(hardware.getIdPersona()));
 		lista.add(dispositiviService.getDispositivo(hardware.getIdDispositivo()));
 		lista.add(personeService.getAllDipendenti());
-		lista.add(hardwareService.findStoricoHardware());
+		lista.add(hardwareService.findStoricoHardware(hardware.getSeriale()));
 		
 		return new ResponseEntity<>(lista, HttpStatus.OK);
 	}

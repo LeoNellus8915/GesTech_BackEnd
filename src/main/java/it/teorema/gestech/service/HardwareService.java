@@ -19,7 +19,8 @@ public interface HardwareService extends JpaRepository <Hardware, Integer> {
 	Hardware getHardware (int idHardware);
 
 	@Query("select id "
-			+ "from Hardware ")
+			+ "from Hardware "
+			+ "where dataRestituzione is NULL")
 	List<Integer> getListaIdHardware();
 
 	@Query("select max(id) "
@@ -39,8 +40,9 @@ public interface HardwareService extends JpaRepository <Hardware, Integer> {
 	@Query("select h.id as id, p.nome as nome, p.cognome as cognome, h.dataConsegna as dataConsegna, "
 			+ "h.dataRestituzione as dataRestituzione "
 			+"from Persone p, Hardware h "
-			+"where p.id = h.idPersona and h.dataRestituzione IS NOT NULL")
-	List<AllStoriciBeni> findStoricoHardware ();
+			+"where p.id = h.idPersona and h.dataRestituzione IS NOT NULL "
+			+ "and h.seriale = :seriale")
+	List<AllStoriciBeni> findStoricoHardware (String seriale);
 	
 	@Query("select h.id as id, p.nome as nomePersona, p.cognome as cognomePersona, d.nome as nomeDispositivo, "
 			+ "h.modello as modello, h.marca as marca, h.dataRestituzione as dataRestituzione, "
