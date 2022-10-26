@@ -9,8 +9,10 @@ import it.teorema.gestech.model.Dispositivi;
 
 public interface DispositiviService extends JpaRepository <Dispositivi, Integer> {
 
-	
 	@Query("from Dispositivi d "
 			+"where d.id != 5")
 	List<Dispositivi> getDispositivi();
+	
+	@Query("from Dispositivi where id = :id")
+	Dispositivi getDispositivo(int id);
 }

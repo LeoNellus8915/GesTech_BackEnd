@@ -199,6 +199,8 @@ public class SecurityController {
 			UUID codice = UUID.randomUUID();
 			oggetto.put("id", id);
 			oggetto.put("codice", codice.toString().replaceAll("-", ""));
+			System.err.println(id);
+			System.err.println(codice.toString().replaceAll("-", ""));
 			listaCodici.add(oggetto);
 			//controllo sul se esce uguale
 		}

@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import it.teorema.gestech.model.Richieste;
 import it.teorema.gestech.model.mapper.AllCandidati;
@@ -16,6 +17,7 @@ import it.teorema.gestech.model.mapper.AllRichiesteChiuse;
 import it.teorema.gestech.model.mapper.GetRichiesta;
 
 public interface RichiesteService extends JpaRepository <Richieste, Integer> {
+	
 	@Query("select ri.id as id, ri.data as data, c.nome as cliente, ri.citta as citta , ri.costo as costo, "
 			+ "ri.note as note , li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
 			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita, ri.recruiter as recruiters "
@@ -155,8 +157,10 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	
 	@Modifying
 	@Transactional
-	@Query("update Richieste set idStato = :idStato, priorita = :priorita, recruiter = :recruiter where id = :idRichiesta")
-	void updateRichiesta(int idStato, int idRichiesta, int priorita, String recruiter);
+	@Query("update Richieste "
+			+ "set idStato = :#{#richiesta.idStato}, recruiter = :#{#richiesta.recruiter}, priorita = :#{#richiesta.priorita} "
+			+ "where id = :#{#richiesta.id}")
+	void updateRichiesta(@Param("richiesta") Richieste richiesta);
 
 	
 

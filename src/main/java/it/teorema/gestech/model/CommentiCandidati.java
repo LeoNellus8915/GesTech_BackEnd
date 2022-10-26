@@ -87,7 +87,7 @@ public class CommentiCandidati
 		
 		if ((String)commentiCandidati.get("commento") != "")
 		{
-			this.setData(LocalDate.parse(format1.format(now), format1));
+			this.setData(data);
 			this.setIdPersona(Integer.parseInt((String)commentiCandidati.get("idDipendente")));
 			this.setIdDettaglioCandidato(idCandidato);
 			this.setNote((String)commentiCandidati.get("commento"));

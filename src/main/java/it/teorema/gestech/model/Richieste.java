@@ -43,6 +43,16 @@ public class Richieste {
 	
 	public Richieste() {}
 
+	public Richieste(int id, String recruiter, int idStato, int priorita) {
+		super();
+		this.id = id;
+		this.recruiter = recruiter;
+		this.idStato = idStato;
+		this.priorita = priorita;
+	}
+
+
+
 	public Richieste(int id, int idPersona, LocalDateTime data, int idLinguaggio, int idProfilo, int idLivello,
 			int idCliente, String citta, double costo, String note, String recruiter, int idStato, int priorita,
 			String candidati) {

@@ -12,6 +12,7 @@ import it.teorema.gestech.model.CommentiRichieste;
 import it.teorema.gestech.model.mapper.AllCommentiRichieste;
 
 public interface CommentiRichiesteService extends JpaRepository <CommentiRichieste, Integer> {
+	
 	@Query("select c.data as data, p.nome as nome, p.cognome as cognome, c.note as note "
 			+ "from CommentiRichieste c, Persone p "
 			+ "where c.idRichiesta = :idRichiesta and c.idPersona = p.id and c.nascosto = 1 "
@@ -32,7 +33,8 @@ public interface CommentiRichiesteService extends JpaRepository <CommentiRichies
 
 	@Modifying
 	@Transactional
-	@Query("delete from CommentiRichieste "
+	@Query("delete "
+			+ "from CommentiRichieste "
 			+ "where idRichiesta = :idRichiesta")
 	void deleteCommento(int idRichiesta);
 
@@ -42,3 +44,29 @@ public interface CommentiRichiesteService extends JpaRepository <CommentiRichies
 			+ "group by r.id")
 	String recruiterPresente(int idRichiesta);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

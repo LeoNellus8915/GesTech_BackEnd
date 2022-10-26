@@ -1,8 +1,7 @@
 package it.teorema.gestech.model.mapper;
 
-public interface FindAllDipendentiException {
+public interface GetDipendente {
 	int getId();
 	String getNome();
-    String getCognome();
-
+	String getCognome();
 }

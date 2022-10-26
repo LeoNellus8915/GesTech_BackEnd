@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import it.teorema.gestech.model.RuoliPersone;
 
 public interface RuoliPersoneService extends JpaRepository <RuoliPersone, Integer>{
+	
 	@Query("select r.nome "
 			+ "from RuoliPersone rp, Ruoli r "
 			+ "where rp.idRuolo = r.id and rp.idPersona = :idPersona")

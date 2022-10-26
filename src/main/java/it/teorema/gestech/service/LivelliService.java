@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import it.teorema.gestech.model.Livelli;
 
 public interface LivelliService extends JpaRepository <Livelli, Integer> {	
+	
 	@Query("select l.nome "
 			+ "from Livelli l, DettagliCandidati dc, ProfiliDettagliCandidati pdc "
 			+ "where l.id = pdc.idLivello and dc.idPersona = :idPersona")

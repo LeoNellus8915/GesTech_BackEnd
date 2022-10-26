@@ -35,6 +35,19 @@ public class Hardware {
 	private String note;
 	
 	public Hardware() {}
+	
+	public Hardware(int idPersona, int idDispositivo, String marca, String modello, String seriale, LocalDate dataConsegna,
+			LocalDate dataRestituzione, String note) {
+		super();
+		this.idPersona = idPersona;
+		this.idDispositivo = idDispositivo;
+		this.marca = marca;
+		this.modello = modello;
+		this.seriale = seriale;
+		this.dataConsegna = dataConsegna;
+		this.dataRestituzione = dataRestituzione;
+		this.note = note;
+	}
 
 	public Hardware(int id, int idPersona, int idDispositivo, String marca, String modello, String seriale, LocalDate dataConsegna,
 			LocalDate dataRestituzione, String note) {
@@ -122,4 +135,13 @@ public class Hardware {
 	public void setNote(String note) {
 		this.note = note;
 	}
+	
+//	public Hardware setUpdateHardware(JSONObject form,int id) {
+//		Hardware updateHardware = new Hardware();
+//		
+//		updateHardware.setId(id);
+//		updateHardware.setIdDispositivo(Integer.parseInt(form.con));
+//		
+//		return null;
+//	}
 }
