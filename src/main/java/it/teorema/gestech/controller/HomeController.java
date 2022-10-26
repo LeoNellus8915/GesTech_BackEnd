@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,12 +26,19 @@ public class HomeController {
 	@Autowired
 	AuthService authService;
 	
+	@Autowired
+	SecurityController securityController;
+	
 	@RequestMapping("/get-avvisi/{ruolo}")
-	public ResponseEntity<List<Avvisi>> getAvvisi(@PathVariable("ruolo") String ruolo) {
-		if(ruolo.equals("Admin"))
-			return new ResponseEntity<>(avvisiService.findAll(), HttpStatus.OK);
-		else 
-			return new ResponseEntity<>(avvisiService.getAvvisiByRuolo(ruolo), HttpStatus.OK);
+	public ResponseEntity<List<Avvisi>> getAvvisi(@PathVariable("ruolo") String ruolo, HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		else {
+			if (ruolo.equals("Admin"))
+				return new ResponseEntity<>(avvisiService.findAll(), HttpStatus.OK);
+			else
+				return new ResponseEntity<>(avvisiService.getAvvisiByRuolo(ruolo), HttpStatus.OK);
+		}
 	}
 	
 	@RequestMapping("/delete-avviso/{idAvviso}")

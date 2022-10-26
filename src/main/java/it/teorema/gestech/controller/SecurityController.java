@@ -1,5 +1,8 @@
 package it.teorema.gestech.controller;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import it.teorema.gestech.service.HardwareService;
 import it.teorema.gestech.service.PersoneService;
 import it.teorema.gestech.service.RichiesteService;
+import it.teorema.gestech.service.SessionService;
 
 @Controller
 public class SecurityController {
@@ -24,6 +28,8 @@ public class SecurityController {
 	PersoneService personeService;
 	@Autowired
 	HardwareService hardwareService;
+	@Autowired
+	SessionService sessionService;
 	
 	private static List<JSONObject> listaCodiciCandidati;
 	private static List<JSONObject> listaCodiciRichiesteAperteAdmin;
@@ -202,5 +208,24 @@ public class SecurityController {
 	
 	public static List<JSONObject> getListaCodiciHardware() {
 		return listaCodiciHardware;
+	}
+	
+	public boolean controlloToken(String token) {
+		LocalDateTime dataSessione = sessionService.getData(token);
+		if (dataSessione == null)
+			return false;
+		else {
+			DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
+			LocalDateTime now = LocalDateTime.now();  
+			LocalDateTime data = LocalDateTime.parse(format.format(now), format);
+			long diffInSeconds = ChronoUnit.SECONDS.between(dataSessione, data);
+			if (diffInSeconds > 1800)
+				return false;
+			else
+			{
+				sessionService.updateData(data, token);
+				return true;
+			}
+		}
 	}
 }

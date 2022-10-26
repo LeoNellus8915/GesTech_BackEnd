@@ -9,6 +9,7 @@ public class LocalSession {
 	private String azienda;
 	private int idDipendente;
 	private int numeroRichieste;
+	private String token;
 	
 	public String getNome() {
 		return nome;
@@ -45,5 +46,11 @@ public class LocalSession {
 	}
 	public void setNumeroRichieste(int numeroRichieste) {
 		this.numeroRichieste = numeroRichieste;
+	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
 	}
 }
