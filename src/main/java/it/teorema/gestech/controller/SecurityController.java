@@ -38,7 +38,7 @@ public class SecurityController {
 	private static List<JSONObject> listaCodiciRichiesteAperteRecruiter;
 	private static List<JSONObject> listaCodiciRichiesteAperte;
  	private static List<JSONObject> listaCodiciRichiesteChiuse;
-  private static List<JSONObject> listaCodiciHardware;
+ 	private static List<JSONObject> listaCodiciHardware;
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/get-codici-candidati")
