@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.internal.build.AllowSysOut;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,8 @@ import it.teorema.gestech.model.DettagliCandidati;
 import it.teorema.gestech.model.LingueDettagliCandidati;
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.ProfiliDettagliCandidati;
+import it.teorema.gestech.model.mapper.GetProfili;
+import it.teorema.gestech.model.mapper.MapperCandidato;
 import it.teorema.gestech.service.CommentiCandidatiService;
 import it.teorema.gestech.service.CvService;
 import it.teorema.gestech.service.DettagliCandidatiService;
@@ -36,6 +39,7 @@ import it.teorema.gestech.service.LingueDettagliCandidatiService;
 import it.teorema.gestech.service.LingueService;
 import it.teorema.gestech.service.LivelliService;
 import it.teorema.gestech.service.ProfiliService;
+import it.teorema.gestech.utils.ResponseHttp;
 
 @Controller
 public class CandidatiController {
@@ -160,6 +164,48 @@ public class CandidatiController {
 		}
 	}
 	
+	
+	@RequestMapping("/get-candidato-visualizza/{codiceCandidato}")
+	public ResponseEntity<ResponseHttp> getCandidatoVisualizza(@PathVariable("codiceCandidato") String codiceCandidato) {
+		ResponseHttp response = new ResponseHttp();
+		response.setCode("1");
+		int idCandidato = 0;
+		List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
+		
+		for (JSONObject codice : listaCodici) {
+			if (((String)codice.get(("codice"))).equals(codiceCandidato)) {
+				idCandidato = (Integer)codice.get("id");
+				System.out.println("idCandidato " + idCandidato);
+			}
+		}
+		
+		
+		
+		MapperCandidato mc = new MapperCandidato();
+		mc.setPersonaCandidato(personeService.findPersona_Candidato(idCandidato));
+		mc.setProfiloDettaglioCandidato(dettagliCandidatiService.findGetProfili(idCandidato));
+		if(mc.getPersonaCandidato()==null || mc.getProfiloDettaglioCandidato()==null) {
+			response.setCode("0");
+		}
+		else {
+			response.setDataSource(mc);
+		}
+		
+		System.out.println(mc.getPersonaCandidato().getNome());
+		System.out.println(mc.getPersonaCandidato().getCognome());
+		
+		for (GetProfili profilo : mc.getProfiloDettaglioCandidato()) {
+			System.out.println(profilo.getNomeProfilo());
+			System.out.println(profilo.getNomeLinguaggio());
+			System.out.println(profilo.getNomeLivello());
+			System.out.println(profilo.getDescrizione());
+		}
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	
+	
+	/*
 	@RequestMapping("/get-candidato-visualizza/{codiceCandidato}")
 	public ResponseEntity<List<Object>> getCandidatoVisualizza(@PathVariable("codiceCandidato") String codiceCandidato) {
 		int idCandidato = 0;
@@ -189,7 +235,14 @@ public class CandidatiController {
 		}
 		else
 			return new ResponseEntity<>(null, HttpStatus.OK);
-	}
+	}*/
+	
+	
+	
+	
+	
+	
+	
 	
 	@RequestMapping("/get-candidato-modifica/{codiceCandidato}")
 	public ResponseEntity<List<Object>> getCandidatoModifica(@PathVariable("codiceCandidato") String codiceCandidato) {

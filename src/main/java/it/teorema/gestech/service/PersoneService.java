@@ -13,6 +13,7 @@ import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.mapper.AllDipendenti;
 import it.teorema.gestech.model.mapper.GetDipendente;
 import it.teorema.gestech.model.mapper.GetNomiRecruiter;
+import it.teorema.gestech.model.mapper.MapperPersona_Candidato;
 
 public interface PersoneService extends JpaRepository<Persone, Integer>{
 
@@ -66,6 +67,13 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 			+ "cittaDiResidenza = :cittaDiResidenza "
 			+ "where id = :idPersona")
 	void updatePersona(int idPersona, String nome, String cognome, String cellulare, String email, String cittaDiResidenza);
+	
+	@Query("select nome as nome, cognome as cognome, email as email, cellulare as cellulare, "
+			+ "cittaDiResidenza as cittaDiResidenza "
+			+ "from Persone p "
+			+ "where id = :idCandidato")
+	MapperPersona_Candidato findPersona_Candidato(int idCandidato);
+	
 }
 
 
