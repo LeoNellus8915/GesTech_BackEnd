@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 
 public interface InfoDettaglioCandidato {
 	
+	String getProfiloLinkedin();
 	int getIdEsitoColloquio();
 	String getEsitoColloquio();
+	int getColoreEsitoColloquio();
 	LocalDateTime getDataInserimento();
 	String getCompetenzaPrincipale();
 	LocalDate getDataColloquio();

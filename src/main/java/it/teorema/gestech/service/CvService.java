@@ -11,10 +11,13 @@ import it.teorema.gestech.model.Cv;
 public interface CvService extends JpaRepository <Cv, Integer> {
 	@Modifying
 	@Transactional
-	@Query("delete from Cv where idPersona = :idCandidato")
+	@Query("delete "
+			+ "from Cv "
+			+ "where idPersona = :idCandidato")
 	void deleteByIdCandidato(int idCandidato);
 
 	@Query("select cvBase64 "
-			+ "from Cv where idPersona = :idCandidato")
+			+ "from Cv "
+			+ "where idPersona = :idCandidato")
 	String getCv(int idCandidato);
 }
