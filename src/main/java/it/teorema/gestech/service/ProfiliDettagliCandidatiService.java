@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import it.teorema.gestech.model.ProfiliDettagliCandidati;
+import it.teorema.gestech.model.mapper.InfoProfili;
 import it.teorema.gestech.model.mapper.GetProfili;
 
 public interface ProfiliDettagliCandidatiService extends JpaRepository <ProfiliDettagliCandidati, Integer> {
@@ -17,4 +18,10 @@ public interface ProfiliDettagliCandidatiService extends JpaRepository <ProfiliD
 			+ "and pdc.idLivello = liv.id "
 			+ "and dc.idPersona = :idCandidato")
 	List<GetProfili> getProfili(int idCandidato);
+	
+	@Query("select p.id as idProfilo, l.id as idLinguaggio, liv.id as idLivello, pdc.descrizione as descrizione "
+			+ "from DettagliCandidati dc, ProfiliDettagliCandidati pdc, Profili p, Linguaggi l, Livelli liv "
+			+ "where dc.idPersona = :idCandidato and pdc.idDettaglioCandidato = dc.id and pdc.idProfilo = p.id and "
+			+ "pdc.idLinguaggio = l.id and pdc.idLivello = liv.id")
+	List<InfoProfili> getInfoProfili(int idCandidato);
 }

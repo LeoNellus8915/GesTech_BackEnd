@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.hibernate.internal.build.AllowSysOut;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,6 @@ import it.teorema.gestech.model.DettagliCandidati;
 import it.teorema.gestech.model.LingueDettagliCandidati;
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.ProfiliDettagliCandidati;
-import it.teorema.gestech.model.mapper.GetProfili;
 import it.teorema.gestech.model.mapper.MapperCandidato;
 import it.teorema.gestech.service.CommentiCandidatiService;
 import it.teorema.gestech.service.CvService;
@@ -175,31 +173,24 @@ public class CandidatiController {
 		for (JSONObject codice : listaCodici) {
 			if (((String)codice.get(("codice"))).equals(codiceCandidato)) {
 				idCandidato = (Integer)codice.get("id");
-				System.out.println("idCandidato " + idCandidato);
 			}
 		}
 		
-		
-		
 		MapperCandidato mc = new MapperCandidato();
-		mc.setPersonaCandidato(personeService.findPersona_Candidato(idCandidato));
-		mc.setProfiloDettaglioCandidato(dettagliCandidatiService.findGetProfili(idCandidato));
-		if(mc.getPersonaCandidato()==null || mc.getProfiloDettaglioCandidato()==null) {
+		mc.setPersonaCandidato(personeService.getInfoPersona(idCandidato));
+		mc.setDettaglioCandidato_Candidato(dettagliCandidatiService.getInfoDettaglioCandidato(idCandidato));
+		mc.setProfiloDettaglioCandidato(profiliDettagliCandidatiService.getInfoProfili(idCandidato));
+		mc.setLingueDettaglioCandidato(lingueDettagliCandidatiService.getInfoLingue(idCandidato));
+		if(mc.getPersonaCandidato()==null || mc.getDettaglioCandidato_Candidato()==null
+				|| mc.getProfiloDettaglioCandidato()==null || mc.getLingueDettaglioCandidato()==null) {
 			response.setCode("0");
+			response.setMessage("No");
 		}
 		else {
 			response.setDataSource(mc);
+			response.setMessage("Yes");
 		}
 		
-		System.out.println(mc.getPersonaCandidato().getNome());
-		System.out.println(mc.getPersonaCandidato().getCognome());
-		
-		for (GetProfili profilo : mc.getProfiloDettaglioCandidato()) {
-			System.out.println(profilo.getNomeProfilo());
-			System.out.println(profilo.getNomeLinguaggio());
-			System.out.println(profilo.getNomeLivello());
-			System.out.println(profilo.getDescrizione());
-		}
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	

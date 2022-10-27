@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import it.teorema.gestech.model.DettagliCandidati;
 
 import it.teorema.gestech.model.mapper.AllCandidati;
-import it.teorema.gestech.model.mapper.GetProfili;
+import it.teorema.gestech.model.mapper.InfoDettaglioCandidato;
 
 public interface DettagliCandidatiService extends JpaRepository <DettagliCandidati, Integer> {
 	
@@ -39,6 +39,15 @@ public interface DettagliCandidatiService extends JpaRepository <DettagliCandida
 	@Query("from DettagliCandidati where idPersona = :idPersona")
 	DettagliCandidati findByIdCandidato(int idPersona);
 	
+	@Query("select idEsitoColloquio as idEsitoColloquio, dataInserimento as dataInserimento, "
+			+ "competenzaPrincipale as competenzaPrincipale, dataColloquio as dataColloquio, "
+			+ "annoColloquio as annoColloquio, fonteReperimento as fonteReperimento, "
+			+ "costoGiornaliero as costoGiornaliero, possibilitaLavorativa as possibilitaLavorativa, "
+			+ "competenzeTotali as competenzeTotali, certificazioni as certificazioni "
+			+ "from DettagliCandidati dc "
+			+ "where dc.idPersona = :idCandidato")
+	InfoDettaglioCandidato getInfoDettaglioCandidato(int idCandidato);
+	
 	@Modifying
 	@Transactional
 	@Query("update DettagliCandidati set idEsitoColloquio = :idEsitoColloquio, dataColloquio = :dataColloquio, "
@@ -57,12 +66,6 @@ public interface DettagliCandidatiService extends JpaRepository <DettagliCandida
 			+ "from DettagliCandidati "
 			+ "where idPersona = :idPersona")
 	void deleteByIdCandidato(int idPersona);
-	
-	@Query("select p.nome as nomeProfilo, l.nome as nomeLinguaggio, liv.nome as nomeLivello, pdc.descrizione as descrizione "
-			+ "from DettagliCandidati dc, ProfiliDettagliCandidati pdc, Profili p, Linguaggi l, Livelli liv "
-			+ "where dc.idPersona = :idCandidato and pdc.idDettaglioCandidato = dc.id and pdc.idProfilo = p.id and "
-			+ "pdc.idLinguaggio = l.id and pdc.idLivello = liv.id")
-	List<GetProfili> findGetProfili(int idCandidato);
 }
 
 

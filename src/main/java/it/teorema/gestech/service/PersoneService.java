@@ -13,7 +13,7 @@ import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.mapper.AllDipendenti;
 import it.teorema.gestech.model.mapper.GetDipendente;
 import it.teorema.gestech.model.mapper.GetNomiRecruiter;
-import it.teorema.gestech.model.mapper.MapperPersona_Candidato;
+import it.teorema.gestech.model.mapper.InfoPersona;
 
 public interface PersoneService extends JpaRepository<Persone, Integer>{
 
@@ -72,7 +72,7 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 			+ "cittaDiResidenza as cittaDiResidenza "
 			+ "from Persone p "
 			+ "where id = :idCandidato")
-	MapperPersona_Candidato findPersona_Candidato(int idCandidato);
+	InfoPersona getInfoPersona(int idCandidato);
 	
 }
 

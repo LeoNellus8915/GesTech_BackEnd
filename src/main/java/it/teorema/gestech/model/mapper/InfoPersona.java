@@ -1,6 +1,6 @@
 package it.teorema.gestech.model.mapper;
 
-public interface MapperPersona_Candidato {
+public interface InfoPersona {
 
 	String getNome();
 	String getCognome();
