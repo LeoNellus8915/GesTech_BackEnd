@@ -9,7 +9,7 @@ public class LocalSession {
 	private String azienda;
 	private int idDipendente;
 	private int numeroRichieste;
-	private String uuid;
+	private String token;
 	
 	public String getNome() {
 		return nome;
@@ -47,10 +47,11 @@ public class LocalSession {
 	public void setNumeroRichieste(int numeroRichieste) {
 		this.numeroRichieste = numeroRichieste;
 	}
-	public String getUuid() {
-		return uuid;
+	public String getToken() {
+		return token;
 	}
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
+	public void setToken(String token) {
+		this.token = token;
 	}
+	 
 }

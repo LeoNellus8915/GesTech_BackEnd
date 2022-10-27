@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -61,9 +62,10 @@ public class LoginController {
 	        localSession.setNumeroRichieste(dipendentiRichiesteService.getNumeroRichieste(idDipendente));
 	        localSession.setRuolo(ruoliDipendentiService.getRuoloByIdPersona(idDipendente));
 	        localSession.setAzienda(contrattiService.getAziendaByIdPersona(idDipendente));
-	        localSession.setUuid(generateString());		        
+	        localSession.setToken(generateString());		        
 	        
-	       Session session = new Session(idDipendente,generateString(),LocalDateTime.parse(dtf.format(ldt), dtf));	        
+	       Session session = new Session(idDipendente,generateString(),LocalDateTime.parse(dtf.format(ldt), dtf));
+	       sessionService.deleteTokenPersona(idDipendente);
 	       sessionService.save(session);
 	        return new ResponseEntity<>(localSession, HttpStatus.OK);
 		}

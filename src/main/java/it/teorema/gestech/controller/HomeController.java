@@ -1,21 +1,25 @@
 package it.teorema.gestech.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-
+import java.util.concurrent.TimeUnit;
+import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import it.teorema.gestech.model.Avvisi;
 import it.teorema.gestech.service.AuthService;
 import it.teorema.gestech.service.AvvisiService;
+import it.teorema.gestech.service.SessionService;
 
 @Controller
 public class HomeController {
@@ -23,9 +27,29 @@ public class HomeController {
 	AvvisiService avvisiService;
 	@Autowired
 	AuthService authService;
+	@Autowired
+	SessionService sessionService;
 	
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping("/get-avvisi/{ruolo}")
-	public ResponseEntity<List<Avvisi>> getAvvisi(@PathVariable("ruolo") String ruolo) {
+	public ResponseEntity<List<Avvisi>> getAvvisi(@PathVariable("ruolo") String ruolo,HttpServletRequest request) throws ParseException {		
+		String pattern = "yyyy-MM-dd HH:mm:ss";
+		SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+		
+		String token= (String) request.getAttribute("token");
+		LocalDateTime now = LocalDateTime.now();
+		
+		String datadb =sdf.format(sessionService.getDateByToken(token));
+		String datanow = sdf.format(now);
+   
+        long elapsedms = sdf.parse(datanow).getTime() - sdf.parse(datadb).getTime();
+        long diff = TimeUnit.SECONDS.convert(elapsedms, TimeUnit.MILLISECONDS);
+        System.out.println(diff);
+        
+        if(diff >= 1800)
+        	return new ResponseEntity<>(null, HttpStatus.OK);
+		 
+		
 		if(ruolo.equals("Admin"))
 			return new ResponseEntity<>(avvisiService.findAll(), HttpStatus.OK);
 		else 
@@ -57,4 +81,5 @@ public class HomeController {
 		authService.changePassword((String)formModificaPassword.get("password"), Integer.parseInt((String)formModificaPassword.get("idDipendente")));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
+	 
 }
