@@ -42,28 +42,43 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/delete-avviso/{idAvviso}")
-	public ResponseEntity<?> deleteAvviso(@PathVariable("idAvviso") int idAvviso) {
-		avvisiService.deleteById(idAvviso);
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<?> deleteAvviso(@PathVariable("idAvviso") int idAvviso,HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		else {
+			avvisiService.deleteById(idAvviso);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		
 	}
 	
 	@RequestMapping("/salva-avviso")
-	public ResponseEntity<?> salvaAvviso(@RequestBody JSONObject addForm) {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
-		LocalDateTime now = LocalDateTime.now();
-		Avvisi avviso = new Avvisi();
-		avviso.setTitolo((String) addForm.get("titolo"));
-		avviso.setRuoli((String) addForm.get("ruoli").toString().replace(",", "").replace("[", "").replace("]", ""));
-		avviso.setData(LocalDateTime.parse(dtf.format(now), dtf));
-		avviso.setIdPersona(Integer.parseInt((String) addForm.get("idDipendente")));
-		avviso.setNote((String) addForm.get("note"));
-		avvisiService.save(avviso);
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<?> salvaAvviso(@RequestBody JSONObject addForm,HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		else {
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
+			LocalDateTime now = LocalDateTime.now();
+			Avvisi avviso = new Avvisi();
+			avviso.setTitolo((String) addForm.get("titolo"));
+			avviso.setRuoli((String) addForm.get("ruoli").toString().replace(",", "").replace("[", "").replace("]", ""));
+			avviso.setData(LocalDateTime.parse(dtf.format(now), dtf));
+			avviso.setIdPersona(Integer.parseInt((String) addForm.get("idDipendente")));
+			avviso.setNote((String) addForm.get("note"));
+			avvisiService.save(avviso);
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+
 	}
 	
 	@RequestMapping("/modifica-password")
-	public ResponseEntity<?> modificaPassword(@RequestBody JSONObject formModificaPassword) {
-		authService.changePassword((String)formModificaPassword.get("password"), Integer.parseInt((String)formModificaPassword.get("idDipendente")));
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<?> modificaPassword(@RequestBody JSONObject formModificaPassword,HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		else {
+			authService.changePassword((String)formModificaPassword.get("password"), Integer.parseInt((String)formModificaPassword.get("idDipendente")));
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+	
 	}
 }
