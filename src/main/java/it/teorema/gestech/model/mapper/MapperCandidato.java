@@ -4,46 +4,52 @@ import java.util.List;
 
 public class MapperCandidato {
 
-	InfoPersona PersonaCandidato;
-	InfoDettaglioCandidato DettaglioCandidato_Candidato;
-	List<InfoProfili> ProfiloDettaglioCandidato;
-	List<InfoLingue> LingueDettaglioCandidato;
+	InfoPersona infoPersona;
+	InfoDettaglioCandidato infoDettaglioCandidato;
+	List<InfoProfili> infoProfili;
+	List<InfoLingue> infoLingue;
 	
 	public MapperCandidato() {}
-	
-	public MapperCandidato(InfoPersona personaCandidato,
-			InfoDettaglioCandidato dettaglioCandidato_Candidato, List<InfoProfili> profiloDettaglioCandidato,
-			List<InfoLingue> lingueDettaglioCandidato) {
+
+	public MapperCandidato(InfoPersona infoPersona, InfoDettaglioCandidato infoDettaglioCandidato,
+			List<InfoProfili> infoProfili, List<InfoLingue> infoLingue) {
 		super();
-		PersonaCandidato = personaCandidato;
-		DettaglioCandidato_Candidato = dettaglioCandidato_Candidato;
-		ProfiloDettaglioCandidato = profiloDettaglioCandidato;
-		LingueDettaglioCandidato = lingueDettaglioCandidato;
+		this.infoPersona = infoPersona;
+		this.infoDettaglioCandidato = infoDettaglioCandidato;
+		this.infoProfili = infoProfili;
+		this.infoLingue = infoLingue;
 	}
-	public InfoPersona getPersonaCandidato() {
-		return PersonaCandidato;
+
+	public InfoPersona getInfoPersona() {
+		return infoPersona;
 	}
-	public void setPersonaCandidato(InfoPersona personaCandidato) {
-		PersonaCandidato = personaCandidato;
+
+	public void setInfoPersona(InfoPersona infoPersona) {
+		this.infoPersona = infoPersona;
 	}
-	public InfoDettaglioCandidato getDettaglioCandidato_Candidato() {
-		return DettaglioCandidato_Candidato;
+
+	public InfoDettaglioCandidato getInfoDettaglioCandidato() {
+		return infoDettaglioCandidato;
 	}
-	public void setDettaglioCandidato_Candidato(InfoDettaglioCandidato dettaglioCandidato_Candidato) {
-		DettaglioCandidato_Candidato = dettaglioCandidato_Candidato;
+
+	public void setInfoDettaglioCandidato(InfoDettaglioCandidato infoDettaglioCandidato) {
+		this.infoDettaglioCandidato = infoDettaglioCandidato;
 	}
-	public List<InfoProfili> getProfiloDettaglioCandidato() {
-		return ProfiloDettaglioCandidato;
+
+	public List<InfoProfili> getInfoProfili() {
+		return infoProfili;
 	}
-	public void setProfiloDettaglioCandidato(List<InfoProfili> profiloDettaglioCandidato) {
-		ProfiloDettaglioCandidato = profiloDettaglioCandidato;
+
+	public void setInfoProfili(List<InfoProfili> infoProfili) {
+		this.infoProfili = infoProfili;
 	}
-	public List<InfoLingue> getLingueDettaglioCandidato() {
-		return LingueDettaglioCandidato;
+
+	public List<InfoLingue> getInfoLingue() {
+		return infoLingue;
 	}
-	public void setLingueDettaglioCandidato(List<InfoLingue> lingueDettaglioCandidato) {
-		LingueDettaglioCandidato = lingueDettaglioCandidato;
+
+	public void setInfoLingue(List<InfoLingue> infoLingue) {
+		this.infoLingue = infoLingue;
 	}
-	
 	
 }

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 public interface InfoDettaglioCandidato {
 	
 	int getIdEsitoColloquio();
+	String getEsitoColloquio();
 	LocalDateTime getDataInserimento();
 	String getCompetenzaPrincipale();
 	LocalDate getDataColloquio();

@@ -5,6 +5,6 @@ public interface InfoPersona {
 	String getNome();
 	String getCognome();
 	String getEmail();
-	String getCellullare();
+	String getCellulare();
 	String getCittaDiResidenza();
 }
