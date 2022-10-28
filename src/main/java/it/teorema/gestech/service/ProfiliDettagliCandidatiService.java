@@ -19,7 +19,8 @@ public interface ProfiliDettagliCandidatiService extends JpaRepository <ProfiliD
 			+ "and dc.idPersona = :idCandidato")
 	List<GetProfili> getProfili(int idCandidato);
 	
-	@Query("select p.id as idProfilo, l.id as idLinguaggio, liv.id as idLivello, pdc.descrizione as descrizione "
+	@Query("select p.id as idProfilo, p.nome as nomeProfilo, l.id as idLinguaggio, l.nome as nomeLinguaggio, "
+			+ "liv.id as idLivello, liv.nome as nomeLivello, pdc.descrizione as descrizione "
 			+ "from DettagliCandidati dc, ProfiliDettagliCandidati pdc, Profili p, Linguaggi l, Livelli liv "
 			+ "where dc.idPersona = :idCandidato and pdc.idDettaglioCandidato = dc.id and pdc.idProfilo = p.id and "
 			+ "pdc.idLinguaggio = l.id and pdc.idLivello = liv.id")

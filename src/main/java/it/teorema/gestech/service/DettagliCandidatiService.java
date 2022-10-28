@@ -39,13 +39,14 @@ public interface DettagliCandidatiService extends JpaRepository <DettagliCandida
 	@Query("from DettagliCandidati where idPersona = :idPersona")
 	DettagliCandidati findByIdCandidato(int idPersona);
 	
-	@Query("select idEsitoColloquio as idEsitoColloquio, dataInserimento as dataInserimento, "
-			+ "competenzaPrincipale as competenzaPrincipale, dataColloquio as dataColloquio, "
-			+ "annoColloquio as annoColloquio, fonteReperimento as fonteReperimento, "
-			+ "costoGiornaliero as costoGiornaliero, possibilitaLavorativa as possibilitaLavorativa, "
-			+ "competenzeTotali as competenzeTotali, certificazioni as certificazioni "
-			+ "from DettagliCandidati dc "
-			+ "where dc.idPersona = :idCandidato")
+	@Query("select dc.profiloLinkedin as profiloLinkedin, dc.idEsitoColloquio as idEsitoColloquio, "
+			+ "ec.nome as esitoColloquio, ec.colore as coloreEsitoColloquio, dc.dataInserimento as dataInserimento, "
+			+ "dc.competenzaPrincipale as competenzaPrincipale, dc.dataColloquio as dataColloquio, "
+			+ "dc.annoColloquio as annoColloquio, dc.fonteReperimento as fonteReperimento, "
+			+ "dc.costoGiornaliero as costoGiornaliero, dc.possibilitaLavorativa as possibilitaLavorativa, "
+			+ "dc.competenzeTotali as competenzeTotali, dc.certificazioni as certificazioni "
+			+ "from DettagliCandidati dc, EsitiColloquio ec "
+			+ "where dc.idPersona = :idCandidato and dc.idEsitoColloquio = ec.id")
 	InfoDettaglioCandidato getInfoDettaglioCandidato(int idCandidato);
 	
 	@Modifying

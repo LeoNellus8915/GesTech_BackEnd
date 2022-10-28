@@ -15,8 +15,8 @@ public interface LingueDettagliCandidatiService extends JpaRepository <LingueDet
 			+ "where l.id = ldc.idLingua and dc.id = ldc.idDettaglioCandidato and dc.idPersona = :idCandidato")
 	String[] getLingue(int idCandidato);
 	
-	@Query("select ldc.id as idLingua, ldc.descrizione as descrizione "
-			+ "from DettagliCandidati dc, LingueDettagliCandidati ldc "
-			+ "where dc.idPersona = :idCandidato and ldc.idDettaglioCandidato = dc.id")
+	@Query("select ldc.id as idLingua, l.nome as nomeLingua, ldc.descrizione as descrizione "
+			+ "from DettagliCandidati dc, LingueDettagliCandidati ldc, Lingue l "
+			+ "where dc.idPersona = :idCandidato and ldc.idDettaglioCandidato = dc.id and ldc.idLingua = l.id")
 	List<InfoLingue> getInfoLingue(int idCandidato);
 }
