@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,72 +36,83 @@ public class DipendentiController {
 	RuoliPersoneService ruoliDipendentiService;
 	@Autowired
 	ContrattiService contrattiService;
+	@Autowired
+	SecurityController securityController;
 
 	@RequestMapping("/salva-utente")
-	public ResponseEntity<Integer> salvaUtente(@RequestBody JSONObject formUtente) {
-		if (personeService.existsByEmail((String) formUtente.get("email")) != null
-				|| personeService.existsByEmail((String) formUtente.get("email")) != null)
-			return new ResponseEntity<>(0, HttpStatus.OK);
+	public ResponseEntity<Integer> salvaUtente(@RequestBody JSONObject formUtente, HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		else {
-			Persone persona = new Persone();
-			Auth auth = new Auth();
+			if (personeService.existsByEmail((String) formUtente.get("email")) != null
+					|| personeService.existsByEmail((String) formUtente.get("email")) != null)
+				return new ResponseEntity<>(0, HttpStatus.OK);
+			else {
+				Persone persona = new Persone();
+				Auth auth = new Auth();
 
-			DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			LocalDate now = LocalDate.now();
+				DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				LocalDate now = LocalDate.now();
 
-			persona.setNome((String) formUtente.get("nome"));
-			persona.setCognome((String) formUtente.get("cognome"));
-			persona.setEmail((String) formUtente.get("email"));
+				persona.setNome((String) formUtente.get("nome"));
+				persona.setCognome((String) formUtente.get("cognome"));
+				persona.setEmail((String) formUtente.get("email"));
 
-			personeService.save(persona);
+				personeService.save(persona);
 
-			int idPersona = personeService.findIdByEmail((String) formUtente.get("email"));
+				int idPersona = personeService.findIdByEmail((String) formUtente.get("email"));
 
-			auth.setPassword((String) formUtente.get("password"));
-			auth.setIdPersona(idPersona);
-			auth.setData(LocalDate.parse(format.format(now), format));
+				auth.setPassword((String) formUtente.get("password"));
+				auth.setIdPersona(idPersona);
+				auth.setData(LocalDate.parse(format.format(now), format));
 
-			authService.save(auth);
+				authService.save(auth);
 
-			if ((String) formUtente.get("ruolo") != "") {
-				List<RuoliPersone> ruoli = new ArrayList<RuoliPersone>();
-				RuoliPersone ruoloPersona = new RuoliPersone();
+				if ((String) formUtente.get("ruolo") != "") {
+					List<RuoliPersone> ruoli = new ArrayList<RuoliPersone>();
+					RuoliPersone ruoloPersona = new RuoliPersone();
 
-				RuoliPersone ruoloAlternativo = new RuoliPersone();
+					RuoliPersone ruoloAlternativo = new RuoliPersone();
 
-				ruoloAlternativo.setIdPersona(idPersona);
-				ruoloAlternativo.setIdRuolo(Integer.parseInt((String) formUtente.get("ruolo")));
-				ruoli.add(ruoloAlternativo);
+					ruoloAlternativo.setIdPersona(idPersona);
+					ruoloAlternativo.setIdRuolo(Integer.parseInt((String) formUtente.get("ruolo")));
+					ruoli.add(ruoloAlternativo);
 
-				ruoloPersona.setIdPersona(idPersona);
-				ruoloPersona.setIdRuolo(ruoliDipendentiService.getIdRuoloDipendente());
-				ruoli.add(ruoloPersona);
+					ruoloPersona.setIdPersona(idPersona);
+					ruoloPersona.setIdRuolo(ruoliDipendentiService.getIdRuoloDipendente());
+					ruoli.add(ruoloPersona);
 
-				ruoliDipendentiService.saveAll(ruoli);
+					ruoliDipendentiService.saveAll(ruoli);
 
-			} else {
-				RuoliPersone ruoliRisorse = new RuoliPersone();
-				ruoliRisorse.setIdPersona(idPersona);
-				ruoliRisorse.setIdRuolo(4);
+				} else {
+					RuoliPersone ruoliRisorse = new RuoliPersone();
+					ruoliRisorse.setIdPersona(idPersona);
+					ruoliRisorse.setIdRuolo(4);
 
-				ruoliDipendentiService.save(ruoliRisorse);
+					ruoliDipendentiService.save(ruoliRisorse);
 
+				}
+				Contratti newContract = new Contratti();
+
+				newContract.setIdPersona(idPersona);
+				newContract.setIdAzienda(Integer.parseInt((String) formUtente.get("azienda")));
+
+				contrattiService.save(newContract);
+
+				return new ResponseEntity<>(1, HttpStatus.OK);
 			}
-			Contratti newContract = new Contratti();
-
-			newContract.setIdPersona(idPersona);
-			newContract.setIdAzienda(Integer.parseInt((String) formUtente.get("azienda")));
-
-			contrattiService.save(newContract);
-
-			return new ResponseEntity<>(1, HttpStatus.OK);
 		}
+
 	}
 
 	@RequestMapping("/all-dipendenti")
-	public ResponseEntity<List<AllDipendenti>> allDipendenti() {
-		List<AllDipendenti> dipendenti = personeService.getAllDipendenti();
-		return new ResponseEntity<>(dipendenti, HttpStatus.OK);
+	public ResponseEntity<List<AllDipendenti>> allDipendenti(HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		else {
+			List<AllDipendenti> dipendenti = personeService.getAllDipendenti();
+			return new ResponseEntity<>(dipendenti, HttpStatus.OK);
+		}
 	}
 //	@RequestMapping("/get-dipendenti")
 //	public ResponseEntity<AllDipendenti> getDipendenti() {

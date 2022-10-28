@@ -32,7 +32,7 @@ public class HomeController {
 	@RequestMapping("/get-avvisi/{ruolo}")
 	public ResponseEntity<List<Avvisi>> getAvvisi(@PathVariable("ruolo") String ruolo, HttpServletRequest request) {
 		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		else {
 			if (ruolo.equals("Admin"))
 				return new ResponseEntity<>(avvisiService.findAll(), HttpStatus.OK);
@@ -42,9 +42,10 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/delete-avviso/{idAvviso}")
-	public ResponseEntity<?> deleteAvviso(@PathVariable("idAvviso") int idAvviso,HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
+	public ResponseEntity<?> deleteAvviso(@PathVariable("idAvviso") int idAvviso, HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			System.err.println("yjgyj");
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
 		else {
 			avvisiService.deleteById(idAvviso);
 			return new ResponseEntity<>(HttpStatus.OK);
@@ -55,7 +56,7 @@ public class HomeController {
 	@RequestMapping("/salva-avviso")
 	public ResponseEntity<?> salvaAvviso(@RequestBody JSONObject addForm,HttpServletRequest request) {
 		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		else {
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
 			LocalDateTime now = LocalDateTime.now();
@@ -74,7 +75,7 @@ public class HomeController {
 	@RequestMapping("/modifica-password")
 	public ResponseEntity<?> modificaPassword(@RequestBody JSONObject formModificaPassword,HttpServletRequest request) {
 		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		else {
 			authService.changePassword((String)formModificaPassword.get("password"), Integer.parseInt((String)formModificaPassword.get("idDipendente")));
 			return new ResponseEntity<>(HttpStatus.OK);

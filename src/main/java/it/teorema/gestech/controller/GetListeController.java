@@ -2,6 +2,8 @@ package it.teorema.gestech.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,64 +53,113 @@ public class GetListeController {
 	ClientiService clientiService;
 	@Autowired
 	ContrattiService contrattiService;
+	@Autowired
+	SecurityController securityController;
 
 	@RequestMapping("/all-esiti-colloquio")
-	public ResponseEntity<List<EsitiColloquio>> allEsitiColloquio() {
-		return new ResponseEntity<>(esitiColloquioService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<EsitiColloquio>> allEsitiColloquio(HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		else {
+			return new ResponseEntity<>(esitiColloquioService.findAll(), HttpStatus.OK);
+		}
 	}
-	
+
 	@RequestMapping("/all-linguaggi")
-	public ResponseEntity<List<Linguaggi>> allLinguaggi() {
-		return new ResponseEntity<>(linguaggiService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<Linguaggi>> allLinguaggi(HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		else {
+			return new ResponseEntity<>(linguaggiService.findAll(), HttpStatus.OK);
+		}
 	}
-	
+
 	@RequestMapping("/all-lingue")
-	public ResponseEntity<List<Lingue>> allLingue() {
-		return new ResponseEntity<>(lingueService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<Lingue>> allLingue(HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		else {
+			return new ResponseEntity<>(lingueService.findAll(), HttpStatus.OK);
+		}
 	}
-	
+
 	@RequestMapping("/all-livelli")
-	public ResponseEntity<List<Livelli>> allLivelli() {
-		return new ResponseEntity<>(livelliService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<Livelli>> allLivelli(HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		else {
+			return new ResponseEntity<>(livelliService.findAll(), HttpStatus.OK);
+		}
+
 	}
-	
+
 	@RequestMapping("/all-profili")
-	public ResponseEntity<List<Profili>> allProfili() {
-		return new ResponseEntity<>(profiiliService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<Profili>> allProfili(HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		else {
+			return new ResponseEntity<>(profiiliService.findAll(), HttpStatus.OK);
+		}
 	}
-	
+
 	@RequestMapping("/all-ruoli")
-	public ResponseEntity<List<Ruoli>> allRuoli() {
-		return new ResponseEntity<>(ruoliService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<Ruoli>> allRuoli(HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		else {
+			return new ResponseEntity<>(ruoliService.findAll(), HttpStatus.OK);
+		}
 	}
-	
+
 	@RequestMapping("/all-ruoli-dipendente-admin")
-	public ResponseEntity<List<Ruoli>> allRuoliTranneDipendenteAdmin() {
-		return new ResponseEntity<>(ruoliService.allRuoliTranneDipendenteAdmin(), HttpStatus.OK);
+	public ResponseEntity<List<Ruoli>> allRuoliTranneDipendenteAdmin(HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		else {
+			return new ResponseEntity<>(ruoliService.allRuoliTranneDipendenteAdmin(), HttpStatus.OK);
+		}
 	}
-	
+
 	@RequestMapping("/all-ruoli-dipendente-personale")
-	public ResponseEntity<List<Ruoli>> allRuoliTranneDipendentePersonale() {
-		return new ResponseEntity<>(ruoliService.allRuoliTranneDipendentePersonale(), HttpStatus.OK);
+	public ResponseEntity<List<Ruoli>> allRuoliTranneDipendentePersonale(HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		else {
+			return new ResponseEntity<>(ruoliService.allRuoliTranneDipendentePersonale(), HttpStatus.OK);
+		}
 	}
-	
+
 	@RequestMapping("/all-stati-richiesta")
-	public ResponseEntity<List<StatiRichiesta>> allStatiRichiesta() {
-		return new ResponseEntity<>(statiRichiestaService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<StatiRichiesta>> allStatiRichiesta(HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		else {
+			return new ResponseEntity<>(statiRichiestaService.findAll(), HttpStatus.OK);
+		}
 	}
-	
+
 	@RequestMapping("/all-aziende")
-	public ResponseEntity<List<Aziende>> allAziende() {
+	public ResponseEntity<List<Aziende>> allAziende(HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		return new ResponseEntity<>(aziendeService.findAll(), HttpStatus.OK);
 	}
-	
+
 	@RequestMapping("/all-clienti")
-	public ResponseEntity<List<Clienti>> allClienti() {
-		return new ResponseEntity<>(clientiService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<Clienti>> allClienti(HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		else {
+			return new ResponseEntity<>(clientiService.findAll(), HttpStatus.OK);
+		}
 	}
-	
+
 	@RequestMapping("/all-contratti")
-	public ResponseEntity<List<Contratti>> allContratti() {
-		return new ResponseEntity<>(contrattiService.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<Contratti>> allContratti(HttpServletRequest request) {
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		else {
+			return new ResponseEntity<>(contrattiService.findAll(), HttpStatus.OK);
+		}
 	}
 }

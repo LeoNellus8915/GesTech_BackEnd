@@ -39,7 +39,7 @@ public class HardwareController {
 	@RequestMapping("/all-hardware")
 	public ResponseEntity<List<Object>> allHardware(HttpServletRequest request) {
 		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		else {
 			List<Object> lista = new ArrayList<>();
 			lista.add(hardwareService.allHardware());
@@ -52,7 +52,7 @@ public class HardwareController {
 	@RequestMapping("/salva-hardware")
 	public ResponseEntity<?> salvaHardware(@RequestBody JSONObject formHardware,HttpServletRequest request) {
 		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		else {
 			Hardware hardware = new Hardware();
 			DateTimeFormatter format2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -83,7 +83,7 @@ public class HardwareController {
 	@RequestMapping("/get-hardware-visualizza/{codiceHardware}")
 	public ResponseEntity<List<Object>> getHardwareVisualizza(@PathVariable("codiceHardware") String codiceHardware,HttpServletRequest request) {
 		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		else {
 			List<Object> lista = new ArrayList<>();
 			int idHardware = 0;
@@ -108,7 +108,7 @@ public class HardwareController {
 	@RequestMapping("/get-all-dispositivi")
 	public ResponseEntity<List<Dispositivi>> getAllDispositivi(HttpServletRequest request) {
 		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		else {
 			List<Dispositivi> listaDispositivi = dispositiviService.getDispositivi();
 			return new ResponseEntity<>(listaDispositivi, HttpStatus.OK);
@@ -118,7 +118,7 @@ public class HardwareController {
 	@RequestMapping("/get-hardware-modifica/{codiceHardware}")
 	public ResponseEntity<List<Object>> getHardwareModifica(@PathVariable("codiceHardware") String codiceHardware,HttpServletRequest request) {
 		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		else {
 			List<Object> lista = new ArrayList<>();
 
@@ -145,7 +145,7 @@ public class HardwareController {
 	public ResponseEntity<?> modificaHardware(@RequestBody Hardware updateForm,
 			@PathVariable("codiceHardware") String codiceHardware,HttpServletRequest request) {
 		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		else {
 			int idHardware = 0;
 			List<JSONObject> listaCodici = SecurityController.getListaCodiciHardware();

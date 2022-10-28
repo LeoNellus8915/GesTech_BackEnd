@@ -5,6 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,48 +39,52 @@ public class LoginController {
 	ContrattiService contrattiService;
 	@Autowired
 	SessionService sessionService;
-	
-	@RequestMapping("/login")
-	public ResponseEntity<?> login(@RequestBody JSONObject formLogin){
-        
-        Integer idDipendente = authService.login((String)formLogin.get("email"), (String)formLogin.get("password"));
-        
-		if (idDipendente == null)
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		else {
-			LocalSession localSession = new LocalSession();
-	        localSession.setIdDipendente(idDipendente);
-	        Persone persona = personeService.findByIdPersona(idDipendente);
-	        localSession.setNome(persona.getNome());
-	        localSession.setCognome(persona.getCognome());
-	        localSession.setNumeroRichieste(dipendentiRichiesteService.getNumeroRichieste(idDipendente));
-	        localSession.setRuolo(ruoliDipendentiService.getRuoloByIdPersona(idDipendente));
-	        localSession.setAzienda(contrattiService.getAziendaByIdPersona(idDipendente));
-	        	
-			sessionService.deleteTokensById(idDipendente);
-			
-			DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
-			LocalDateTime data = LocalDateTime.parse(format.format(LocalDateTime.now()), format);
-			
-			sessionService.deleteAllOldToken(data);
-			
-			UUID primoCodice = UUID.randomUUID();
-			UUID secondoCodice = UUID.randomUUID();
-			
-			String token = (primoCodice.toString().replaceAll("-", "") + ":" +
-							data.getYear() + data.getMonthValue() + data.getDayOfMonth() + 
-							data.getHour() + data.getMinute() + data.getSecond() + ":" + 
-							secondoCodice.toString().replaceAll("-", "")).toString();
+	@Autowired
+	SecurityController securityController;
 
-			String tokenCodificato = Base64.getEncoder().encodeToString(token.getBytes());
-						
-			Session session = new Session();
-			session.setIdPersona(idDipendente);
-			session.setToken(tokenCodificato);
-			session.setData(data);
-			sessionService.save(session);
-			localSession.setToken(tokenCodificato);
-	        return new ResponseEntity<>(localSession, HttpStatus.OK);
-		}
+	@RequestMapping("/login")
+	public ResponseEntity<?> login(@RequestBody JSONObject formLogin) {
+
+			Integer idDipendente = authService.login((String) formLogin.get("email"),
+					(String) formLogin.get("password"));
+
+			if (idDipendente == null)
+				return new ResponseEntity<>(null, HttpStatus.OK);
+			else {
+				LocalSession localSession = new LocalSession();
+				localSession.setIdDipendente(idDipendente);
+				Persone persona = personeService.findByIdPersona(idDipendente);
+				localSession.setNome(persona.getNome());
+				localSession.setCognome(persona.getCognome());
+				localSession.setNumeroRichieste(dipendentiRichiesteService.getNumeroRichieste(idDipendente));
+				localSession.setRuolo(ruoliDipendentiService.getRuoloByIdPersona(idDipendente));
+				localSession.setAzienda(contrattiService.getAziendaByIdPersona(idDipendente));
+
+				sessionService.deleteTokensById(idDipendente);
+
+				DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+				LocalDateTime data = LocalDateTime.parse(format.format(LocalDateTime.now()), format);
+
+				sessionService.deleteAllOldToken(data);
+
+				UUID primoCodice = UUID.randomUUID();
+				UUID secondoCodice = UUID.randomUUID();
+
+				String token = (primoCodice.toString().replaceAll("-", "") + ":" + data.getYear() + data.getMonthValue()
+						+ data.getDayOfMonth() + data.getHour() + data.getMinute() + data.getSecond() + ":"
+						+ secondoCodice.toString().replaceAll("-", "")).toString();
+
+				String tokenCodificato = Base64.getEncoder().encodeToString(token.getBytes());
+
+				Session session = new Session();
+				session.setIdPersona(idDipendente);
+				session.setToken(tokenCodificato);
+				session.setData(data);
+				sessionService.save(session);
+				localSession.setToken(tokenCodificato);
+				System.err.println(localSession.getToken());
+				return new ResponseEntity<>(localSession, HttpStatus.OK);
+			}
+
 	}
 }
