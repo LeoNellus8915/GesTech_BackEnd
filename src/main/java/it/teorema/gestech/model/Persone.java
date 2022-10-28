@@ -153,6 +153,6 @@ public class Persone {
 		this.cognome = (String)anagrafica.get("cognome");
 		this.cellulare = (String)anagrafica.get("cellulare");
 		this.email = (String)anagrafica.get("email");
-		this.cittaDiResidenza = (String)anagrafica.get("cittaDiResidenza");
+		this.cittaDiResidenza = (String)anagrafica.get("citta");
 	}
 }

@@ -27,6 +27,7 @@ import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.ProfiliDettagliCandidati;
 import it.teorema.gestech.model.mapper.InfoPersona;
 import it.teorema.gestech.model.mapper.MapperCandidato;
+import it.teorema.gestech.model.mapper.MapperModificaCandidato;
 import it.teorema.gestech.service.CommentiCandidatiService;
 import it.teorema.gestech.service.CvService;
 import it.teorema.gestech.service.DettagliCandidatiService;
@@ -303,10 +304,19 @@ public class CandidatiController {
 				if (((String) codice.get(("codice"))).equals(codiceCandidato))
 					idPersona = (Integer) codice.get("id");
 			
-			InfoPersona infoPersona = new InfoPersona((String) updateForm.get("nome"), (String) updateForm.get("cognome"),
-					(String) updateForm.get("email"), (String) updateForm.get("cellulare"), (String) updateForm.get("citta"));
+			/*MapperModificaCandidato mapperModificaCandidato = new MapperModificaCandidato();
+			mapperModificaCandidato.setMapperModificaCandidato(updateForm, idPersona);
+			personeService.updateInfoPersona(mapperModificaCandidato);*/
 			
-			personeService.updateInfoPersona(idPersona, infoPersona);
+			System.out.println(updateForm.get("esitoColloquio").getClass());
+			
+			Persone p = new Persone();
+			p.setAnagrafica(updateForm);
+			personeService.updateInfoPersona(p, idPersona);
+			
+			DettagliCandidati dc = new DettagliCandidati();
+			dc.setDettagliCandidato(updateForm, idPersona);
+			dettagliCandidatiService.updateInfoDettaglioCandidato(dc, idPersona);
 			
 			/*personeService.updatePersona(idPersona, (String) updateForm.get("nome"), (String) updateForm.get("cognome"),
 					(String) updateForm.get("cellulare"), (String) updateForm.get("email"),

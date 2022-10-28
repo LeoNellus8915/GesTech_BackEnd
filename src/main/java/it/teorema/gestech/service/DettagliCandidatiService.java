@@ -51,7 +51,8 @@ public interface DettagliCandidatiService extends JpaRepository <DettagliCandida
 	
 	@Modifying
 	@Transactional
-	@Query("update DettagliCandidati set idEsitoColloquio = :idEsitoColloquio, dataColloquio = :dataColloquio, "
+	@Query("update DettagliCandidati "
+			+ "set idEsitoColloquio = :idEsitoColloquio, dataColloquio = :dataColloquio, "
 			+ "annoColloquio = :annoColloquio, fonteReperimento = :fonteReperimento, "
 			+ "competenzaPrincipale = :competenzaPrincipale, profiloLinkedin = :profiloLinkedin, "
 			+ "costoGiornaliero = :costoGiornaliero, possibilitaLavorativa = :possibilitaLavorativa, "
@@ -67,6 +68,17 @@ public interface DettagliCandidatiService extends JpaRepository <DettagliCandida
 			+ "from DettagliCandidati "
 			+ "where idPersona = :idPersona")
 	void deleteByIdCandidato(int idPersona);
+
+	@Modifying
+	@Transactional
+	@Query("update DettagliCandidati "
+			+ "set idEsitoColloquio = :#{#dc.idEsitoColloquio}, dataColloquio = :#{#dc.dataColloquio}, "
+			+ "annoColloquio = :#{#dc.annoColloquio}, fonteReperimento = :#{#dc.fonteReperimento}, "
+			+ "competenzaPrincipale = :#{#dc.competenzaPrincipale}, profiloLinkedin = :#{#dc.profiloLinkedin}, "
+			+ "costoGiornaliero = :#{#dc.costoGiornaliero}, possibilitaLavorativa = :#{#dc.possibilitaLavorativa}, "
+			+ "competenzeTotali = :#{#dc.costoGiornaliero}, certificazioni = :#{#dc.certificazioni} "
+			+ "where idPersona = :idCandidato")
+	void updateInfoDettaglioCandidato(DettagliCandidati dc, int idCandidato);
 }
 
 

@@ -15,6 +15,7 @@ import it.teorema.gestech.model.mapper.AllDipendenti;
 import it.teorema.gestech.model.mapper.GetDipendente;
 import it.teorema.gestech.model.mapper.GetNomiRecruiter;
 import it.teorema.gestech.model.mapper.InfoPersona;
+import it.teorema.gestech.model.mapper.MapperModificaCandidato;
 
 public interface PersoneService extends JpaRepository<Persone, Integer>{
 
@@ -74,14 +75,50 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 			+ "from Persone p "
 			+ "where id = :idCandidato")
 	InfoPersona getInfoPersona(int idCandidato);
-
 	
 	@Modifying
 	@Transactional
 	@Query("update Persone "
-			+ "set cittaDiResidenza = :#{#infoPersona.cittaDiResidenza} "
-			+ "where id = :#{#infoPersona.idPersona}")
-	void updateInfoPersona(int idPersona,@Param("infoPersona") InfoPersona infoPersona);
+			+ "set nome = :#{#persona.nome}, cognome = :#{#persona.cognome}, "
+			+ "cellulare = :#{#persona.cellulare}, email = :#{#persona.email}, "
+			+ "cittaDiResidenza = :#{#persona.cittaDiResidenza} "
+			+ "where id = :idPersona")
+	void updateInfoPersona(Persone persona, int idPersona);
+
+	
+	/*@Modifying
+	@Transactional
+	@Query("update Persone p, DettagliCandidati dc "
+			+ "set p.nome = :#{#mapperModificaCandidato.nome}, p.cognome = :#{#mapperModificaCandidato.cognome}, "
+			+ "p.cellulare = :#{#mapperModificaCandidato.cellulare}, p.email = :#{#mapperModificaCandidato.email}, "
+			+ "p.cittaDiResidenza = :#{#mapperModificaCandidato.cittaDiResidenza}, "
+			+ "dc.idPersona = :#{#mapperModificaCandidato.idPersona}, dc.profiloLinkedin = :#{#mapperModificaCandidato.profiloLinkedin}, "
+			+ "dc.idEsitoColloquio = :#{#mapperModificaCandidato.idEsitoColloquio}, dc.esitoColloquio = :#{#mapperModificaCandidato.esitoColloquio}, "
+			+ "dc.coloreEsitoColloquio = :#{#mapperModificaCandidato.coloreEsitoColloquio}, dc.dataInserimento = :#{#mapperModificaCandidato.dataInserimento}, "
+			+ "dc.competenzaPrincipale = :#{#mapperModificaCandidato.competenzaPrincipale}, dc.dataColloquio = :#{#mapperModificaCandidato.dataColloquio}, "
+			+ "dc.annoColloquio = :#{#mapperModificaCandidato.annoColloquio}, dc.fonteReperimento = :#{#mapperModificaCandidato.fonteReperimento}, "
+			+ "dc.costoGiornaliero = :#{#mapperModificaCandidato.costoGiornaliero}, dc.possibilitaLavorativa = :#{#mapperModificaCandidato.possibilitaLavorativa}, "
+			+ "dc.competenzeTotali = :#{#mapperModificaCandidato.competenzeTotali}, dc.certificazioni = :#{#mapperModificaCandidato.certificazioni} "
+			+ "where p.id = :idPersona and dc.idPersona = p.id")
+	void updateInfoPersona(@Param("mapperModificaCandidato") MapperModificaCandidato mapperModificaCandidato);*/
+	
+	/*@Modifying
+	@Transactional
+	@Query("update Persone p "
+			+ "set p.nome = :#{#mapperModificaCandidato.nome}, p.cognome = :#{#mapperModificaCandidato.cognome}, "
+			+ "p.cellulare = :#{#mapperModificaCandidato.cellulare}, p.email = :#{#mapperModificaCandidato.email}, "
+			+ "p.cittaDiResidenza = :#{#mapperModificaCandidato.cittaDiResidenza}, "
+			+ "inner join DettagliCandidati dc on dc.idPersona = p.id "
+			+ "DettagliCandidati dc "
+			+ "set dc.idPersona = :#{#mapperModificaCandidato.idPersona}, dc.profiloLinkedin = :#{#mapperModificaCandidato.profiloLinkedin}, "
+			+ "dc.idEsitoColloquio = :#{#mapperModificaCandidato.idEsitoColloquio}, dc.esitoColloquio = :#{#mapperModificaCandidato.esitoColloquio}, "
+			+ "dc.coloreEsitoColloquio = :#{#mapperModificaCandidato.coloreEsitoColloquio}, dc.dataInserimento = :#{#mapperModificaCandidato.dataInserimento}, "
+			+ "dc.competenzaPrincipale = :#{#mapperModificaCandidato.competenzaPrincipale}, dc.dataColloquio = :#{#mapperModificaCandidato.dataColloquio}, "
+			+ "dc.annoColloquio = :#{#mapperModificaCandidato.annoColloquio}, dc.fonteReperimento = :#{#mapperModificaCandidato.fonteReperimento}, "
+			+ "dc.costoGiornaliero = :#{#mapperModificaCandidato.costoGiornaliero}, dc.possibilitaLavorativa = :#{#mapperModificaCandidato.possibilitaLavorativa}, "
+			+ "dc.competenzeTotali = :#{#mapperModificaCandidato.competenzeTotali}, dc.certificazioni = :#{#mapperModificaCandidato.certificazioni} "
+			+ "where p.id = :idPersona and dc.idPersona = p.id")
+	void updateInfoPersona(@Param("mapperModificaCandidato") MapperModificaCandidato mapperModificaCandidato);*/
 	
 }
 
