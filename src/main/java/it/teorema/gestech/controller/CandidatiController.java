@@ -25,6 +25,7 @@ import it.teorema.gestech.model.DettagliCandidati;
 import it.teorema.gestech.model.LingueDettagliCandidati;
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.ProfiliDettagliCandidati;
+import it.teorema.gestech.model.mapper.InfoPersona;
 import it.teorema.gestech.model.mapper.MapperCandidato;
 import it.teorema.gestech.service.CommentiCandidatiService;
 import it.teorema.gestech.service.CvService;
@@ -237,7 +238,6 @@ public class CandidatiController {
 		mc.setInfoProfili(profiliDettagliCandidatiService.getInfoProfili(idCandidato));
 		mc.setInfoLingue(lingueDettagliCandidatiService.getInfoLingue(idCandidato));
 		mc.setCvBase64(cvService.getCv(idCandidato));
-		mc.setAllCommentiCandidato(commentiCandidatiService.findByIdCandidato(idCandidato));
 		if (mc.getInfoPersona() == null || mc.getInfoDettaglioCandidato() == null
 				|| mc.getInfoProfili() == null || mc.getInfoLingue() == null) {
 			response.setCode("0");
@@ -280,31 +280,35 @@ public class CandidatiController {
 
 	@RequestMapping("/controllo-email-modifica")
 	public ResponseEntity<Integer> controlloEmailModifica(@RequestBody String email, HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+		/*if (securityController.controlloToken(request.getHeader("App-Key")) == false)
 			return new ResponseEntity<>(null, HttpStatus.OK);
-		else {
+		else {*/
 			if (personeService.existsByEmail(email) != null)
 				return new ResponseEntity<>(0, HttpStatus.OK);
 			else
 				return new ResponseEntity<>(1, HttpStatus.OK);
-		}
-
+		//}
 	}
 
 	@RequestMapping("/modifica-candidato/{codiceCandidato}/{idDipendente}")
 	public ResponseEntity<?> modificaCandidato(@PathVariable("codiceCandidato") String codiceCandidato,
 			@PathVariable("idDipendente") int idDipendente, @RequestBody JSONObject updateForm,
 			HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
+		/*if (securityController.controlloToken(request.getHeader("App-Key")) == false)
 			return new ResponseEntity<>(null, HttpStatus.OK);
-		else {
+		else {*/
 			int idPersona = 0;
 			List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
 			for (JSONObject codice : listaCodici)
 				if (((String) codice.get(("codice"))).equals(codiceCandidato))
 					idPersona = (Integer) codice.get("id");
-
-			personeService.updatePersona(idPersona, (String) updateForm.get("nome"), (String) updateForm.get("cognome"),
+			
+			InfoPersona infoPersona = new InfoPersona((String) updateForm.get("nome"), (String) updateForm.get("cognome"),
+					(String) updateForm.get("email"), (String) updateForm.get("cellulare"), (String) updateForm.get("citta"));
+			
+			personeService.updateInfoPersona(idPersona, infoPersona);
+			
+			/*personeService.updatePersona(idPersona, (String) updateForm.get("nome"), (String) updateForm.get("cognome"),
 					(String) updateForm.get("cellulare"), (String) updateForm.get("email"),
 					(String) updateForm.get("citta"));
 
@@ -326,9 +330,9 @@ public class CandidatiController {
 				commentiCandidato.setIdDettaglioCandidato(idPersona);
 				commentiCandidato.setNote((String) updateForm.get("commento"));
 				commentiCandidatiService.save(commentiCandidato);
-			}
+			}*/
 			return new ResponseEntity<>(HttpStatus.OK);
-		}
+		//}
 	}
 
 }

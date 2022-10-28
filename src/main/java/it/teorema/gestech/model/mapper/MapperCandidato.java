@@ -12,6 +12,7 @@ public class MapperCandidato {
 	private List<AllCommentiCandidato> commentiCandidato;
 	
 	public MapperCandidato() {}
+	
 	public MapperCandidato(InfoPersona infoPersona, InfoDettaglioCandidato infoDettaglioCandidato,
 			List<InfoProfili> infoProfili, List<InfoLingue> infoLingue, String cvBase64,
 			List<AllCommentiCandidato> commentiCandidato) {

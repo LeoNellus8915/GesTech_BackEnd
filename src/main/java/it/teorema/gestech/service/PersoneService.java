@@ -4,10 +4,11 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.json.simple.JSONObject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-
+import org.springframework.data.repository.query.Param;
 
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.mapper.AllDipendenti;
@@ -73,6 +74,14 @@ public interface PersoneService extends JpaRepository<Persone, Integer>{
 			+ "from Persone p "
 			+ "where id = :idCandidato")
 	InfoPersona getInfoPersona(int idCandidato);
+
+	
+	@Modifying
+	@Transactional
+	@Query("update Persone "
+			+ "set cittaDiResidenza = :#{#infoPersona.cittaDiResidenza} "
+			+ "where id = :#{#infoPersona.idPersona}")
+	void updateInfoPersona(int idPersona,@Param("infoPersona") InfoPersona infoPersona);
 	
 }
 
