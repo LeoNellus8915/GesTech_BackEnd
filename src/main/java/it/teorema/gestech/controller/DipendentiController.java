@@ -24,6 +24,7 @@ import it.teorema.gestech.service.AuthService;
 import it.teorema.gestech.service.ContrattiService;
 import it.teorema.gestech.service.PersoneService;
 import it.teorema.gestech.service.RuoliPersoneService;
+import it.teorema.gestech.utils.ResponseHttp;
 
 @Controller
 public class DipendentiController {
@@ -40,13 +41,20 @@ public class DipendentiController {
 	SecurityController securityController;
 
 	@RequestMapping("/salva-utente")
-	public ResponseEntity<Integer> salvaUtente(@RequestBody JSONObject formUtente, HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> salvaUtente(@RequestBody JSONObject formUtente, HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
+			responseHttp.setCode("1");
+			
 			if (personeService.existsByEmail((String) formUtente.get("email")) != null
-					|| personeService.existsByEmail((String) formUtente.get("email")) != null)
-				return new ResponseEntity<>(0, HttpStatus.OK);
+					|| personeService.existsByEmail((String) formUtente.get("email")) != null) {
+				responseHttp.setDataSource(0);
+				return new ResponseEntity<> (responseHttp, HttpStatus.OK); 
+			}
 			else {
 				Persone persona = new Persone();
 				Auth auth = new Auth();
@@ -99,19 +107,24 @@ public class DipendentiController {
 
 				contrattiService.save(newContract);
 
-				return new ResponseEntity<>(1, HttpStatus.OK);
+				responseHttp.setDataSource(1);
+				return new ResponseEntity<> (responseHttp, HttpStatus.OK); 
 			}
 		}
 
 	}
 
 	@RequestMapping("/all-dipendenti")
-	public ResponseEntity<List<AllDipendenti>> allDipendenti(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allDipendenti(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			List<AllDipendenti> dipendenti = personeService.getAllDipendenti();
-			return new ResponseEntity<>(dipendenti, HttpStatus.OK);
+			responseHttp.setDataSource(personeService.getAllDipendenti());
+			responseHttp.setCodeSession("1");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 //	@RequestMapping("/get-dipendenti")

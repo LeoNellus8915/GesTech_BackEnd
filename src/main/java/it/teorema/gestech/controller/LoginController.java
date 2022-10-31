@@ -47,6 +47,7 @@ public class LoginController {
 
 			Integer idDipendente = authService.login((String) formLogin.get("email"),
 					(String) formLogin.get("password"));
+			System.err.println(idDipendente);
 
 			if (idDipendente == null)
 				return new ResponseEntity<>(null, HttpStatus.OK);
@@ -82,7 +83,6 @@ public class LoginController {
 				session.setData(data);
 				sessionService.save(session);
 				localSession.setToken(tokenCodificato);
-				System.err.println(localSession.getToken());
 				return new ResponseEntity<>(localSession, HttpStatus.OK);
 			}
 

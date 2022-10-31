@@ -19,8 +19,6 @@ public class RichiesteDettagliCandidati {
 	private int idRichiesta;
 	@Column(name = "id_dettaglio_candidato")
 	private int idDettaglioCandidato;
-	@Column(name = "note")
-	private String note;
 	
 	public RichiesteDettagliCandidati() {}
 
@@ -29,12 +27,6 @@ public class RichiesteDettagliCandidati {
 		this.id = id;
 		this.idRichiesta = idRichiesta;
 		this.idDettaglioCandidato = idDettaglioCandidato;
-	}
-
-	public RichiesteDettagliCandidati(int idRichiesta, int idDettaglioCandidato, String note) {
-		this.idRichiesta = idRichiesta;
-		this.idDettaglioCandidato = idDettaglioCandidato;
-		this.note = note;
 	}
 
 	public RichiesteDettagliCandidati(int idDettaglioCandidato, int idRichiesta) {
@@ -65,7 +57,4 @@ public class RichiesteDettagliCandidati {
 	public void setIdDettaglioCandidato(int idDettaglioCandidato) {
 		this.idDettaglioCandidato = idDettaglioCandidato;
 	}
-	
-	
-
 }

@@ -3,7 +3,6 @@ package it.teorema.gestech.model.mapper;
 import java.time.LocalDate;
 
 public interface AllHardware {
-
 	int getId();
 	String getNomePersona();
 	String getCognomePersona();
@@ -14,5 +13,4 @@ public interface AllHardware {
 	String getSeriale();
 	LocalDate getDataConsegna();
 	LocalDate getDataRestituzione();
-	
 }

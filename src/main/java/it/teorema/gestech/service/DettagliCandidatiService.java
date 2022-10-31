@@ -32,8 +32,8 @@ public interface DettagliCandidatiService extends JpaRepository <DettagliCandida
 	@Query("select p.id as id, dc.dataInserimento as dataInserimento, p.nome as nome, "
 			+ "p.cognome as cognome, dc.competenzaPrincipale as competenzaPrincipale, "
 			+ "ec.nome as esitoNome, p.cittaDiResidenza as citta "
-			+"from Persone p, DettagliCandidati dc, EsitiColloquio ec "
-			+"where p.id = dc.idPersona and dc.idEsitoColloquio = ec.id ")
+			+ "from Persone p, DettagliCandidati dc, EsitiColloquio ec "
+			+ "where p.id = dc.idPersona and dc.idEsitoColloquio = ec.id ")
 	List<AllCandidati> allCandidati();
 	
 	@Query("from DettagliCandidati where idPersona = :idPersona")

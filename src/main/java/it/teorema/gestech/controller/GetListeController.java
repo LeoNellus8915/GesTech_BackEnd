@@ -30,6 +30,7 @@ import it.teorema.gestech.service.LivelliService;
 import it.teorema.gestech.service.ProfiliService;
 import it.teorema.gestech.service.RuoliService;
 import it.teorema.gestech.service.StatiRichiestaService;
+import it.teorema.gestech.utils.ResponseHttp;
 
 @Controller
 public class GetListeController {
@@ -57,109 +58,171 @@ public class GetListeController {
 	SecurityController securityController;
 
 	@RequestMapping("/all-esiti-colloquio")
-	public ResponseEntity<List<EsitiColloquio>> allEsitiColloquio(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allEsitiColloquio(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			return new ResponseEntity<>(esitiColloquioService.findAll(), HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(esitiColloquioService.findAll());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-linguaggi")
-	public ResponseEntity<List<Linguaggi>> allLinguaggi(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allLinguaggi(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			return new ResponseEntity<>(linguaggiService.findAll(), HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(linguaggiService.findAll());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-lingue")
-	public ResponseEntity<List<Lingue>> allLingue(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allLingue(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			return new ResponseEntity<>(lingueService.findAll(), HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(lingueService.findAll());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-livelli")
-	public ResponseEntity<List<Livelli>> allLivelli(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allLivelli(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			return new ResponseEntity<>(livelliService.findAll(), HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(livelliService.findAll());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 
 	}
 
 	@RequestMapping("/all-profili")
-	public ResponseEntity<List<Profili>> allProfili(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> ResponseHttp(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			return new ResponseEntity<>(profiiliService.findAll(), HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(profiiliService.findAll());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-ruoli")
-	public ResponseEntity<List<Ruoli>> allRuoli(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allRuoli(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			return new ResponseEntity<>(ruoliService.findAll(), HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(ruoliService.findAll());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-ruoli-dipendente-admin")
-	public ResponseEntity<List<Ruoli>> allRuoliTranneDipendenteAdmin(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allRuoliTranneDipendenteAdmin(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			return new ResponseEntity<>(ruoliService.allRuoliTranneDipendenteAdmin(), HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(ruoliService.allRuoliTranneDipendenteAdmin());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-ruoli-dipendente-personale")
-	public ResponseEntity<List<Ruoli>> allRuoliTranneDipendentePersonale(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allRuoliTranneDipendentePersonale(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			return new ResponseEntity<>(ruoliService.allRuoliTranneDipendentePersonale(), HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(ruoliService.allRuoliTranneDipendentePersonale());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-stati-richiesta")
-	public ResponseEntity<List<StatiRichiesta>> allStatiRichiesta(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allStatiRichiesta(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			return new ResponseEntity<>(statiRichiestaService.findAll(), HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(statiRichiestaService.findAll());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-aziende")
-	public ResponseEntity<List<Aziende>> allAziende(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		return new ResponseEntity<>(aziendeService.findAll(), HttpStatus.OK);
+	public ResponseEntity<ResponseHttp> allAziende(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
+		else {
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(aziendeService.findAll());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 	}
 
 	@RequestMapping("/all-clienti")
-	public ResponseEntity<List<Clienti>> allClienti(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allClienti(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			return new ResponseEntity<>(clientiService.findAll(), HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(clientiService.findAll());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-contratti")
-	public ResponseEntity<List<Contratti>> allContratti(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allContratti(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			return new ResponseEntity<>(contrattiService.findAll(), HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(contrattiService.findAll());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 }

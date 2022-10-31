@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import it.teorema.gestech.model.Avvisi;
 import it.teorema.gestech.service.AuthService;
 import it.teorema.gestech.service.AvvisiService;
+import it.teorema.gestech.utils.ResponseHttp;
 
 @Controller
 public class HomeController {
@@ -30,33 +31,47 @@ public class HomeController {
 	SecurityController securityController;
 	
 	@RequestMapping("/get-avvisi/{ruolo}")
-	public ResponseEntity<List<Avvisi>> getAvvisi(@PathVariable("ruolo") String ruolo, HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> getAvvisi(@PathVariable("ruolo") String ruolo, HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			if (ruolo.equals("Admin"))
-				return new ResponseEntity<>(avvisiService.findAll(), HttpStatus.OK);
-			else
-				return new ResponseEntity<>(avvisiService.getAvvisiByRuolo(ruolo), HttpStatus.OK);
+			responseHttp.setCode("1");
+			if (ruolo.equals("Admin")) {
+				responseHttp.setDataSource(avvisiService.findAll());
+				return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+			}
+			else {
+				responseHttp.setDataSource(avvisiService.getAvvisiByRuolo(ruolo));
+				return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+			}
 		}
 	}
 	
 	@RequestMapping("/delete-avviso/{idAvviso}")
-	public ResponseEntity<?> deleteAvviso(@PathVariable("idAvviso") int idAvviso, HttpServletRequest request) {
+	public ResponseEntity<ResponseHttp> deleteAvviso(@PathVariable("idAvviso") int idAvviso, HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
 		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
-			System.err.println("yjgyj");
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);}
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
 			avvisiService.deleteById(idAvviso);
-			return new ResponseEntity<>(HttpStatus.OK);
+			responseHttp.setCode("1");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 		
 	}
 	
 	@RequestMapping("/salva-avviso")
-	public ResponseEntity<?> salvaAvviso(@RequestBody JSONObject addForm,HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> salvaAvviso(@RequestBody JSONObject addForm, HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
 			LocalDateTime now = LocalDateTime.now();
@@ -67,19 +82,23 @@ public class HomeController {
 			avviso.setIdPersona(Integer.parseInt((String) addForm.get("idDipendente")));
 			avviso.setNote((String) addForm.get("note"));
 			avvisiService.save(avviso);
-			return new ResponseEntity<>(HttpStatus.OK);
+			responseHttp.setCode("1");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 
 	}
 	
 	@RequestMapping("/modifica-password")
-	public ResponseEntity<?> modificaPassword(@RequestBody JSONObject formModificaPassword,HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> modificaPassword(@RequestBody JSONObject formModificaPassword,HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
 			authService.changePassword((String)formModificaPassword.get("password"), Integer.parseInt((String)formModificaPassword.get("idDipendente")));
-			return new ResponseEntity<>(HttpStatus.OK);
+			responseHttp.setCode("1");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
-	
 	}
 }

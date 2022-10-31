@@ -22,6 +22,9 @@ import it.teorema.gestech.model.CommentiRichieste;
 import it.teorema.gestech.model.Richieste;
 import it.teorema.gestech.model.RichiesteDettagliCandidati;
 import it.teorema.gestech.model.RichiestePersone;
+import it.teorema.gestech.model.mapper.AllRichieste;
+import it.teorema.gestech.model.mapper.AllRichiesteAperte;
+import it.teorema.gestech.model.mapper.AllRichiesteChiuse;
 import it.teorema.gestech.model.mapper.GetNomiRecruiter;
 import it.teorema.gestech.service.CommentiRichiesteService;
 import it.teorema.gestech.service.RichiesteService;
@@ -29,6 +32,7 @@ import it.teorema.gestech.service.RichiestePersoneService;
 import it.teorema.gestech.service.PersoneService;
 import it.teorema.gestech.service.RichiesteDettagliCandidatiService;
 import it.teorema.gestech.service.StatiRichiestaService;
+import it.teorema.gestech.utils.ResponseHttp;
 
 @Controller
 public class RichiesteController {
@@ -49,10 +53,13 @@ public class RichiesteController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping("/salva-richiesta/{ruolo}")
-	public ResponseEntity<?> salvaRichiesta(@RequestBody JSONObject addForm, @PathVariable("ruolo") String ruolo,
+	public ResponseEntity<ResponseHttp> salvaRichiesta(@RequestBody JSONObject addForm, @PathVariable("ruolo") String ruolo,
 			HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 			LocalDateTime now = LocalDateTime.now();
@@ -70,145 +77,110 @@ public class RichiesteController {
 			richiesta.setPriorita(0);
 			richiesteService.save(richiesta);
 
-			List<JSONObject> listaCodici = null;
-			if (ruolo.equals("Account"))
-				listaCodici = SecurityController.getListaCodiciRichiesteAperteAccount();
-			if (ruolo.equals("Admin"))
-				listaCodici = SecurityController.getListaCodiciRichiesteAperteAdmin();
-			JSONObject oggetto = new JSONObject();
-			UUID codice = UUID.randomUUID();
-			oggetto.put("id", richiesteService.getLastId());
-			oggetto.put("codice", codice.toString().replaceAll("-", ""));
-			Collections.reverse(listaCodici);
-			listaCodici.add(oggetto);
-			Collections.reverse(listaCodici);
-
-			return new ResponseEntity<>(HttpStatus.OK);
+			responseHttp.setCode("1");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 
 	}
 
 	@RequestMapping("/all-richieste-aperte-account/{idDipendente}")
-	public ResponseEntity<List<Object>> allRichiesteAperteAccount(@PathVariable("idDipendente") int idDipendente,
+	public ResponseEntity<ResponseHttp> allRichiesteAperteAccount(@PathVariable("idDipendente") int idDipendente,
 			HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			List<Object> lista = new ArrayList<Object>();
-			lista.add(SecurityController.getListaCodiciRichiesteAperteAccount());
-			lista.add(richiesteService.stampaCardAperteAccount(idDipendente));
-			return new ResponseEntity<>(lista, HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(richiesteService.stampaCardAperteAccount(idDipendente));
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-richieste-aperte-commerciale")
-	public ResponseEntity<List<Object>> allRichiesteAperteCommerciale(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allRichiesteAperteCommerciale(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			List<Object> lista = new ArrayList<Object>();
-			lista.add(SecurityController.getListaCodiciRichiesteAperteCommerciale());
-			lista.add(richiesteService.stampaCardAperteCommerciale());
-			return new ResponseEntity<>(lista, HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(richiesteService.stampaCardAperteCommerciale());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-richieste-aperte-recruiter") // Direttore Recruiter
-	public ResponseEntity<List<Object>> allRichiesteAperteRecruiter(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allRichiesteAperteRecruiter(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			List<Object> lista = new ArrayList<Object>();
-			lista.add(SecurityController.getListaCodiciRichiesteAperteRecruiter());
-			lista.add(richiesteService.stampaCardAperteRecruiter());
-			return new ResponseEntity<>(lista, HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(richiesteService.stampaCardAperteRecruiter());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-richieste-aperte-admin")
-	public ResponseEntity<List<Object>> allRichiesteAperteAdmin(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> allRichiesteAperteAdmin(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			List<Object> lista = new ArrayList<Object>();
-			lista.add(SecurityController.getListaCodiciRichiesteAperteAdmin());
-			lista.add(richiesteService.stampaCardAperteAdmin());
-			return new ResponseEntity<>(lista, HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(richiesteService.stampaCardAperteAdmin());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-richieste-aperte/{nome}/{cognome}/{idDipendente}")
-	public ResponseEntity<List<Object>> allRichiesteAperte(@PathVariable("nome") String nome,
+	public ResponseEntity<ResponseHttp> allRichiesteAperte(@PathVariable("nome") String nome,
 			@PathVariable("cognome") String cognome, @PathVariable("idDipendente") int idDipendente,
 			HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
 			String cognomeNome = cognome + "  " + nome;
-			List<Object> lista = new ArrayList<Object>();
-			lista.add(SecurityController.getListaCodiciRichiesteAperte());
-			lista.add(richiesteService.stampaCardAperte(cognomeNome, idDipendente));
-			return new ResponseEntity<>(lista, HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(richiesteService.stampaCardAperte(cognomeNome, idDipendente));
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
 	@RequestMapping("/all-richieste-chiuse/{ruolo}/{nomeCognome}/{idDipendente}")
-	public ResponseEntity<List<Object>> allRichiesteChiuse(@PathVariable String ruolo, @PathVariable String nomeCognome,
+	public ResponseEntity<ResponseHttp> allRichiesteChiuse(@PathVariable String ruolo, @PathVariable String nomeCognome,
 			@PathVariable("idDipendente") int idDipendente, HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			List<Object> lista = new ArrayList<Object>();
-			lista.add(SecurityController.getListaCodiciRichiesteChiuse());
-			lista.add(richiesteService.stampaCardChiuse());
-			return new ResponseEntity<>(lista, HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(richiesteService.stampaCardChiuse());
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
-	@RequestMapping("/get-richiesta/{codiceRichiesta}/{pagina}/{ruolo}")
-	public ResponseEntity<List<Object>> getRichiesta(@PathVariable("codiceRichiesta") String codiceRichiesta,
+	@RequestMapping("/get-richiesta/{idRichiesta}/{pagina}/{ruolo}")
+	public ResponseEntity<ResponseHttp> getRichiesta(@PathVariable("idRichiesta") int idRichiesta,
 			@PathVariable("pagina") int pagina, @PathVariable("ruolo") String ruolo, HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			int idRichiesta = 0;
-			if (pagina == 0 && ruolo.equals("Admin")) {
-				List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteAdmin();
-				for (JSONObject codice : listaCodici)
-					if (((String) codice.get(("codice"))).equals(codiceRichiesta))
-						idRichiesta = (Integer) codice.get("id");
-			}
-			if (pagina == 0 && ruolo.equals("Account")) {
-				List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteAccount();
-				for (JSONObject codice : listaCodici)
-					if (((String) codice.get(("codice"))).equals(codiceRichiesta))
-						idRichiesta = (Integer) codice.get("id");
-			}
-			if (pagina == 0 && ruolo.equals("Direttore Commerciale")) {
-				List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteCommerciale();
-				for (JSONObject codice : listaCodici)
-					if (((String) codice.get(("codice"))).equals(codiceRichiesta))
-						idRichiesta = (Integer) codice.get("id");
-			}
-			if (pagina == 0 && ruolo.equals("Direttore Recruiter")) {
-				List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteRecruiter();
-				for (JSONObject codice : listaCodici)
-					if (((String) codice.get(("codice"))).equals(codiceRichiesta))
-						idRichiesta = (Integer) codice.get("id");
-			}
-			if (pagina == 0 && ruolo.equals("Recruiter")) {
-				List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperte();
-				for (JSONObject codice : listaCodici)
-					if (((String) codice.get(("codice"))).equals(codiceRichiesta))
-						idRichiesta = (Integer) codice.get("id");
-			}
-			if (pagina == 1) {
-				List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteChiuse();
-				for (JSONObject codice : listaCodici)
-					if (((String) codice.get(("codice"))).equals(codiceRichiesta))
-						idRichiesta = (Integer) codice.get("id");
-			}
-
 			List<Object> dati = new ArrayList<Object>();
 			String nomeStatoRichiesta = statiRichiestaService.getStatoRichiesta(idRichiesta);
 			dati.add(richiesteService.visualizzaRichiesta(idRichiesta));
@@ -220,134 +192,83 @@ public class RichiesteController {
 				dati.add(commentiRichiesteService.findRecruiterById(idRichiesta));
 			} else if (ruolo.equals("Recruiter"))
 				dati.add(commentiRichiesteService.findById(idRichiesta));
-			else
+			else {
 				dati.add(commentiRichiesteService.findAltriById(idRichiesta));
-			return new ResponseEntity<>(dati, HttpStatus.OK);
+			}
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(dati);
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 
 	}
 
 	@RequestMapping("salva-priorita/{ruolo}")
-	public ResponseEntity<?> salvaPriorita(@RequestBody List<JSONObject> listaPriorita,
+	public ResponseEntity<ResponseHttp> salvaPriorita(@RequestBody List<JSONObject> listaPriorita,
 			@PathVariable("ruolo") String ruolo, HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			int idRichiesta = 0;
-			List<JSONObject> listaCodici = new ArrayList<JSONObject>();
-			if (ruolo.equals("Direttore Commerciale"))
-				listaCodici = SecurityController.getListaCodiciRichiesteAperteCommerciale();
-			else
-				listaCodici = SecurityController.getListaCodiciRichiesteAperteAdmin();
 			for (JSONObject oggetto : listaPriorita) {
-				for (JSONObject codice : listaCodici)
-					if (((String) codice.get(("codice"))).equals((String) oggetto.get("codiceRichiesta")))
-						idRichiesta = (Integer) codice.get("id");
-				richiesteService.setPriorita(idRichiesta, (Integer) oggetto.get("priorita"));
+				richiesteService.setPriorita((Integer) oggetto.get("idRichiesta"), (Integer) oggetto.get("priorita"));
 			}
-			return new ResponseEntity<>(HttpStatus.OK);
+			responseHttp.setCode("1");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
 
-	/*
-	 * @RequestMapping("/elimina-richiesta/{codiceRichiesta}/{pagina}/{ruolo}")
-	 * public ResponseEntity<?> eliminaRichiesta(@PathVariable("codiceRichiesta")
-	 * String codiceRichiesta, @PathVariable("pagina") int pagina,
-	 * 
-	 * @PathVariable("ruolo") String ruolo) { int idRichiesta = 0; JSONObject
-	 * appoggio = null;
-	 * 
-	 * if (pagina == 0) { List<JSONObject> listaCodici = null; if
-	 * (ruolo.equals("Direttore Commerciale")) listaCodici =
-	 * SecurityController.getListaCodiciRichiesteAperteCommerciale(); if
-	 * (ruolo.equals("Admin")) listaCodici =
-	 * SecurityController.getListaCodiciRichiesteAperteAdmin(); for (JSONObject
-	 * codice : listaCodici) if
-	 * (((String)codice.get(("codice"))).equals(codiceRichiesta)) { idRichiesta =
-	 * (Integer)codice.get("id"); appoggio = codice; } listaCodici.remove(appoggio);
-	 * } else { List<JSONObject> listaCodici =
-	 * SecurityController.getListaCodiciRichiesteChiuse(); for (JSONObject codice :
-	 * listaCodici) if (((String)codice.get(("codice"))).equals(codiceRichiesta)) {
-	 * idRichiesta = (Integer)codice.get("id"); appoggio = codice; }
-	 * listaCodici.remove(appoggio); }
-	 * 
-	 * richiesteService.deleteById(idRichiesta);
-	 * commentiRichiesteService.deleteCommento(idRichiesta);
-	 * dipendentiRichiesteService.deleteDipendenteRichiesta(idRichiesta); return new
-	 * ResponseEntity<> (HttpStatus.OK); }
-	 */
+	
+	@RequestMapping("/elimina-richiesta/{idRichiesta}/{pagina}/{ruolo}")
+	public ResponseEntity<ResponseHttp> eliminaRichiesta(@PathVariable("idRichiesta") int idRichiesta, 
+		  										@PathVariable("pagina") int pagina, @PathVariable("ruolo") String ruolo, 
+		  										HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
+		else {
+			richiesteService.deleteById(idRichiesta);
+			commentiRichiesteService.deleteCommento(idRichiesta);
+			richiestePersoneService.deleteDipendenteRichiesta(idRichiesta); 
+			responseHttp.setCode("1");
+			return new ResponseEntity<> (responseHttp, HttpStatus.OK); 
+		}
+	}
+	 
+	
 	@RequestMapping("/get-nomi-recruiter")
-	public ResponseEntity<List<String>> getNomiRecruiter(HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	public ResponseEntity<ResponseHttp> getNomiRecruiter(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
 			List<GetNomiRecruiter> getNomiRecruiter = dipendentiService.getNomiRecruiter();
 			List<String> nomiRecruiter = new ArrayList<String>();
 			for (GetNomiRecruiter element : getNomiRecruiter) {
 				nomiRecruiter.add(element.getCognome() + "  " + element.getNome());
 			}
-			return new ResponseEntity<>(nomiRecruiter, HttpStatus.OK);
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(nomiRecruiter);
+			return new ResponseEntity<> (responseHttp, HttpStatus.OK); 
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	@RequestMapping("/modifica-richiesta/{codiceRichiesta}/{idPersona}/{pagina}/{ruolo}")
-	public ResponseEntity<?> modificaRichiesta(@PathVariable("codiceRichiesta") String codiceRichiesta,
+	@RequestMapping("/modifica-richiesta/{idRichiesta}/{idPersona}/{pagina}/{ruolo}")
+	public ResponseEntity<ResponseHttp> modificaRichiesta(@PathVariable("idRichiesta") int idRichiesta,
 			@PathVariable("idPersona") int idPersona, @PathVariable("pagina") int pagina,
 			@PathVariable("ruolo") String ruolo, @RequestBody JSONObject updateForm, HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			int idRichiesta = 0;
-			JSONObject richiesta = null;
-
-			if (pagina == 0 && ruolo.equals("Admin")) {
-				List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteAdmin();
-				for (JSONObject codice : listaCodici)
-					if (((String) codice.get(("codice"))).equals(codiceRichiesta)) {
-						idRichiesta = (Integer) codice.get("id");
-						richiesta = codice;
-					}
-			}
-			if (pagina == 0 && ruolo.equals("Account")) {
-				List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteAccount();
-				for (JSONObject codice : listaCodici)
-					if (((String) codice.get(("codice"))).equals(codiceRichiesta)) {
-						idRichiesta = (Integer) codice.get("id");
-						richiesta = codice;
-					}
-			}
-			if (pagina == 0 && ruolo.equals("Direttore Commerciale")) {
-				List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteCommerciale();
-				for (JSONObject codice : listaCodici)
-					if (((String) codice.get(("codice"))).equals(codiceRichiesta)) {
-						idRichiesta = (Integer) codice.get("id");
-						richiesta = codice;
-					}
-			}
-			if (pagina == 0 && ruolo.equals("Direttore Recruiter")) {
-				List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperteRecruiter();
-				for (JSONObject codice : listaCodici)
-					if (((String) codice.get(("codice"))).equals(codiceRichiesta)) {
-						idRichiesta = (Integer) codice.get("id");
-						richiesta = codice;
-					}
-			}
-			if (pagina == 0 && ruolo.equals("Recruiter")) {
-				List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperte();
-				for (JSONObject codice : listaCodici)
-					if (((String) codice.get(("codice"))).equals(codiceRichiesta))
-						idRichiesta = (Integer) codice.get("id");
-			}
-			if (pagina == 1) {
-				List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteChiuse();
-				for (JSONObject codice : listaCodici)
-					if (((String) codice.get(("codice"))).equals(codiceRichiesta)) {
-						idRichiesta = (Integer) codice.get("id");
-						richiesta = codice;
-					}
-			}
-
 			if (!ruolo.equals("Recruiter")) {
 				String listaRecruiters;
 				if (updateForm.get("listaRecruiters").toString().equals("[]"))
@@ -371,8 +292,7 @@ public class RichiesteController {
 						for (int c = 0; c < recruiter.size(); c++) {
 							RichiesteDettagliCandidati rdc = new RichiesteDettagliCandidati(idRichiesta,
 									dipendentiService.findByName(recruiter.get(c).getNome(),
-											recruiter.get(c).getCognome()),
-									(String) updateForm.get("note"));
+											recruiter.get(c).getCognome()));
 							richiesteDettagliCandidatiService.save(rdc);
 						}
 					} else if (recruiters.length > 0)
@@ -381,37 +301,6 @@ public class RichiesteController {
 							richiestePersoneService.save(new RichiestePersone(idRichiesta,
 									dipendentiService.findByName((String) rec[1], (String) rec[0])));
 						}
-				}
-
-				List<JSONObject> listaCodiciAperte = new ArrayList<JSONObject>();
-				if (ruolo.equals("Account"))
-					listaCodiciAperte = SecurityController.getListaCodiciRichiesteAperteAccount();
-				if (ruolo.equals("Direttore Commerciale"))
-					listaCodiciAperte = SecurityController.getListaCodiciRichiesteAperteCommerciale();
-				if (ruolo.equals("Direttore Recruiter"))
-					listaCodiciAperte = SecurityController.getListaCodiciRichiesteAperteRecruiter();
-				List<JSONObject> listaCodiciChiuse = SecurityController.getListaCodiciRichiesteChiuse();
-
-				if (pagina == 0 && Integer.parseInt((String) updateForm.get("statoRichiesta")) == 3) {
-					listaCodiciAperte.remove(richiesta);
-					JSONObject oggetto = new JSONObject();
-					UUID codice = UUID.randomUUID();
-					oggetto.put("id", idRichiesta);
-					oggetto.put("codice", codice.toString().replaceAll("-", ""));
-					Collections.reverse(listaCodiciChiuse);
-					listaCodiciChiuse.add(oggetto);
-					Collections.reverse(listaCodiciChiuse);
-				}
-				if (pagina == 1 && (Integer.parseInt((String) updateForm.get("statoRichiesta")) == 1
-						|| Integer.parseInt((String) updateForm.get("statoRichiesta")) == 2)) {
-					listaCodiciChiuse.remove(richiesta);
-					JSONObject oggetto = new JSONObject();
-					UUID codice = UUID.randomUUID();
-					oggetto.put("id", idRichiesta);
-					oggetto.put("codice", codice.toString().replaceAll("-", ""));
-					Collections.reverse(listaCodiciAperte);
-					listaCodiciAperte.add(oggetto);
-					Collections.reverse(listaCodiciAperte);
 				}
 
 				if (Integer.parseInt((String) updateForm.get("statoRichiesta")) == 3) {
@@ -442,47 +331,44 @@ public class RichiesteController {
 				commentoRichiesta.setNascosto(true);
 				commentiRichiesteService.save(commentoRichiesta);
 			}
-			return new ResponseEntity<>(HttpStatus.OK);
+			responseHttp.setCode("1");
+			return new ResponseEntity<> (responseHttp, HttpStatus.OK); 
 		}
 
 	}
 
-	@RequestMapping("/set-visualizzato/{codiceRichiesta}/{idDipendente}")
-	public ResponseEntity<?> setVisualizzato(@PathVariable("codiceRichiesta") String codiceRichiesta,
+	@RequestMapping("/set-visualizzato/{idRichiesta}/{idDipendente}")
+	public ResponseEntity<ResponseHttp> setVisualizzato(@PathVariable("idRichiesta") int idRichiesta,
 			@PathVariable("idDipendente") int idDipendente, HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
-			int idRichiesta = 0;
-
-			List<JSONObject> listaCodici = SecurityController.getListaCodiciRichiesteAperte();
-			for (JSONObject codice : listaCodici)
-				if (((String) codice.get(("codice"))).equals(codiceRichiesta))
-					idRichiesta = (Integer) codice.get("id");
-
 			richiestePersoneService.setVisualizzato(idRichiesta, idDipendente);
-			return new ResponseEntity<>(HttpStatus.OK);
+			responseHttp.setCode("1");
+			return new ResponseEntity<> (responseHttp, HttpStatus.OK); 
 		}
 	}
 
 	@RequestMapping("/assegna-candidati/{idRichiesta}")
-	public ResponseEntity<?> assegnaCandidati(@RequestBody String listaCandidati,
+	public ResponseEntity<ResponseHttp> assegnaCandidati(@RequestBody String listaCandidati,
 			@PathVariable("idRichiesta") int idRichiesta, HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
 		else {
 			String[] candidati = listaCandidati.split(",");
 			for (int i = 0; i < candidati.length; i++) {
-				for (JSONObject codice : SecurityController.getListaCodiciCandidati()) {
-					if (codice.get("codice").equals(candidati[i])) {
-						int idCandidato = (int) codice.get("id");
-						RichiesteDettagliCandidati rdc = new RichiesteDettagliCandidati(idCandidato, idRichiesta);
-						richiesteDettagliCandidatiService.save(rdc);
-					}
-				}
+				RichiesteDettagliCandidati rdc = new RichiesteDettagliCandidati(Integer.parseInt(candidati[i]), idRichiesta);
+				richiesteDettagliCandidatiService.save(rdc);
 			}
 			richiesteService.setStato(idRichiesta);
-			return new ResponseEntity<>(HttpStatus.OK);
+			responseHttp.setCode("1");
+			return new ResponseEntity<> (responseHttp, HttpStatus.OK); 
 		}
 	}
 }

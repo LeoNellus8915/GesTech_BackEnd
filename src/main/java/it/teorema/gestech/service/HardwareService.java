@@ -47,8 +47,8 @@ public interface HardwareService extends JpaRepository <Hardware, Integer> {
 	@Query("select h.id as id, p.nome as nomePersona, p.cognome as cognomePersona, d.nome as nomeDispositivo, "
 			+ "h.modello as modello, h.marca as marca, h.dataRestituzione as dataRestituzione, "
 			+ "h.dataConsegna as dataConsegna "
-			+"from Persone p, Dispositivi d, Hardware h "
-			+"where p.id = h.idPersona and h.idDispositivo = d.id and h.dataRestituzione IS NULL")
+			+ "from Persone p, Dispositivi d, Hardware h "
+			+ "where p.id = h.idPersona and h.idDispositivo = d.id and h.dataRestituzione IS NULL")
 	List<AllHardware> allHardware();
 	
 	@Modifying

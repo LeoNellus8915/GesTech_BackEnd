@@ -69,26 +69,34 @@ public class CandidatiController {
 	SecurityController securityController;
 
 	@RequestMapping("/all-candidati")
-	public ResponseEntity<List<Object>> allCandidati(HttpServletRequest request) {
-		/*if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		else {*/
-			List<Object> lista = new ArrayList<>();
-			lista.add(dettagliCandidatiService.allCandidati());
-			lista.add(SecurityController.getListaCodiciCandidati());
-			return new ResponseEntity<>(lista, HttpStatus.OK);
-		//}
+	public ResponseEntity<ResponseHttp> allCandidati(HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
+		else {
+			responseHttp.setCode("1");
+			responseHttp.setDataSource(SecurityController.getListaCodiciCandidati(dettagliCandidatiService.allCandidati()));
+			return new ResponseEntity<> (responseHttp, HttpStatus.OK);
+		}
 
 	}
 
 	@RequestMapping("/salva-candidato")
 	public ResponseEntity<?> salvaCandidato(@RequestBody JSONObject formCandidato, HttpServletRequest request) {
-		/*if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		else {*/
-			HashMap<String, Object> x = (HashMap) formCandidato.get("anagrafica");
-			if (personeService.existsByEmail((String) formCandidato.get("email")) != null)
-				return new ResponseEntity<>(0, HttpStatus.OK);
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
+		else {
+			responseHttp.setCode("1");
+			//HashMap<String, Object> x = (HashMap) formCandidato.get("anagrafica");
+			if (personeService.existsByEmail((String) formCandidato.get("email")) != null) {
+				responseHttp.setDataSource(0);
+				return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+			}
 			else {
 
 				DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -165,35 +173,22 @@ public class CandidatiController {
 					commentiCandidato.setCommentiCandidati(formCandidato, idCandidato);
 					commentiCandidatiService.save(commentiCandidato);
 				}
-
-				List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
-				JSONObject oggetto = new JSONObject();
-				UUID codice = UUID.randomUUID();
-				oggetto.put("id", idCandidato);
-				oggetto.put("codice", codice.toString().replaceAll("-", ""));
-				listaCodici.add(oggetto);
-				return new ResponseEntity<>(HttpStatus.OK);
+				return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 			}
-		//}
-
+		}
 	}
 
-	@RequestMapping("/get-candidato-visualizza/{codiceCandidato}")
-	public ResponseEntity<ResponseHttp> getCandidatoVisualizza(@PathVariable("codiceCandidato") String codiceCandidato,
+	@RequestMapping("/get-candidato-visualizza/{idCandidato}")
+	public ResponseEntity<ResponseHttp> getCandidatoVisualizza(@PathVariable("idCandidato") int idCandidato,
 			HttpServletRequest request) {
-		/*if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		else {*/
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
+		else {
 			ResponseHttp response = new ResponseHttp();
 			response.setCode("1");
-			int idCandidato = 0;
-			List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
-
-			for (JSONObject codice : listaCodici) {
-				if (((String) codice.get(("codice"))).equals(codiceCandidato)) {
-					idCandidato = (Integer) codice.get("id");
-				}
-			}
 
 			MapperCandidato mc = new MapperCandidato();
 			mc.setInfoPersona(personeService.getInfoPersona(idCandidato));
@@ -212,111 +207,99 @@ public class CandidatiController {
 			}
 
 			return new ResponseEntity<>(response, HttpStatus.OK);
-		//}
-
+		}
 	}
 
-	@RequestMapping("/get-candidato-modifica/{codiceCandidato}")
-	public ResponseEntity<ResponseHttp> getCandidatoModifica(@PathVariable("codiceCandidato") String codiceCandidato,
+	@RequestMapping("/get-candidato-modifica/{idCandidato}")
+	public ResponseEntity<ResponseHttp> getCandidatoModifica(@PathVariable("idCandidato") int idCandidato,
 			HttpServletRequest request) {
-		/*if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		else {*/
-		ResponseHttp response = new ResponseHttp();
-		response.setCode("1");
-		int idCandidato = 0;
-		List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
-
-		for (JSONObject codice : listaCodici) {
-			if (((String) codice.get(("codice"))).equals(codiceCandidato)) {
-				idCandidato = (Integer) codice.get("id");
-			}
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
-
-		MapperCandidato mc = new MapperCandidato();
-		mc.setInfoPersona(personeService.getInfoPersona(idCandidato));
-		mc.setInfoDettaglioCandidato(dettagliCandidatiService.getInfoDettaglioCandidato(idCandidato));
-		mc.setInfoProfili(profiliDettagliCandidatiService.getInfoProfili(idCandidato));
-		mc.setInfoLingue(lingueDettagliCandidatiService.getInfoLingue(idCandidato));
-		mc.setCvBase64(cvService.getCv(idCandidato));
-		if (mc.getInfoPersona() == null || mc.getInfoDettaglioCandidato() == null
-				|| mc.getInfoProfili() == null || mc.getInfoLingue() == null) {
-			response.setCode("0");
-			response.setMessage("No");
-		} else {
-			response.setDataSource(mc);
-			response.setMessage("Yes");
-		}
-
-		return new ResponseEntity<>(response, HttpStatus.OK);
-		//}
-
-	}
-
-	@RequestMapping("/elimina-candidato/{codiceCandidato}")
-	public ResponseEntity<?> eliminaCandidato(@PathVariable("codiceCandidato") String codiceCandidato,
-			HttpServletRequest request) {
-		if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
 		else {
-			int idCandidato = 0;
-			JSONObject appoggio = null;
-			List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
-			for (JSONObject codice : listaCodici) {
-				if (((String) codice.get(("codice"))).equals(codiceCandidato)) {
-					idCandidato = (Integer) codice.get("id");
-					appoggio = codice;
-				}
+			responseHttp.setCode("1");
+	
+			MapperCandidato mc = new MapperCandidato();
+			mc.setInfoPersona(personeService.getInfoPersona(idCandidato));
+			mc.setInfoDettaglioCandidato(dettagliCandidatiService.getInfoDettaglioCandidato(idCandidato));
+			mc.setInfoProfili(profiliDettagliCandidatiService.getInfoProfili(idCandidato));
+			mc.setInfoLingue(lingueDettagliCandidatiService.getInfoLingue(idCandidato));
+			mc.setCvBase64(cvService.getCv(idCandidato));
+			if (mc.getInfoPersona() == null || mc.getInfoDettaglioCandidato() == null
+					|| mc.getInfoProfili() == null || mc.getInfoLingue() == null) {
+				responseHttp.setCode("0");
+				responseHttp.setMessage("No");
+			} else {
+				responseHttp.setDataSource(mc);
+				responseHttp.setMessage("Yes");
 			}
-			listaCodici.remove(appoggio);
+	
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
+	}
 
+	@RequestMapping("/elimina-candidato/{idCandidato}")
+	public ResponseEntity<ResponseHttp> eliminaCandidato(@PathVariable("idCandidato") int idCandidato,
+			HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
+		else {
 			personeService.deleteById(idCandidato);
 			dettagliCandidatiService.deleteByIdCandidato(idCandidato);
 			commentiCandidatiService.deleteByIdCandidato(idCandidato);
 			cvService.deleteByIdCandidato(idCandidato);
-			return new ResponseEntity<>(HttpStatus.OK);
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 
 	}
 
 	@RequestMapping("/controllo-email-modifica")
-	public ResponseEntity<Integer> controlloEmailModifica(@RequestBody String email, HttpServletRequest request) {
-		/*if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		else {*/
-			if (personeService.existsByEmail(email) != null)
-				return new ResponseEntity<>(0, HttpStatus.OK);
-			else
-				return new ResponseEntity<>(1, HttpStatus.OK);
-		//}
+	public ResponseEntity<ResponseHttp> controlloEmailModifica(@RequestBody String email, HttpServletRequest request) {
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
+		else {
+			responseHttp.setCode("1");
+			if (personeService.existsByEmail(email) != null) {
+				responseHttp.setDataSource(1);
+				return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+			}
+			else {
+				responseHttp.setDataSource(0);
+				return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+			}
+		}
 	}
 
-	@RequestMapping("/modifica-candidato/{codiceCandidato}/{idDipendente}")
-	public ResponseEntity<?> modificaCandidato(@PathVariable("codiceCandidato") String codiceCandidato,
+	@RequestMapping("/modifica-candidato/{idCandidato}/{idDipendente}")
+	public ResponseEntity<?> modificaCandidato(@PathVariable("idCandidato") int idCandidato,
 			@PathVariable("idDipendente") int idDipendente, @RequestBody JSONObject updateForm,
 			HttpServletRequest request) {
-		/*if (securityController.controlloToken(request.getHeader("App-Key")) == false)
-			return new ResponseEntity<>(null, HttpStatus.OK);
-		else {*/
-			int idPersona = 0;
-			List<JSONObject> listaCodici = SecurityController.getListaCodiciCandidati();
-			for (JSONObject codice : listaCodici)
-				if (((String) codice.get(("codice"))).equals(codiceCandidato))
-					idPersona = (Integer) codice.get("id");
+		ResponseHttp responseHttp = new ResponseHttp();
+		if (securityController.controlloToken(request.getHeader("App-Key")) == false) {
+			responseHttp.setCodeSession("0");
+			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
+		}
+		else {
 			
 			/*MapperModificaCandidato mapperModificaCandidato = new MapperModificaCandidato();
 			mapperModificaCandidato.setMapperModificaCandidato(updateForm, idPersona);
 			personeService.updateInfoPersona(mapperModificaCandidato);*/
-			
-			System.out.println(updateForm.get("esitoColloquio").getClass());
-			
+						
 			Persone p = new Persone();
 			p.setAnagrafica(updateForm);
-			personeService.updateInfoPersona(p, idPersona);
+			personeService.updateInfoPersona(p, idCandidato);
 			
 			DettagliCandidati dc = new DettagliCandidati();
-			dc.setDettagliCandidato(updateForm, idPersona);
-			dettagliCandidatiService.updateInfoDettaglioCandidato(dc, idPersona);
+			dc.setDettagliCandidato(updateForm, idCandidato);
+			dettagliCandidatiService.updateInfoDettaglioCandidato(dc, idCandidato);
 			
 			/*personeService.updatePersona(idPersona, (String) updateForm.get("nome"), (String) updateForm.get("cognome"),
 					(String) updateForm.get("cellulare"), (String) updateForm.get("email"),
@@ -342,7 +325,6 @@ public class CandidatiController {
 				commentiCandidatiService.save(commentiCandidato);
 			}*/
 			return new ResponseEntity<>(HttpStatus.OK);
-		//}
+		}
 	}
-
 }
