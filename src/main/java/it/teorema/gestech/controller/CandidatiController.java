@@ -25,7 +25,9 @@ import it.teorema.gestech.model.DettagliCandidati;
 import it.teorema.gestech.model.LingueDettagliCandidati;
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.ProfiliDettagliCandidati;
+import it.teorema.gestech.model.mapper.InfoLingue;
 import it.teorema.gestech.model.mapper.InfoPersona;
+import it.teorema.gestech.model.mapper.InfoProfili;
 import it.teorema.gestech.model.mapper.MapperCandidato;
 import it.teorema.gestech.model.mapper.MapperModificaCandidato;
 import it.teorema.gestech.service.CommentiCandidatiService;
@@ -255,7 +257,6 @@ public class CandidatiController {
 			cvService.deleteByIdCandidato(idCandidato);
 			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
-
 	}
 
 	@RequestMapping("/controllo-email-modifica")
@@ -279,6 +280,8 @@ public class CandidatiController {
 	}
 
 	@RequestMapping("/modifica-candidato/{idCandidato}/{idDipendente}")
+	// idCandidato -> idPersona del profilo modificato
+	// idDipendente -> idPersona di chi effettua la modifica
 	public ResponseEntity<?> modificaCandidato(@PathVariable("idCandidato") int idCandidato,
 			@PathVariable("idDipendente") int idDipendente, @RequestBody JSONObject updateForm,
 			HttpServletRequest request) {
@@ -287,12 +290,7 @@ public class CandidatiController {
 			responseHttp.setCodeSession("0");
 			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
-		else {
-			
-			/*MapperModificaCandidato mapperModificaCandidato = new MapperModificaCandidato();
-			mapperModificaCandidato.setMapperModificaCandidato(updateForm, idPersona);
-			personeService.updateInfoPersona(mapperModificaCandidato);*/
-						
+		else {		
 			Persone p = new Persone();
 			p.setAnagrafica(updateForm);
 			personeService.updateInfoPersona(p, idCandidato);
@@ -301,29 +299,69 @@ public class CandidatiController {
 			dc.setDettagliCandidato(updateForm, idCandidato);
 			dettagliCandidatiService.updateInfoDettaglioCandidato(dc, idCandidato);
 			
-			/*personeService.updatePersona(idPersona, (String) updateForm.get("nome"), (String) updateForm.get("cognome"),
-					(String) updateForm.get("cellulare"), (String) updateForm.get("email"),
-					(String) updateForm.get("citta"));
-
-			dettagliCandidatiService.updateCandidato(idPersona,
-					Integer.parseInt((String) updateForm.get("esitoColloquio")),
-					LocalDate.parse((String) updateForm.get("dataColloquio")),
-					(Integer) updateForm.get("annoColloquio"), (String) updateForm.get("fonteReperimento"),
-					(String) updateForm.get("competenzaPrincipale"),
-					Double.parseDouble((String) updateForm.get("costoGiornaliero")),
-					(String) updateForm.get("possibilitaLavorativa"), (String) updateForm.get("competenzeTotali"),
-					(String) updateForm.get("certificazioni"), (String) updateForm.get("profiloLinkedin"));
+			int idDettaglioCandidato = dettagliCandidatiService.getIdDettaglioCandidato(idCandidato);
+			profiliDettagliCandidatiService.deleteByIdDettaglioCandidato(idDettaglioCandidato);
+			lingueDettagliCandidatiService.deleteByIdDettaglioCandidato(idDettaglioCandidato);
+			
+			int c = 0;
+			ProfiliDettagliCandidati pcd = new ProfiliDettagliCandidati(idDettaglioCandidato);
+			List<ProfiliDettagliCandidati> listapdc = new ArrayList<ProfiliDettagliCandidati>();
+			String[] arrayProfili = updateForm.get("listaProfili").toString().replace("[{", "").replace("}]", "")
+					.replace("}", "").replace(" {", " ").split(", ");
+			if (arrayProfili.length > 1) {
+				for (String profilo : arrayProfili) {
+					if (c == 0) {
+						pcd.setIdProfilo(
+								Integer.parseInt((String) profilo.substring(profilo.lastIndexOf("=") + 1)));
+					}
+					if (c == 1) {
+						pcd.setIdLinguaggio(
+								Integer.parseInt((String) profilo.substring(profilo.lastIndexOf("=") + 1)));
+					}
+					if (c == 2) {
+						pcd.setIdLivello(
+								Integer.parseInt((String) profilo.substring(profilo.lastIndexOf("=") + 1)));
+						System.out.println(pcd.getIdLivello());
+					}
+					if (c == 3) {
+						pcd.setDescrizione(profilo.substring(profilo.lastIndexOf("=") + 1));
+					}
+					c++;
+					if (c == 4) {
+						listapdc.add(pcd);
+						c = 0;
+						pcd = new ProfiliDettagliCandidati(idDettaglioCandidato);
+					}
+				}
+			}
+			profiliDettagliCandidatiService.saveAll(listapdc);
+			
+			LingueDettagliCandidati ldc = new LingueDettagliCandidati(idDettaglioCandidato);
+			List<LingueDettagliCandidati> listaldc = new ArrayList<LingueDettagliCandidati>();
+			String[] arrayLingue = updateForm.get("listaLingue").toString().replace("[{", "").replace("}]", "")
+					.replace("}", "").replace(" {", " ").split(", ");
+			if (arrayLingue.length > 1) {
+				for (String lingue : arrayLingue) {
+					ldc.setIdLingua(Integer.parseInt((String) lingue.substring(lingue.lastIndexOf("=") + 1)));
+					ldc.setDescrizione("");
+					listaldc.add(ldc);
+					ldc = new LingueDettagliCandidati(idDettaglioCandidato);
+				}
+			}
+			lingueDettagliCandidatiService.saveAll(listaldc);
+			
+			if ((String) updateForm.get("cv") != null) {
+				Cv cv = new Cv();
+				cv.setCv(updateForm, idCandidato);
+				cvService.save(cv);
+			}
 
 			if ((String) updateForm.get("commento") != "") {
 				CommentiCandidati commentiCandidato = new CommentiCandidati();
-				DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-				LocalDateTime now = LocalDateTime.now();
-				commentiCandidato.setData(LocalDate.parse(format.format(now), format));
-				commentiCandidato.setIdPersona(idDipendente);
-				commentiCandidato.setIdDettaglioCandidato(idPersona);
-				commentiCandidato.setNote((String) updateForm.get("commento"));
+				commentiCandidato.setCommentiCandidati(updateForm, idCandidato);
 				commentiCandidatiService.save(commentiCandidato);
-			}*/
+			}
+			
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 	}

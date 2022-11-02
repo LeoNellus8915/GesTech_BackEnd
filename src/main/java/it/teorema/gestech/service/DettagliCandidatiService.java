@@ -76,7 +76,7 @@ public interface DettagliCandidatiService extends JpaRepository <DettagliCandida
 			+ "annoColloquio = :#{#dc.annoColloquio}, fonteReperimento = :#{#dc.fonteReperimento}, "
 			+ "competenzaPrincipale = :#{#dc.competenzaPrincipale}, profiloLinkedin = :#{#dc.profiloLinkedin}, "
 			+ "costoGiornaliero = :#{#dc.costoGiornaliero}, possibilitaLavorativa = :#{#dc.possibilitaLavorativa}, "
-			+ "competenzeTotali = :#{#dc.costoGiornaliero}, certificazioni = :#{#dc.certificazioni} "
+			+ "competenzeTotali = :#{#dc.competenzeTotali}, certificazioni = :#{#dc.certificazioni} "
 			+ "where idPersona = :idCandidato")
 	void updateInfoDettaglioCandidato(DettagliCandidati dc, int idCandidato);
 }

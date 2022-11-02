@@ -2,7 +2,10 @@ package it.teorema.gestech.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import it.teorema.gestech.model.ProfiliDettagliCandidati;
@@ -25,4 +28,11 @@ public interface ProfiliDettagliCandidatiService extends JpaRepository <ProfiliD
 			+ "where dc.idPersona = :idCandidato and pdc.idDettaglioCandidato = dc.id and pdc.idProfilo = p.id and "
 			+ "pdc.idLinguaggio = l.id and pdc.idLivello = liv.id")
 	List<InfoProfili> getInfoProfili(int idCandidato);
+	
+	@Modifying
+	@Transactional
+	@Query("delete "
+			+ "from ProfiliDettagliCandidati pdc "
+			+ "where pdc.idDettaglioCandidato = :idDettaglioCandidato")
+	void deleteByIdDettaglioCandidato(int idDettaglioCandidato);
 }

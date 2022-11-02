@@ -90,6 +90,12 @@ public class ProfiliDettagliCandidati {
 	public void setDescrizione(String descrizione) {
 		this.descrizione = descrizione;
 	}
+
+	public void setProfiloDefault(int idProfilo, int idLivello, int idLinguaggio) {
+		this.idProfilo = idProfilo;
+		this.idLivello = idLivello;
+		this.idLinguaggio = idLinguaggio;
+	}
 	
 	
 
