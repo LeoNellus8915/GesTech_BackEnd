@@ -203,7 +203,7 @@ public class RichiesteController {
 
 	}
 
-	@RequestMapping("salva-priorita/{ruolo}")
+	@RequestMapping("/salva-priorita/{ruolo}")
 	public ResponseEntity<ResponseHttp> salvaPriorita(@RequestBody List<JSONObject> listaPriorita,
 			@PathVariable("ruolo") String ruolo, HttpServletRequest request) {
 		ResponseHttp responseHttp = new ResponseHttp();
