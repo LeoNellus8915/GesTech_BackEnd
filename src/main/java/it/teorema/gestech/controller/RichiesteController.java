@@ -250,7 +250,7 @@ public class RichiesteController {
 			List<GetNomiRecruiter> getNomiRecruiter = dipendentiService.getNomiRecruiter();
 			List<String> nomiRecruiter = new ArrayList<String>();
 			for (GetNomiRecruiter element : getNomiRecruiter) {
-				nomiRecruiter.add(element.getCognome() + "  " + element.getNome());
+				nomiRecruiter.add(element.getNome() + "  " + element.getCognome());
 			}
 			responseHttp.setCode("1");
 			responseHttp.setDataSource(nomiRecruiter);
@@ -299,7 +299,7 @@ public class RichiesteController {
 						for (int c = 0; c < recruiters.length; c++) {
 							String[] rec = recruiters[c].toString().split("  ");
 							richiestePersoneService.save(new RichiestePersone(idRichiesta,
-									dipendentiService.findByName((String) rec[1], (String) rec[0])));
+									dipendentiService.findByName((String) rec[0], (String) rec[1])));
 						}
 				}
 
