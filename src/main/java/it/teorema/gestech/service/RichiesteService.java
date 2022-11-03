@@ -54,6 +54,18 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "order by ri.priorita, ri.data desc")
 	List<AllRichieste> stampaCardAperteRecruiter();
 	
+	/*@Query("select ri.id as id, ri.data as data, c.nome as cliente, ri.citta as citta, ri.costo as costo, "
+			+ "ri.note as note, li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
+			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita, rp.visualizzato as visualizzato "
+			+ "from Richieste ri, Linguaggi li, Profili pro, Livelli liv, StatiRichiesta sr, "
+			+ "RichiestePersone rp, Clienti c "
+			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and "
+			+ "ri.idStato = sr.id and ri.id = rp.idRichiesta "
+			+ "and ri.idCliente = c.id and sr.nome != 'Chiusa' and rp.idPersona = :idPersona "
+			+ "and (ri.recruiter like %:nomeCognome% or ri.recruiter like '%Tutti%') "
+			+ "order by ri.priorita, ri.data desc")
+	List<AllRichiesteAperte> stampaCardAperte(String nomeCognome, int idPersona);*/  //quella vecchia
+	
 	@Query("select ri.id as id, ri.data as data, c.nome as cliente, ri.citta as citta, ri.costo as costo, "
 			+ "ri.note as note, li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "
 			+ "sr.nome as statiRichiesteNome, ri.priorita as priorita, rp.visualizzato as visualizzato "
@@ -62,9 +74,9 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 			+ "where ri.idLivello = liv.id and ri.idLinguaggio = li.id and ri.idProfilo = pro.id and "
 			+ "ri.idStato = sr.id and ri.id = rp.idRichiesta "
 			+ "and ri.idCliente = c.id and sr.nome != 'Chiusa' and rp.idPersona = :idPersona "
-			+ "and (ri.recruiter like %:cognomeNome% or ri.recruiter like '%Tutti%') "
+			+ "and ri.recruiter like %:nomeCognome% "
 			+ "order by ri.priorita, ri.data desc")
-	List<AllRichiesteAperte> stampaCardAperte(String cognomeNome, int idPersona);
+	List<AllRichiesteAperte> stampaCardAperte(String nomeCognome, int idPersona);
 	
 	@Query("select ri.id as id, ri.data as data, c.nome as cliente, ri.citta as citta, ri.costo as costo, "
 			+ "ri.note as note, li.nome as linguaggiNome, pro.nome as profiliNome, liv.nome as livelliNome, "

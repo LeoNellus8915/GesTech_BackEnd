@@ -260,7 +260,6 @@ public class RichiesteController {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping("/modifica-richiesta/{idRichiesta}/{idPersona}/{pagina}/{ruolo}")
 	public ResponseEntity<ResponseHttp> modificaRichiesta(@PathVariable("idRichiesta") int idRichiesta,
 			@PathVariable("idPersona") int idPersona, @PathVariable("pagina") int pagina,
@@ -272,10 +271,22 @@ public class RichiesteController {
 		}
 		else {
 			if (!ruolo.equals("Recruiter")) {
-				String listaRecruiters;
+				String listaRecruiters = "";
 				if (updateForm.get("listaRecruiters").toString().equals("[]"))
 					listaRecruiters = null;
 				else
+					if (updateForm.get("listaRecruiters").toString().indexOf("Tutti") > -1) {
+						List<GetNomiRecruiter> list = dipendentiService.getNomiRecruiter();
+						for (GetNomiRecruiter rec : list) {
+							if(listaRecruiters.equals("")) {
+								listaRecruiters = (rec.getNome() + "  " + rec.getCognome());
+							}
+							else {
+								listaRecruiters = listaRecruiters + ", "  + (rec.getNome() + "  " + rec.getCognome());
+							}
+						}
+					}
+					else
 					listaRecruiters = (String) updateForm.get("listaRecruiters").toString().replace("[", "")
 							.replace("]", "");
 
@@ -289,20 +300,20 @@ public class RichiesteController {
 						.split(", ");
 				List<GetNomiRecruiter> recruiter = new ArrayList<GetNomiRecruiter>();
 				if (ruolo.equals("Direttore Recruiter") && !recruiters[0].equals("")) {
-					if (updateForm.get("listaRecruiters").toString().indexOf("Tutti") > -1) {
-						recruiter = dipendentiService.getNomiRecruiter();
-						for (int c = 0; c < recruiter.size(); c++) {
-							richiestePersoneService.save(new RichiestePersone(idRichiesta,
-									dipendentiService.findByName(recruiter.get(c).getNome(),
-											recruiter.get(c).getCognome())));
-						}
-					} else if (recruiters.length > 0)
-						for (int c = 0; c < recruiters.length; c++) {
-							String[] rec = recruiters[c].toString().split("  ");
-							richiestePersoneService.save(new RichiestePersone(idRichiesta,
-									dipendentiService.findByName((String) rec[0], (String) rec[1])));
-						}
-				}
+                    if (updateForm.get("listaRecruiters").toString().indexOf("Tutti") > -1) {
+                        recruiter = dipendentiService.getNomiRecruiter();
+                        for (int c = 0; c < recruiter.size(); c++) {
+                            richiestePersoneService.save(new RichiestePersone(idRichiesta,
+                                    dipendentiService.findByName(recruiter.get(c).getNome(),
+                                            recruiter.get(c).getCognome())));
+                        }
+                    } else if (recruiters.length > 0)
+                        for (int c = 0; c < recruiters.length; c++) {
+                            String[] rec = recruiters[c].toString().split("  ");
+                            richiestePersoneService.save(new RichiestePersone(idRichiesta,
+                                    dipendentiService.findByName((String) rec[0], (String) rec[1])));
+                        }
+                }
 
 				if (Integer.parseInt((String) updateForm.get("statoRichiesta")) == 3) {
 					richiestePersoneService.setVisualizzato(idRichiesta);
