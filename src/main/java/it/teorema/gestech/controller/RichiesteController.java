@@ -187,7 +187,8 @@ public class RichiesteController {
 			dati.add(nomeStatoRichiesta);
 			dati.add(statiRichiestaService.getIdStatoRichiesta(nomeStatoRichiesta).toString());
 			dati.add(statiRichiestaService.findAllException(nomeStatoRichiesta));
-			dati.add(richiesteService.getCandidatiSelezionati(idRichiesta));
+			//dati.add(richiesteService.getCandidatiSelezionati(idRichiesta));
+			dati.add(SecurityController.getListaCodiciCandidati(richiesteService.getCandidatiSelezionati(idRichiesta)));
 			if (ruolo.equals("Direttore Recruiter")) {
 				dati.add(commentiRichiesteService.findRecruiterById(idRichiesta));
 			} else if (ruolo.equals("Recruiter"))
