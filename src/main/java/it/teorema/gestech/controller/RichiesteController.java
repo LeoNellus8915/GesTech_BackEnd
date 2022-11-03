@@ -150,9 +150,9 @@ public class RichiesteController {
 			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 		else {
-			String cognomeNome = cognome + "  " + nome;
+			String nomeCognome = nome + "  " + cognome;
 			responseHttp.setCode("1");
-			responseHttp.setDataSource(richiesteService.stampaCardAperte(cognomeNome, idDipendente));
+			responseHttp.setDataSource(richiesteService.stampaCardAperte(nomeCognome, idDipendente));
 			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
 	}
