@@ -44,29 +44,3 @@ public interface CommentiRichiesteService extends JpaRepository <CommentiRichies
 			+ "group by r.id")
 	String recruiterPresente(int idRichiesta);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
