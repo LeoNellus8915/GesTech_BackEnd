@@ -181,7 +181,7 @@ public class DettagliCandidati
 		this.setIdPersona(idPersona);
 		this.setProfiloLinkedin((String)dettagliCandidato.get("profiloLinkedin"));
 		this.setDataInserimento(data);
-		this.setIdEsitoColloquio((Integer)dettagliCandidato.get("esitoColloquio"));
+		this.setIdEsitoColloquio(Integer.parseInt((String)dettagliCandidato.get("esitoColloquio")));
 		this.setCompetenzaPrincipale((String)dettagliCandidato.get("competenzaPrincipale"));
 		if (((String)dettagliCandidato.get("dataColloquio")).equals(""))
 			this.setDataColloquio(null);
