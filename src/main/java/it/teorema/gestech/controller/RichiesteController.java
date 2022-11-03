@@ -66,7 +66,8 @@ public class RichiesteController {
 			Richieste richiesta = new Richieste();
 			richiesta.setIdPersona(Integer.parseInt((String) addForm.get("idDipendente")));
 			richiesta.setData(LocalDateTime.parse(dtf.format(now), dtf));
-			richiesta.setIdLinguaggio(Integer.parseInt((String) addForm.get("linguaggio")));
+			if ((String)addForm.get("linguaggio") != "")
+				richiesta.setIdLinguaggio(Integer.parseInt((String) addForm.get("linguaggio")));
 			richiesta.setIdProfilo(Integer.parseInt((String) addForm.get("profilo")));
 			richiesta.setIdLivello(Integer.parseInt((String) addForm.get("livello")));
 			richiesta.setIdCliente(Integer.parseInt((String) addForm.get("cliente")));
@@ -291,10 +292,9 @@ public class RichiesteController {
 					if (updateForm.get("listaRecruiters").toString().indexOf("Tutti") > -1) {
 						recruiter = dipendentiService.getNomiRecruiter();
 						for (int c = 0; c < recruiter.size(); c++) {
-							RichiesteDettagliCandidati rdc = new RichiesteDettagliCandidati(idRichiesta,
+							richiestePersoneService.save(new RichiestePersone(idRichiesta,
 									dipendentiService.findByName(recruiter.get(c).getNome(),
-											recruiter.get(c).getCognome()));
-							richiesteDettagliCandidatiService.save(rdc);
+											recruiter.get(c).getCognome())));
 						}
 					} else if (recruiters.length > 0)
 						for (int c = 0; c < recruiters.length; c++) {
