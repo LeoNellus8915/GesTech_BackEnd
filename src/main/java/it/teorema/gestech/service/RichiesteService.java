@@ -149,10 +149,11 @@ public interface RichiesteService extends JpaRepository <Richieste, Integer> {
 	@Query("select p.id as id, dc.dataInserimento as dataInserimento, p.nome as nome, p.cognome as cognome, "
 			+ "pf.nome as profiloNome, dc.competenzaPrincipale as competenzaPrincipale, ec.nome as esitoNome, "
 			+ "p.cittaDiResidenza as citta "
-			+"from Persone p, DettagliCandidati dc, ProfiliDettagliCandidati pdc, Profili pf, EsitiColloquio ec, "
+			+ "from Persone p, DettagliCandidati dc, Profili pf, EsitiColloquio ec, "
 			+ "RichiesteDettagliCandidati rdc "
-			+"where p.id = dc.idPersona and dc.id = pdc.idDettaglioCandidato and pdc.idProfilo = pf.id and "
-			+ "dc.idEsitoColloquio = ec.id and rdc.idRichiesta = :idRichiesta and rdc.idDettaglioCandidato = dc.id")
+			+ "where p.id = dc.idPersona and "
+			+ "dc.idEsitoColloquio = ec.id and rdc.idDettaglioCandidato = dc.id and rdc.idRichiesta = :idRichiesta "
+			+ "group by p.id")
 	List<AllCandidati> getCandidatiSelezionati(int idRichiesta);
 	
 	@Modifying
