@@ -3,9 +3,7 @@ package it.teorema.gestech.controller;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,11 +20,9 @@ import it.teorema.gestech.model.CommentiRichieste;
 import it.teorema.gestech.model.Richieste;
 import it.teorema.gestech.model.RichiesteDettagliCandidati;
 import it.teorema.gestech.model.RichiestePersone;
-import it.teorema.gestech.model.mapper.AllRichieste;
-import it.teorema.gestech.model.mapper.AllRichiesteAperte;
-import it.teorema.gestech.model.mapper.AllRichiesteChiuse;
 import it.teorema.gestech.model.mapper.GetNomiRecruiter;
 import it.teorema.gestech.service.CommentiRichiesteService;
+import it.teorema.gestech.service.DettagliCandidatiService;
 import it.teorema.gestech.service.RichiesteService;
 import it.teorema.gestech.service.RichiestePersoneService;
 import it.teorema.gestech.service.PersoneService;
@@ -41,6 +37,8 @@ public class RichiesteController {
 	@Autowired
 	PersoneService dipendentiService;
 	@Autowired
+	DettagliCandidatiService dettagliCandidatiService;
+	@Autowired
 	CommentiRichiesteService commentiRichiesteService;
 	@Autowired
 	RichiesteDettagliCandidatiService richiesteDettagliCandidatiService;
@@ -51,7 +49,6 @@ public class RichiesteController {
 	@Autowired
 	SecurityController securityController;
 
-	@SuppressWarnings("unchecked")
 	@RequestMapping("/salva-richiesta/{ruolo}")
 	public ResponseEntity<ResponseHttp> salvaRichiesta(@RequestBody JSONObject addForm, @PathVariable("ruolo") String ruolo,
 			HttpServletRequest request) {
@@ -77,7 +74,6 @@ public class RichiesteController {
 			richiesta.setIdStato(1);
 			richiesta.setPriorita(0);
 			richiesteService.save(richiesta);
-
 			responseHttp.setCode("1");
 			return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 		}
@@ -188,7 +184,6 @@ public class RichiesteController {
 			dati.add(nomeStatoRichiesta);
 			dati.add(statiRichiestaService.getIdStatoRichiesta(nomeStatoRichiesta).toString());
 			dati.add(statiRichiestaService.findAllException(nomeStatoRichiesta));
-			//dati.add(richiesteService.getCandidatiSelezionati(idRichiesta));
 			dati.add(SecurityController.getListaCodiciCandidati(richiesteService.getCandidatiSelezionati(idRichiesta)));
 			if (ruolo.equals("Direttore Recruiter")) {
 				dati.add(commentiRichiesteService.findRecruiterById(idRichiesta));
@@ -375,7 +370,8 @@ public class RichiesteController {
 		else {
 			String[] candidati = listaCandidati.split(",");
 			for (int i = 0; i < candidati.length; i++) {
-				RichiesteDettagliCandidati rdc = new RichiesteDettagliCandidati(Integer.parseInt(candidati[i]), idRichiesta);
+				int idDettaglioCandidato = dettagliCandidatiService.getIdDettaglioCandidato(Integer.parseInt(candidati[i]));
+				RichiesteDettagliCandidati rdc = new RichiesteDettagliCandidati(idDettaglioCandidato, idRichiesta);
 				richiesteDettagliCandidatiService.save(rdc);
 			}
 			richiesteService.setStato(idRichiesta);

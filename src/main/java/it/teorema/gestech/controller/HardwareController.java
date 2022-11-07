@@ -3,9 +3,7 @@ package it.teorema.gestech.controller;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import it.teorema.gestech.model.Dispositivi;
 import it.teorema.gestech.model.Hardware;
 import it.teorema.gestech.model.mapper.AllHardware;
 import it.teorema.gestech.service.DispositiviService;

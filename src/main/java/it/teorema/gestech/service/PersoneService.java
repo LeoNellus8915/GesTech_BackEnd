@@ -4,18 +4,15 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.json.simple.JSONObject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.mapper.AllDipendenti;
 import it.teorema.gestech.model.mapper.GetDipendente;
 import it.teorema.gestech.model.mapper.GetNomiRecruiter;
 import it.teorema.gestech.model.mapper.InfoPersona;
-import it.teorema.gestech.model.mapper.MapperModificaCandidato;
 
 public interface PersoneService extends JpaRepository<Persone, Integer>{
 

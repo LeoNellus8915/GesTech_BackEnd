@@ -1,12 +1,7 @@
 package it.teorema.gestech.controller;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,11 +20,7 @@ import it.teorema.gestech.model.DettagliCandidati;
 import it.teorema.gestech.model.LingueDettagliCandidati;
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.ProfiliDettagliCandidati;
-import it.teorema.gestech.model.mapper.InfoLingue;
-import it.teorema.gestech.model.mapper.InfoPersona;
-import it.teorema.gestech.model.mapper.InfoProfili;
 import it.teorema.gestech.model.mapper.MapperCandidato;
-import it.teorema.gestech.model.mapper.MapperModificaCandidato;
 import it.teorema.gestech.service.CommentiCandidatiService;
 import it.teorema.gestech.service.CvService;
 import it.teorema.gestech.service.DettagliCandidatiService;
@@ -100,11 +91,6 @@ public class CandidatiController {
 				return new ResponseEntity<>(responseHttp, HttpStatus.OK);
 			}
 			else {
-
-				DateTimeFormatter format1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-				DateTimeFormatter format2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-				LocalDateTime now = LocalDateTime.now();
-				LocalDateTime data = LocalDateTime.parse(format1.format(now), format1);
 				Persone persona = new Persone();
 				persona.setAnagrafica(formCandidato);
 				personeService.save(persona);

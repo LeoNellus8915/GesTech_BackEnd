@@ -1,6 +1,5 @@
 package it.teorema.gestech.controller;
 
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,16 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import it.teorema.gestech.model.Aziende;
-import it.teorema.gestech.model.Clienti;
-import it.teorema.gestech.model.Contratti;
-import it.teorema.gestech.model.EsitiColloquio;
-import it.teorema.gestech.model.Linguaggi;
-import it.teorema.gestech.model.Lingue;
-import it.teorema.gestech.model.Livelli;
-import it.teorema.gestech.model.Profili;
-import it.teorema.gestech.model.Ruoli;
-import it.teorema.gestech.model.StatiRichiesta;
 import it.teorema.gestech.service.AziendeService;
 import it.teorema.gestech.service.ClientiService;
 import it.teorema.gestech.service.ContrattiService;

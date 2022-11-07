@@ -19,7 +19,6 @@ import it.teorema.gestech.model.Auth;
 import it.teorema.gestech.model.Contratti;
 import it.teorema.gestech.model.Persone;
 import it.teorema.gestech.model.RuoliPersone;
-import it.teorema.gestech.model.mapper.AllDipendenti;
 import it.teorema.gestech.service.AuthService;
 import it.teorema.gestech.service.ContrattiService;
 import it.teorema.gestech.service.PersoneService;
